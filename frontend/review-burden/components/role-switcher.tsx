@@ -3,15 +3,10 @@
 import { useTransition } from "react";
 
 import { setViewer } from "@/app/actions";
-
-export type ViewerOption = {
-  id: number;
-  name: string;
-  role: "manager" | "dev";
-};
+import type { Person } from "@/lib/api-types";
 
 type RoleSwitcherProps = {
-  people: ViewerOption[] | null;
+  people: Person[] | null;
   currentId: number | null;
 };
 

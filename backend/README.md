@@ -12,6 +12,8 @@ uv add <package>                                      # add a dependency (update
 
 In Docker the image installs from `uv.lock` (`uv sync --locked`), so commit `uv.lock` whenever dependencies change.
 
+The frontend's TypeScript types are generated from this API's OpenAPI schema. After changing a route or schema, run `npm run gen:api` in `frontend/review-burden` (it calls `scripts/export_openapi.py`); `tests/test_openapi_export.py` fails until you do.
+
 All routes live under `/api`. The viewer is identified by the `X-Viewer-Id` header; see the root README for how the frontend sets it.
 
 Synthetic data and its ground truth are in `data/` (see `data/README.md`).

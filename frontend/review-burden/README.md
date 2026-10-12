@@ -7,7 +7,12 @@ npm install
 npm run dev     # http://localhost:3000, API expected on http://localhost:8000
 npm run build   # production build (standalone output, used by the Dockerfile)
 npm run lint
+npm run gen:api # after changing the API: re-export lib/openapi.json and regenerate lib/api-schema.d.ts (needs uv)
 ```
+
+## API types
+
+Types for API responses and requests are generated from the backend's OpenAPI schema, never written by hand. Import them from `lib/api-types.ts` (`Person`, `Flag`, `FlagUpdate`, ...). Both generated files are committed so builds don't need the backend; a backend test fails when `lib/openapi.json` is out of date.
 
 ## How data is fetched
 
@@ -25,3 +30,4 @@ npm run lint
 | `components/role-switcher.tsx` | "Viewing as" dropdown |
 | `components/nav-links.tsx` | Nav links with active state |
 | `lib/api.ts`, `lib/viewer.ts` | Server-only API client and viewer cookie helpers |
+| `lib/api-types.ts` | Named API types; `lib/openapi.json` and `lib/api-schema.d.ts` are generated |

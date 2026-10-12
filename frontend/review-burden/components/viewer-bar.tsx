@@ -1,8 +1,9 @@
 import { apiFetch } from "@/lib/api";
+import type { Person } from "@/lib/api-types";
 import { getViewerId } from "@/lib/viewer";
 
 import { NavLinks, type NavItem } from "./nav-links";
-import { RoleSwitcher, type ViewerOption } from "./role-switcher";
+import { RoleSwitcher } from "./role-switcher";
 
 const MANAGER_NAV: NavItem[] = [
   { href: "/", label: "Overview" },
@@ -16,9 +17,9 @@ const MANAGER_NAV: NavItem[] = [
 const DEV_NAV: NavItem[] = [{ href: "/me", label: "My review debt and flags" }];
 
 /** Fetched without `X-Viewer-Id` so a developer viewer can still switch back to the manager. */
-async function loadRoster(): Promise<ViewerOption[] | null> {
+async function loadRoster(): Promise<Person[] | null> {
   try {
-    return await apiFetch<ViewerOption[]>("/api/people", { asViewer: false });
+    return await apiFetch<Person[]>("/api/people", { asViewer: false });
   } catch {
     return null;
   }

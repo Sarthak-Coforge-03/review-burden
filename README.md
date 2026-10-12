@@ -86,9 +86,9 @@ review-burden/
 │   ├── src/backend/routes/     # one module per API area; deps.py (session, viewer), schemas.py (API models)
 │   ├── src/backend/rules/      # rule engine: pure rules, params, patterns, engine runner
 │   ├── data/                   # deterministic synthetic data (see data/README.md)
-│   └── scripts/                # data generator
+│   └── scripts/                # data generator, OpenAPI export for the frontend
 └── frontend/review-burden/     # Next.js 16 (App Router), Tailwind + DaisyUI
     ├── app/                    # pages: overview, flags, load, quality, people, settings, me
     ├── components/             # header, nav, role switcher
-    └── lib/                    # server-only API client and viewer cookie helpers
+    └── lib/                    # server-only API client, viewer cookie helpers, generated API types
 ```
