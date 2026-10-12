@@ -28,6 +28,23 @@ class PullRequestKind(enum.StrEnum):
     hotfix = "hotfix"
 
 
+class RuleKey(enum.StrEnum):
+    merged_unreviewed = "merged_unreviewed"
+    merged_changes_pending = "merged_changes_pending"
+    self_approval = "self_approval"
+    rubber_stamp = "rubber_stamp"
+    escape = "escape"
+    stale_backlog = "stale_backlog"
+    load_concentration = "load_concentration"
+
+
+class FlagRole(enum.StrEnum):
+    """Which side of the review a flagged person was on."""
+
+    author = "author"
+    reviewer = "reviewer"
+
+
 class Developer(Base):
     __tablename__ = "developers"
 
