@@ -323,6 +323,72 @@
         }
       }
     },
+    "/api/load": {
+      "get": {
+        "tags": [
+          "load"
+        ],
+        "summary": "Get Load",
+        "description": "Who carries the review work: weekly history, the load rule's numbers now, and waiting requests. Manager only.",
+        "operationId": "get_load_api_load_get",
+        "parameters": [
+          {
+            "name": "weeks",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 52,
+              "minimum": 1,
+              "description": "How many weeks of history to chart.",
+              "default": 12,
+              "title": "Weeks"
+            },
+            "description": "How many weeks of history to chart."
+          },
+          {
+            "name": "x-viewer-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Who is viewing. Demo only: there is no real auth.",
+              "title": "X-Viewer-Id"
+            },
+            "description": "Who is viewing. Demo only: there is no real auth."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoadReport"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/health": {
       "get": {
         "summary": "Health",
@@ -517,6 +583,147 @@
           "status"
         ],
         "title": "HealthResponse"
+      },
+      "LoadReport": {
+        "properties": {
+          "as_of": {
+            "type": "string",
+            "format": "date-time",
+            "title": "As Of"
+          },
+          "week_starts": {
+            "items": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "type": "array",
+            "title": "Week Starts",
+            "description": "Oldest first. Each week is the 7 days after its start; the last one ends at as_of."
+          },
+          "window_days": {
+            "type": "integer",
+            "title": "Window Days"
+          },
+          "team_reviews": {
+            "type": "integer",
+            "title": "Team Reviews",
+            "description": "Reviews by all developers in the window (the manager is not counted)."
+          },
+          "team_median": {
+            "type": "number",
+            "title": "Team Median"
+          },
+          "top2_share": {
+            "type": "number",
+            "title": "Top2 Share",
+            "description": "Share of team_reviews done by the two busiest developers."
+          },
+          "top2_share_threshold": {
+            "type": "number",
+            "title": "Top2 Share Threshold"
+          },
+          "median_multiple_threshold": {
+            "type": "number",
+            "title": "Median Multiple Threshold"
+          },
+          "concentrated": {
+            "type": "boolean",
+            "title": "Concentrated",
+            "description": "Whether the load_concentration rule fires on these numbers."
+          },
+          "people": {
+            "items": {
+              "$ref": "#/components/schemas/LoadRow"
+            },
+            "type": "array",
+            "title": "People",
+            "description": "Developers, busiest reviewer first."
+          }
+        },
+        "type": "object",
+        "required": [
+          "as_of",
+          "week_starts",
+          "window_days",
+          "team_reviews",
+          "team_median",
+          "top2_share",
+          "top2_share_threshold",
+          "median_multiple_threshold",
+          "concentrated",
+          "people"
+        ],
+        "title": "LoadReport"
+      },
+      "LoadRow": {
+        "properties": {
+          "person": {
+            "$ref": "#/components/schemas/Person"
+          },
+          "weekly": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Weekly",
+            "description": "Reviews per week, aligned with LoadReport.week_starts."
+          },
+          "reviews": {
+            "type": "integer",
+            "title": "Reviews",
+            "description": "Reviews in the load window."
+          },
+          "share": {
+            "type": "number",
+            "title": "Share",
+            "description": "reviews / team_reviews, 0 to 1."
+          },
+          "median_multiple": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Multiple",
+            "description": "reviews / team_median; null when the median is 0."
+          },
+          "over_median_multiple": {
+            "type": "boolean",
+            "title": "Over Median Multiple"
+          },
+          "pending": {
+            "type": "integer",
+            "title": "Pending",
+            "description": "Review requests waiting on this person now."
+          },
+          "oldest_pending_hours": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Oldest Pending Hours",
+            "description": "Age of the oldest waiting request; null if none."
+          }
+        },
+        "type": "object",
+        "required": [
+          "person",
+          "weekly",
+          "reviews",
+          "share",
+          "median_multiple",
+          "over_median_multiple",
+          "pending",
+          "oldest_pending_hours"
+        ],
+        "title": "LoadRow"
       },
       "PatternOut": {
         "properties": {

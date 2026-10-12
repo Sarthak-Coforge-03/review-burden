@@ -15,3 +15,5 @@ export type RoleSummary = Schemas["RoleSummary"];
 export type Pattern = Schemas["PatternOut"];
 export type PendingReview = Schemas["PendingReview"];
 export type ReviewActivity = Schemas["ReviewActivity"];
+export type LoadReport = Schemas["LoadReport"];
+export type LoadRow = Schemas["LoadRow"];

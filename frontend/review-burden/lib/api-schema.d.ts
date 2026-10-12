@@ -104,6 +104,26 @@ export interface paths {
         patch: operations["triage_flag_api_flags__flag_id__patch"];
         trace?: never;
     };
+    "/api/load": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Load
+         * @description Who carries the review work: weekly history, the load rule's numbers now, and waiting requests. Manager only.
+         */
+        get: operations["get_load_api_load_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/health": {
         parameters: {
             query?: never;
@@ -186,6 +206,83 @@ export interface components {
         HealthResponse: {
             /** Status */
             status: string;
+        };
+        /** LoadReport */
+        LoadReport: {
+            /**
+             * As Of
+             * Format: date-time
+             */
+            as_of: string;
+            /**
+             * Week Starts
+             * @description Oldest first. Each week is the 7 days after its start; the last one ends at as_of.
+             */
+            week_starts: string[];
+            /** Window Days */
+            window_days: number;
+            /**
+             * Team Reviews
+             * @description Reviews by all developers in the window (the manager is not counted).
+             */
+            team_reviews: number;
+            /** Team Median */
+            team_median: number;
+            /**
+             * Top2 Share
+             * @description Share of team_reviews done by the two busiest developers.
+             */
+            top2_share: number;
+            /** Top2 Share Threshold */
+            top2_share_threshold: number;
+            /** Median Multiple Threshold */
+            median_multiple_threshold: number;
+            /**
+             * Concentrated
+             * @description Whether the load_concentration rule fires on these numbers.
+             */
+            concentrated: boolean;
+            /**
+             * People
+             * @description Developers, busiest reviewer first.
+             */
+            people: components["schemas"]["LoadRow"][];
+        };
+        /** LoadRow */
+        LoadRow: {
+            person: components["schemas"]["Person"];
+            /**
+             * Weekly
+             * @description Reviews per week, aligned with LoadReport.week_starts.
+             */
+            weekly: number[];
+            /**
+             * Reviews
+             * @description Reviews in the load window.
+             */
+            reviews: number;
+            /**
+             * Share
+             * @description reviews / team_reviews, 0 to 1.
+             */
+            share: number;
+            /**
+             * Median Multiple
+             * @description reviews / team_median; null when the median is 0.
+             */
+            median_multiple: number | null;
+            /** Over Median Multiple */
+            over_median_multiple: boolean;
+            /**
+             * Pending
+             * @description Review requests waiting on this person now.
+             */
+            pending: number;
+            /**
+             * Oldest Pending Hours
+             * @description Age of the oldest waiting request; null if none.
+             */
+            oldest_pending_hours: number | null;
         };
         /** PatternOut */
         PatternOut: {
@@ -478,6 +575,41 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["FlagOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_load_api_load_get: {
+        parameters: {
+            query?: {
+                /** @description How many weeks of history to chart. */
+                weeks?: number;
+            };
+            header?: {
+                /** @description Who is viewing. Demo only: there is no real auth. */
+                "x-viewer-id"?: number | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoadReport"];
                 };
             };
             /** @description Validation Error */
