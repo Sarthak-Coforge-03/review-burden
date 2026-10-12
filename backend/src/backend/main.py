@@ -1,12 +1,23 @@
 """FastAPI application: CORS and route registration. All routes live under /api."""
 
 import os
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-app = FastAPI(title="Review Health Dashboard")
+from backend.db import create_tables
+
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
+    create_tables()
+    yield
+
+
+app = FastAPI(title="Review Health Dashboard", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,

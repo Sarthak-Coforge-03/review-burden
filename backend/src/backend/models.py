@@ -1,0 +1,109 @@
+"""Ingested review data, shaped like data/seed.json. Ids come from the source; nothing derived lives here."""
+
+import enum
+from datetime import datetime
+
+from sqlalchemy import CheckConstraint, ForeignKey, String, Text
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from backend.db import Base
+
+
+# SQLAlchemy stores enum member *names*; keeping names equal to values means the database
+# holds the same strings as the data files ("manager", "changes_requested", ...).
+class Role(enum.StrEnum):
+    manager = "manager"
+    dev = "dev"
+
+
+class ReviewState(enum.StrEnum):
+    approved = "approved"
+    changes_requested = "changes_requested"
+    commented = "commented"
+
+
+class PullRequestKind(enum.StrEnum):
+    normal = "normal"
+    revert = "revert"
+    hotfix = "hotfix"
+
+
+class Developer(Base):
+    __tablename__ = "developers"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(100))
+    handle: Mapped[str] = mapped_column(String(64), unique=True)
+    role: Mapped[Role]
+
+
+class PullRequest(Base):
+    __tablename__ = "pull_requests"
+    __table_args__ = (
+        CheckConstraint("additions >= 0 AND deletions >= 0", name="ck_pull_requests_line_counts"),
+        CheckConstraint("(merged_at IS NULL) = (merged_by_id IS NULL)", name="ck_pull_requests_merged_pair"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title: Mapped[str] = mapped_column(String(255))
+    author_id: Mapped[int] = mapped_column(ForeignKey("developers.id"), index=True)
+    merged_by_id: Mapped[int | None] = mapped_column(ForeignKey("developers.id"), index=True)
+    opened_at: Mapped[datetime]
+    merged_at: Mapped[datetime | None] = mapped_column(index=True)
+    additions: Mapped[int]
+    deletions: Mapped[int]
+    fixes_pr_id: Mapped[int | None] = mapped_column(ForeignKey("pull_requests.id"), index=True)
+    kind: Mapped[PullRequestKind] = mapped_column(default=PullRequestKind.normal)
+
+    author: Mapped[Developer] = relationship(foreign_keys=[author_id])
+    merged_by: Mapped[Developer | None] = relationship(foreign_keys=[merged_by_id])
+    fixes: Mapped["PullRequest | None"] = relationship(remote_side=[id])
+    reviews: Mapped[list["Review"]] = relationship(back_populates="pull_request", order_by="Review.submitted_at")
+    review_requests: Mapped[list["ReviewRequest"]] = relationship(back_populates="pull_request")
+
+    @property
+    def lines_changed(self) -> int:
+        return self.additions + self.deletions
+
+
+class Review(Base):
+    __tablename__ = "reviews"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    pr_id: Mapped[int] = mapped_column(ForeignKey("pull_requests.id", ondelete="CASCADE"), index=True)
+    reviewer_id: Mapped[int] = mapped_column(ForeignKey("developers.id"), index=True)
+    state: Mapped[ReviewState]
+    submitted_at: Mapped[datetime]
+
+    pull_request: Mapped[PullRequest] = relationship(back_populates="reviews")
+    reviewer: Mapped[Developer] = relationship()
+    comments: Mapped[list["ReviewComment"]] = relationship(
+        back_populates="review", order_by="ReviewComment.created_at"
+    )
+
+
+class ReviewComment(Base):
+    __tablename__ = "review_comments"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    review_id: Mapped[int] = mapped_column(ForeignKey("reviews.id", ondelete="CASCADE"), index=True)
+    body: Mapped[str] = mapped_column(Text)
+    is_line_comment: Mapped[bool]
+    created_at: Mapped[datetime]
+
+    review: Mapped[Review] = relationship(back_populates="comments")
+
+
+class ReviewRequest(Base):
+    """Who was asked to review and when they responded. `fulfilled_at` is null while still waiting."""
+
+    __tablename__ = "review_requests"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    pr_id: Mapped[int] = mapped_column(ForeignKey("pull_requests.id", ondelete="CASCADE"), index=True)
+    reviewer_id: Mapped[int] = mapped_column(ForeignKey("developers.id"), index=True)
+    requested_at: Mapped[datetime]
+    fulfilled_at: Mapped[datetime | None]
+
+    pull_request: Mapped[PullRequest] = relationship(back_populates="review_requests")
+    reviewer: Mapped[Developer] = relationship()
