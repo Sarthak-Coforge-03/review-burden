@@ -85,6 +85,7 @@ review-burden/
 │   ├── src/backend/main.py     # app, CORS, router registration
 │   ├── src/backend/routes/     # one module per API area; deps.py (session, viewer), schemas.py (API models)
 │   ├── src/backend/rules/      # rule engine: pure rules, params, patterns, engine runner
+│   ├── src/backend/params_store.py  # rule params saved from the settings page (overrides on top of the defaults)
 │   ├── data/                   # deterministic synthetic data (see data/README.md)
 │   └── scripts/                # data generator, OpenAPI export for the frontend
 └── frontend/review-burden/     # Next.js 16 (App Router), Tailwind + DaisyUI
