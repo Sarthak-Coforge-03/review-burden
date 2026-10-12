@@ -30,6 +30,8 @@ Types for API responses and requests are generated from the backend's OpenAPI sc
 | `app/flags/` | Flag inbox: status tabs, rule/person filters (URL search params), triage via the `triageFlag` Server Action |
 | `app/people/`, `app/people/[id]/` | Developer cards (manager only) and one person's profile |
 | `app/load/`, `components/load-charts.tsx` | Review load (manager only): weekly and 28-day charts (Recharts, client component), per-person table |
+| `app/quality/`, `components/quality-charts.tsx` | Review quality (manager only): approval speed vs substance scatter, escape-rate bars, per-person table linking to their flags |
+| `components/chart-theme.ts` | Colors, axis and tooltip styles shared by the charts |
 | `components/person-profile.tsx` | Profile view shared by `/people/[id]` and `/me`: activity, patterns, flags by role, review debt, flags |
 | `components/flag-table.tsx`, `components/triage-controls.tsx` | Flags table and acknowledge/dismiss/reopen buttons, shared by the flag inbox and profiles |
 | `components/viewer-bar.tsx` | Loads people and the current viewer, picks manager or developer nav |
