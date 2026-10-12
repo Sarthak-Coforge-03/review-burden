@@ -134,6 +134,15 @@ class ReviewRequest(Base):
     reviewer: Mapped[Developer] = relationship()
 
 
+class RuleParamOverride(Base):
+    """A rule threshold or score weight changed in Settings. Only values that differ from the defaults are stored."""
+
+    __tablename__ = "rule_param_overrides"
+
+    name: Mapped[str] = mapped_column(String(64), primary_key=True)
+    value: Mapped[Any] = mapped_column(JSON)
+
+
 class Flag(Base):
     """A problem a rule found, plus its triage. Written by the rule engine; status and note by people.
 
