@@ -144,6 +144,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Overview
+         * @description Team health score with its five parts, KPI tiles and the weekly score trend. Manager only.
+         */
+        get: operations["get_overview_api_overview_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/health": {
         parameters: {
             query?: never;
@@ -222,10 +242,49 @@ export interface components {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
         };
+        /**
+         * HealthPart
+         * @description One part of the health score. `good` of `total` went well; how that maps to `score` depends on the part.
+         */
+        HealthPart: {
+            key: components["schemas"]["HealthPartKey"];
+            /** Weight */
+            weight: number;
+            /**
+             * Good
+             * @description coverage: merged PRs approved by someone other than the author before merging; depth: big-PR approvals that are not rubber stamps; escapes: approved merged PRs with no revert or hotfix; responsiveness: review requests answered (or the PR merged) within the stale threshold; load_balance: reviews done by everyone except the two busiest developers.
+             */
+            good: number;
+            /** Total */
+            total: number;
+            /**
+             * Score
+             * @description 0-100; null when there was nothing to measure, and the other parts share its weight.
+             */
+            score: number | null;
+        };
+        /**
+         * HealthPartKey
+         * @enum {string}
+         */
+        HealthPartKey: "coverage" | "depth" | "escapes" | "responsiveness" | "load_balance";
         /** HealthResponse */
         HealthResponse: {
             /** Status */
             status: string;
+        };
+        /** HealthSnapshot */
+        HealthSnapshot: {
+            /**
+             * As Of
+             * Format: date-time
+             */
+            as_of: string;
+            /**
+             * Score
+             * @description Weighted average of the parts' scores, 0-100; null when no part could be measured.
+             */
+            score: number | null;
         };
         /** LoadReport */
         LoadReport: {
@@ -303,6 +362,74 @@ export interface components {
              * @description Age of the oldest waiting request; null if none.
              */
             oldest_pending_hours: number | null;
+        };
+        /** Overview */
+        Overview: {
+            /**
+             * As Of
+             * Format: date-time
+             */
+            as_of: string;
+            /**
+             * Since
+             * Format: date-time
+             */
+            since: string;
+            /** Window Days */
+            window_days: number;
+            /**
+             * Escape Rate Floor
+             * @description An escape rate at or above this scores 0 on the escapes part.
+             */
+            escape_rate_floor: number;
+            /**
+             * Top2 Share Threshold
+             * @description Load balance scores 100 while the top two do at most this share.
+             */
+            top2_share_threshold: number;
+            /**
+             * Stale After Hours
+             * @description Responsiveness counts a request answered within this many hours.
+             */
+            stale_after_hours: number;
+            /** Score */
+            score: number | null;
+            /** Parts */
+            parts: components["schemas"]["HealthPart"][];
+            kpis: components["schemas"]["OverviewKpis"];
+            /**
+             * Trend
+             * @description The score as it stood at the end of each of the last `weeks` weeks, oldest first. Earlier weeks whose window starts before the first PR are left out; the last point is always `as_of`.
+             */
+            trend: components["schemas"]["HealthSnapshot"][];
+        };
+        /** OverviewKpis */
+        OverviewKpis: {
+            /**
+             * Open Flags
+             * @description Flags not yet acknowledged or dismissed, at any age.
+             */
+            open_flags: number;
+            /**
+             * Prs Merged
+             * @description PRs merged in the window.
+             */
+            prs_merged: number;
+            /**
+             * Median Hours To First Review
+             * @description PRs opened in the window: median hours until someone other than the author reviewed.
+             */
+            median_hours_to_first_review: number | null;
+            /**
+             * Waiting Reviews
+             * @description Review requests still unanswered on unmerged PRs.
+             */
+            waiting_reviews: number;
+            /**
+             * Stale Reviews
+             * @description Of those, how many have waited past the stale threshold.
+             */
+            stale_reviews: number;
         };
         /** PatternOut */
         PatternOut: {
@@ -763,6 +890,41 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["QualityReport"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_overview_api_overview_get: {
+        parameters: {
+            query?: {
+                /** @description How many weeks of score history to include. */
+                weeks?: number;
+            };
+            header?: {
+                /** @description Who is viewing. Demo only: there is no real auth. */
+                "x-viewer-id"?: number | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Overview"];
                 };
             };
             /** @description Validation Error */

@@ -455,6 +455,72 @@
         }
       }
     },
+    "/api/overview": {
+      "get": {
+        "tags": [
+          "overview"
+        ],
+        "summary": "Get Overview",
+        "description": "Team health score with its five parts, KPI tiles and the weekly score trend. Manager only.",
+        "operationId": "get_overview_api_overview_get",
+        "parameters": [
+          {
+            "name": "weeks",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 52,
+              "minimum": 1,
+              "description": "How many weeks of score history to include.",
+              "default": 12,
+              "title": "Weeks"
+            },
+            "description": "How many weeks of score history to include."
+          },
+          {
+            "name": "x-viewer-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Who is viewing. Demo only: there is no real auth.",
+              "title": "X-Viewer-Id"
+            },
+            "description": "Who is viewing. Demo only: there is no real auth."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Overview"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/health": {
       "get": {
         "summary": "Health",
@@ -637,6 +703,59 @@
         "type": "object",
         "title": "HTTPValidationError"
       },
+      "HealthPart": {
+        "properties": {
+          "key": {
+            "$ref": "#/components/schemas/HealthPartKey"
+          },
+          "weight": {
+            "type": "number",
+            "title": "Weight"
+          },
+          "good": {
+            "type": "integer",
+            "title": "Good",
+            "description": "coverage: merged PRs approved by someone other than the author before merging; depth: big-PR approvals that are not rubber stamps; escapes: approved merged PRs with no revert or hotfix; responsiveness: review requests answered (or the PR merged) within the stale threshold; load_balance: reviews done by everyone except the two busiest developers."
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "score": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Score",
+            "description": "0-100; null when there was nothing to measure, and the other parts share its weight."
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "weight",
+          "good",
+          "total",
+          "score"
+        ],
+        "title": "HealthPart",
+        "description": "One part of the health score. `good` of `total` went well; how that maps to `score` depends on the part."
+      },
+      "HealthPartKey": {
+        "type": "string",
+        "enum": [
+          "coverage",
+          "depth",
+          "escapes",
+          "responsiveness",
+          "load_balance"
+        ],
+        "title": "HealthPartKey"
+      },
       "HealthResponse": {
         "properties": {
           "status": {
@@ -649,6 +768,33 @@
           "status"
         ],
         "title": "HealthResponse"
+      },
+      "HealthSnapshot": {
+        "properties": {
+          "as_of": {
+            "type": "string",
+            "format": "date-time",
+            "title": "As Of"
+          },
+          "score": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Score",
+            "description": "Weighted average of the parts' scores, 0-100; null when no part could be measured."
+          }
+        },
+        "type": "object",
+        "required": [
+          "as_of",
+          "score"
+        ],
+        "title": "HealthSnapshot"
       },
       "LoadReport": {
         "properties": {
@@ -790,6 +936,127 @@
           "oldest_pending_hours"
         ],
         "title": "LoadRow"
+      },
+      "Overview": {
+        "properties": {
+          "as_of": {
+            "type": "string",
+            "format": "date-time",
+            "title": "As Of"
+          },
+          "since": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Since"
+          },
+          "window_days": {
+            "type": "integer",
+            "title": "Window Days"
+          },
+          "escape_rate_floor": {
+            "type": "number",
+            "title": "Escape Rate Floor",
+            "description": "An escape rate at or above this scores 0 on the escapes part."
+          },
+          "top2_share_threshold": {
+            "type": "number",
+            "title": "Top2 Share Threshold",
+            "description": "Load balance scores 100 while the top two do at most this share."
+          },
+          "stale_after_hours": {
+            "type": "integer",
+            "title": "Stale After Hours",
+            "description": "Responsiveness counts a request answered within this many hours."
+          },
+          "score": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Score"
+          },
+          "parts": {
+            "items": {
+              "$ref": "#/components/schemas/HealthPart"
+            },
+            "type": "array",
+            "title": "Parts"
+          },
+          "kpis": {
+            "$ref": "#/components/schemas/OverviewKpis"
+          },
+          "trend": {
+            "items": {
+              "$ref": "#/components/schemas/HealthSnapshot"
+            },
+            "type": "array",
+            "title": "Trend",
+            "description": "The score as it stood at the end of each of the last `weeks` weeks, oldest first. Earlier weeks whose window starts before the first PR are left out; the last point is always `as_of`."
+          }
+        },
+        "type": "object",
+        "required": [
+          "as_of",
+          "since",
+          "window_days",
+          "escape_rate_floor",
+          "top2_share_threshold",
+          "stale_after_hours",
+          "score",
+          "parts",
+          "kpis",
+          "trend"
+        ],
+        "title": "Overview"
+      },
+      "OverviewKpis": {
+        "properties": {
+          "open_flags": {
+            "type": "integer",
+            "title": "Open Flags",
+            "description": "Flags not yet acknowledged or dismissed, at any age."
+          },
+          "prs_merged": {
+            "type": "integer",
+            "title": "Prs Merged",
+            "description": "PRs merged in the window."
+          },
+          "median_hours_to_first_review": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Hours To First Review",
+            "description": "PRs opened in the window: median hours until someone other than the author reviewed."
+          },
+          "waiting_reviews": {
+            "type": "integer",
+            "title": "Waiting Reviews",
+            "description": "Review requests still unanswered on unmerged PRs."
+          },
+          "stale_reviews": {
+            "type": "integer",
+            "title": "Stale Reviews",
+            "description": "Of those, how many have waited past the stale threshold."
+          }
+        },
+        "type": "object",
+        "required": [
+          "open_flags",
+          "prs_merged",
+          "median_hours_to_first_review",
+          "waiting_reviews",
+          "stale_reviews"
+        ],
+        "title": "OverviewKpis"
       },
       "PatternOut": {
         "properties": {
