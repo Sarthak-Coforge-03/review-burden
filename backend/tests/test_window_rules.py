@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, timezone
 
 from backend.models import Developer, PullRequest, Review, ReviewRequest, ReviewState, Role
 from backend.rules.params import DEFAULT_PARAMS
-from backend.rules.window_rules import load_concentration, stale_backlog
+from backend.rules.window_rules import load_concentration, review_load, stale_backlog
 
 NOW = datetime(2026, 10, 9, 18, 0, tzinfo=timezone.utc)
 H = timedelta(hours=1)
@@ -116,3 +116,18 @@ def test_manager_and_out_of_window_reviews_are_ignored():
 
 def test_no_reviews_is_not_flagged():
     assert not load_concentration([], team(4), NOW, DEFAULT_PARAMS)
+
+
+def test_review_load_reports_the_numbers_the_rule_uses():
+    load = review_load(reviews_by({2: 20, 3: 5, 4: 4, 5: 5, 6: 6}), team(5), NOW, DEFAULT_PARAMS)
+    assert load.counts == {2: 20, 3: 5, 4: 4, 5: 5, 6: 6}
+    assert (load.total, load.median, load.over_median_multiple, load.concentrated) == (40, 5, [2], True)
+    assert load.top2_share == 26 / 40
+
+
+def test_review_load_with_no_reviews():
+    load = review_load([], team(2), NOW, DEFAULT_PARAMS)
+    assert load.counts == {2: 0, 3: 0}
+    assert (load.total, load.top2_share, load.median, load.over_median_multiple, load.concentrated) == (
+        0, 0.0, 0, [], False,
+    )
