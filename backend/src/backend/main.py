@@ -1,3 +1,5 @@
+"""FastAPI application: CORS and route registration. All routes live under /api."""
+
 import os
 
 from fastapi import FastAPI
