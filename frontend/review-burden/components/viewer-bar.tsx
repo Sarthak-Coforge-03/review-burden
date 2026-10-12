@@ -1,8 +1,7 @@
-import { apiFetch } from "@/lib/api";
-import { getViewerId } from "@/lib/viewer";
+import { loadViewer } from "@/lib/people";
 
 import { NavLinks, type NavItem } from "./nav-links";
-import { RoleSwitcher, type ViewerOption } from "./role-switcher";
+import { RoleSwitcher } from "./role-switcher";
 
 const MANAGER_NAV: NavItem[] = [
   { href: "/", label: "Overview" },
@@ -15,27 +14,14 @@ const MANAGER_NAV: NavItem[] = [
 
 const DEV_NAV: NavItem[] = [{ href: "/me", label: "My review debt and flags" }];
 
-/** Fetched without `X-Viewer-Id` so a developer viewer can still switch back to the manager. */
-async function loadRoster(): Promise<ViewerOption[] | null> {
-  try {
-    return await apiFetch<ViewerOption[]>("/api/people", { asViewer: false });
-  } catch {
-    return null;
-  }
-}
-
 /** Nav and role switcher for the current viewer. Defaults to the manager when no viewer is chosen. */
 export async function ViewerBar() {
-  const [people, viewerId] = await Promise.all([loadRoster(), getViewerId()]);
-  const current =
-    people?.find((p) => p.id === viewerId) ??
-    people?.find((p) => p.role === "manager") ??
-    null;
+  const { people, viewer: current } = await loadViewer();
   const nav = current?.role === "dev" ? DEV_NAV : MANAGER_NAV;
 
   return (
     <>
-      <nav className="flex-1 min-w-0">
+      <nav className="flex-1 min-w-0 overflow-x-auto">
         <NavLinks items={nav} />
       </nav>
       <div className="flex-none">

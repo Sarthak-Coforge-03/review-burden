@@ -3,15 +3,10 @@
 import { useTransition } from "react";
 
 import { setViewer } from "@/app/actions";
-
-export type ViewerOption = {
-  id: number;
-  name: string;
-  role: "manager" | "dev";
-};
+import type { Person } from "@/lib/api-types";
 
 type RoleSwitcherProps = {
-  people: ViewerOption[] | null;
+  people: Person[] | null;
   currentId: number | null;
 };
 
@@ -40,7 +35,7 @@ export function RoleSwitcher({ people, currentId }: RoleSwitcherProps) {
 
   return (
     <label className="flex items-center gap-2 text-sm">
-      <span className="opacity-70 whitespace-nowrap">Viewing as</span>
+      <span className="hidden xl:inline opacity-70 whitespace-nowrap">Viewing as</span>
       <select
         className="select select-sm w-44"
         value={currentId ?? ""}
