@@ -17,3 +17,5 @@ export type PendingReview = Schemas["PendingReview"];
 export type ReviewActivity = Schemas["ReviewActivity"];
 export type LoadReport = Schemas["LoadReport"];
 export type LoadRow = Schemas["LoadRow"];
+export type QualityReport = Schemas["QualityReport"];
+export type QualityRow = Schemas["QualityRow"];

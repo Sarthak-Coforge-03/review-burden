@@ -124,6 +124,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/quality": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Quality
+         * @description Per reviewer: approval speed, comment depth, rubber stamps and escapes, with team medians. Manager only.
+         */
+        get: operations["get_quality_api_quality_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/health": {
         parameters: {
             query?: never;
@@ -347,6 +367,104 @@ export interface components {
             title: string;
             /** Author Id */
             author_id: number;
+        };
+        /**
+         * QualityMedians
+         * @description Medians across developers who have a value; null when nobody does.
+         */
+        QualityMedians: {
+            /** Minutes Per 100 Lines */
+            minutes_per_100_lines: number | null;
+            /** Comments Per 100 Lines */
+            comments_per_100_lines: number | null;
+            /** Substantive Share */
+            substantive_share: number | null;
+            /** Escape Rate */
+            escape_rate: number | null;
+        };
+        /** QualityReport */
+        QualityReport: {
+            /**
+             * As Of
+             * Format: date-time
+             */
+            as_of: string;
+            /**
+             * Since
+             * Format: date-time
+             */
+            since: string;
+            /** Weeks */
+            weeks: number;
+            /**
+             * Big Pr Lines
+             * @description The rubber_stamp rule's size threshold.
+             */
+            big_pr_lines: number;
+            /** Escape Window Days */
+            escape_window_days: number;
+            medians: components["schemas"]["QualityMedians"];
+            /**
+             * People
+             * @description Developers, by name.
+             */
+            people: components["schemas"]["QualityRow"][];
+        };
+        /** QualityRow */
+        QualityRow: {
+            person: components["schemas"]["Person"];
+            /**
+             * Reviews
+             * @description Reviews submitted in the period, any verdict.
+             */
+            reviews: number;
+            /**
+             * Approvals
+             * @description PRs approved in the period (a re-approval of the same PR counts once).
+             */
+            approvals: number;
+            /**
+             * Minutes Per 100 Lines
+             * @description Median minutes from PR opened to first approval, per 100 changed lines; null with no approvals.
+             */
+            minutes_per_100_lines: number | null;
+            /** Comments */
+            comments: number;
+            /**
+             * Comments Per 100 Lines
+             * @description Comments per 100 lines of the PRs reviewed.
+             */
+            comments_per_100_lines: number | null;
+            /**
+             * Substantive Share
+             * @description Share of comments that are substantive (the rubber_stamp rule's test); null with no comments.
+             */
+            substantive_share: number | null;
+            /**
+             * Big Approvals
+             * @description Approved PRs at or over the rubber_stamp size threshold.
+             */
+            big_approvals: number;
+            /**
+             * Stamped Big Approvals
+             * @description Of those, how many the rubber_stamp rule would flag.
+             */
+            stamped_big_approvals: number;
+            /**
+             * Approved Merged
+             * @description Approved PRs merged by as_of.
+             */
+            approved_merged: number;
+            /**
+             * Escapes
+             * @description Of those, how many needed a revert or hotfix within the escape window.
+             */
+            escapes: number;
+            /**
+             * Escape Rate
+             * @description escapes / approved_merged; null when nothing approved was merged.
+             */
+            escape_rate: number | null;
         };
         /** ReviewActivity */
         ReviewActivity: {
@@ -610,6 +728,41 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["LoadReport"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_quality_api_quality_get: {
+        parameters: {
+            query?: {
+                /** @description How many weeks of reviews to include. */
+                weeks?: number;
+            };
+            header?: {
+                /** @description Who is viewing. Demo only: there is no real auth. */
+                "x-viewer-id"?: number | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QualityReport"];
                 };
             };
             /** @description Validation Error */

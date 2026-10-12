@@ -14,20 +14,7 @@ import {
   YAxis,
 } from "recharts";
 
-export type ChartPerson = { id: number; name: string; heavy: boolean };
-
-const HEAVY = "var(--color-error)";
-const PALETTE = ["#60a5fa", "#34d399", "#fbbf24", "#a78bfa", "#f472b6", "#2dd4bf", "#fb923c", "#94a3b8"];
-const AXIS = { stroke: "currentColor", fontSize: 12, opacity: 0.7 };
-const TOOLTIP = {
-  contentStyle: { background: "var(--color-base-100)", border: "1px solid var(--color-base-300)" },
-  labelStyle: { color: "var(--color-base-content)" },
-};
-
-function colors(people: ChartPerson[]): Map<number, string> {
-  let next = 0;
-  return new Map(people.map((p) => [p.id, p.heavy ? HEAVY : PALETTE[next++ % PALETTE.length]]));
-}
+import { AXIS, type ChartPerson, colors, HEAVY, TOOLTIP } from "@/components/chart-theme";
 
 /** One line per developer; `weeks` rows are keyed by person id. */
 export function WeeklyReviewsChart({

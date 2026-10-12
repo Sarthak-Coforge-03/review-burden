@@ -111,6 +111,44 @@ class LoadReport(BaseModel):
     people: list[LoadRow] = Field(description="Developers, busiest reviewer first.")
 
 
+class QualityRow(BaseModel):
+    person: Person
+    reviews: int = Field(description="Reviews submitted in the period, any verdict.")
+    approvals: int = Field(description="PRs approved in the period (a re-approval of the same PR counts once).")
+    minutes_per_100_lines: float | None = Field(
+        description="Median minutes from PR opened to first approval, per 100 changed lines; null with no approvals."
+    )
+    comments: int
+    comments_per_100_lines: float | None = Field(description="Comments per 100 lines of the PRs reviewed.")
+    substantive_share: float | None = Field(
+        description="Share of comments that are substantive (the rubber_stamp rule's test); null with no comments."
+    )
+    big_approvals: int = Field(description="Approved PRs at or over the rubber_stamp size threshold.")
+    stamped_big_approvals: int = Field(description="Of those, how many the rubber_stamp rule would flag.")
+    approved_merged: int = Field(description="Approved PRs merged by as_of.")
+    escapes: int = Field(description="Of those, how many needed a revert or hotfix within the escape window.")
+    escape_rate: float | None = Field(description="escapes / approved_merged; null when nothing approved was merged.")
+
+
+class QualityMedians(BaseModel):
+    """Medians across developers who have a value; null when nobody does."""
+
+    minutes_per_100_lines: float | None
+    comments_per_100_lines: float | None
+    substantive_share: float | None
+    escape_rate: float | None
+
+
+class QualityReport(BaseModel):
+    as_of: datetime
+    since: datetime
+    weeks: int
+    big_pr_lines: int = Field(description="The rubber_stamp rule's size threshold.")
+    escape_window_days: int
+    medians: QualityMedians
+    people: list[QualityRow] = Field(description="Developers, by name.")
+
+
 class FlagUpdate(BaseModel):
     status: FlagStatus
     note: str | None = Field(
