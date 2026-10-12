@@ -3,10 +3,9 @@ from fastapi import status as http
 from sqlalchemy import select
 
 from backend import clock
-from backend.deps import ManagerDep, SessionDep, ViewerDep
+from backend.deps import ManagerDep, ParamsDep, SessionDep, ViewerDep
 from backend.models import Developer, Role
 from backend.profiles import build_profiles
-from backend.rules.params import DEFAULT_PARAMS
 from backend.schemas import Person, PersonProfile
 
 router = APIRouter(prefix="/api/people", tags=["people"])
@@ -20,19 +19,19 @@ def list_people(session: SessionDep) -> list[Person]:
 
 
 @router.get("/profiles")
-def list_profiles(session: SessionDep, _manager: ManagerDep) -> list[PersonProfile]:
+def list_profiles(session: SessionDep, _manager: ManagerDep, params: ParamsDep) -> list[PersonProfile]:
     """Every developer's profile, by name. Manager only."""
     developers = session.scalars(select(Developer).where(Developer.role == Role.dev).order_by(Developer.name)).all()
-    return build_profiles(session, developers, clock.now(), DEFAULT_PARAMS)
+    return build_profiles(session, developers, clock.now(), params)
 
 
 @router.get("/{person_id}/profile")
-def get_profile(person_id: int, session: SessionDep, viewer: ViewerDep) -> PersonProfile:
+def get_profile(person_id: int, session: SessionDep, viewer: ViewerDep, params: ParamsDep) -> PersonProfile:
     """One person's profile. The manager can see anyone's; a developer only their own."""
     if viewer.role != Role.manager and viewer.id != person_id:
         raise HTTPException(http.HTTP_403_FORBIDDEN, "Developers can only see their own profile")
     person = session.get(Developer, person_id)
     if person is None:
         raise HTTPException(http.HTTP_404_NOT_FOUND, "Person not found")
-    [profile] = build_profiles(session, [person], clock.now(), DEFAULT_PARAMS)
+    [profile] = build_profiles(session, [person], clock.now(), params)
     return profile

@@ -521,6 +521,220 @@
         }
       }
     },
+    "/api/settings": {
+      "get": {
+        "tags": [
+          "settings"
+        ],
+        "summary": "Get Settings",
+        "description": "The rule thresholds and health score weights in effect, and their defaults. Manager only.",
+        "operationId": "get_settings_api_settings_get",
+        "parameters": [
+          {
+            "name": "x-viewer-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Who is viewing. Demo only: there is no real auth.",
+              "title": "X-Viewer-Id"
+            },
+            "description": "Who is viewing. Demo only: there is no real auth."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettingsOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "settings"
+        ],
+        "summary": "Save Settings",
+        "description": "Save every setting and re-run the rules with them. Manager only.",
+        "operationId": "save_settings_api_settings_put",
+        "parameters": [
+          {
+            "name": "x-viewer-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Who is viewing. Demo only: there is no real auth.",
+              "title": "X-Viewer-Id"
+            },
+            "description": "Who is viewing. Demo only: there is no real auth."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RuleSettings"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettingsSaved"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "settings"
+        ],
+        "summary": "Reset Settings",
+        "description": "Go back to the defaults and re-run the rules. Manager only.",
+        "operationId": "reset_settings_api_settings_delete",
+        "parameters": [
+          {
+            "name": "x-viewer-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Who is viewing. Demo only: there is no real auth.",
+              "title": "X-Viewer-Id"
+            },
+            "description": "Who is viewing. Demo only: there is no real auth."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettingsSaved"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/settings/run-engine": {
+      "post": {
+        "tags": [
+          "settings"
+        ],
+        "summary": "Rerun Engine",
+        "description": "Re-run the rules with the current settings, as of now. Manager only.",
+        "operationId": "rerun_engine_api_settings_run_engine_post",
+        "parameters": [
+          {
+            "name": "x-viewer-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Who is viewing. Demo only: there is no real auth.",
+              "title": "X-Viewer-Id"
+            },
+            "description": "Who is viewing. Demo only: there is no real auth."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EngineRun"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/health": {
       "get": {
         "summary": "Health",
@@ -542,6 +756,41 @@
   },
   "components": {
     "schemas": {
+      "EngineRun": {
+        "properties": {
+          "created": {
+            "type": "integer",
+            "title": "Created"
+          },
+          "updated": {
+            "type": "integer",
+            "title": "Updated"
+          },
+          "removed": {
+            "type": "integer",
+            "title": "Removed"
+          },
+          "kept_triaged": {
+            "type": "integer",
+            "title": "Kept Triaged"
+          },
+          "open_flags": {
+            "type": "integer",
+            "title": "Open Flags",
+            "description": "Open flags after the run."
+          }
+        },
+        "type": "object",
+        "required": [
+          "created",
+          "updated",
+          "removed",
+          "kept_triaged",
+          "open_flags"
+        ],
+        "title": "EngineRun",
+        "description": "What re-running the rules changed. Open flags that no longer fire are removed; triaged ones are kept."
+      },
       "FlagOut": {
         "properties": {
           "id": {
@@ -1527,6 +1776,201 @@
           "load_concentration"
         ],
         "title": "RuleKey"
+      },
+      "RuleSettings": {
+        "properties": {
+          "rubber_stamp_min_lines": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Rubber Stamp Min Lines",
+            "description": "rubber_stamp: PRs with at least this many changed lines."
+          },
+          "rubber_stamp_max_seconds": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Rubber Stamp Max Seconds",
+            "description": "rubber_stamp: an approval faster than this is a stamp."
+          },
+          "substantive_min_chars": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Substantive Min Chars",
+            "description": "Substantive: a line comment at least this long..."
+          },
+          "stock_phrases": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Stock Phrases",
+            "description": "...and not one of these phrases (case-insensitive). Sorted, unique."
+          },
+          "escape_window_days": {
+            "type": "integer",
+            "maximum": 365.0,
+            "minimum": 1.0,
+            "title": "Escape Window Days",
+            "description": "escape: a fix within this many days of merge."
+          },
+          "stale_after_hours": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Stale After Hours",
+            "description": "stale_backlog: a review request unanswered for longer than this."
+          },
+          "load_window_days": {
+            "type": "integer",
+            "maximum": 365.0,
+            "minimum": 1.0,
+            "title": "Load Window Days",
+            "description": "load_concentration: window in days."
+          },
+          "load_top2_share": {
+            "type": "number",
+            "exclusiveMaximum": 1.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Load Top2 Share",
+            "description": "load_concentration: top two reviewers above this share."
+          },
+          "load_median_multiple": {
+            "type": "number",
+            "minimum": 1.0,
+            "title": "Load Median Multiple",
+            "description": "load_concentration: or anyone above this × median."
+          },
+          "pattern_window_days": {
+            "type": "integer",
+            "maximum": 365.0,
+            "minimum": 1.0,
+            "title": "Pattern Window Days",
+            "description": "Repeat pattern: flags of one rule in this window..."
+          },
+          "pattern_min_count": {
+            "type": "integer",
+            "minimum": 2.0,
+            "title": "Pattern Min Count",
+            "description": "...at least this many times."
+          },
+          "self_approval_pattern_window_days": {
+            "type": "integer",
+            "maximum": 365.0,
+            "minimum": 1.0,
+            "title": "Self Approval Pattern Window Days",
+            "description": "The same, for self-approvals."
+          },
+          "self_approval_pattern_min_count": {
+            "type": "integer",
+            "minimum": 2.0,
+            "title": "Self Approval Pattern Min Count"
+          },
+          "health_window_days": {
+            "type": "integer",
+            "maximum": 365.0,
+            "minimum": 1.0,
+            "title": "Health Window Days",
+            "description": "Health score: measured over this many days."
+          },
+          "health_weight_coverage": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Health Weight Coverage"
+          },
+          "health_weight_depth": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Health Weight Depth"
+          },
+          "health_weight_escapes": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Health Weight Escapes"
+          },
+          "health_weight_responsiveness": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Health Weight Responsiveness"
+          },
+          "health_weight_load_balance": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Health Weight Load Balance"
+          },
+          "health_escape_rate_floor": {
+            "type": "number",
+            "maximum": 1.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Health Escape Rate Floor",
+            "description": "Health score: an escape rate this high scores 0."
+          }
+        },
+        "type": "object",
+        "required": [
+          "rubber_stamp_min_lines",
+          "rubber_stamp_max_seconds",
+          "substantive_min_chars",
+          "stock_phrases",
+          "escape_window_days",
+          "stale_after_hours",
+          "load_window_days",
+          "load_top2_share",
+          "load_median_multiple",
+          "pattern_window_days",
+          "pattern_min_count",
+          "self_approval_pattern_window_days",
+          "self_approval_pattern_min_count",
+          "health_window_days",
+          "health_weight_coverage",
+          "health_weight_depth",
+          "health_weight_escapes",
+          "health_weight_responsiveness",
+          "health_weight_load_balance",
+          "health_escape_rate_floor"
+        ],
+        "title": "RuleSettings",
+        "description": "Every rule threshold and health score weight; the same fields as the backend's RuleParams."
+      },
+      "SettingsOut": {
+        "properties": {
+          "values": {
+            "$ref": "#/components/schemas/RuleSettings",
+            "description": "The settings in effect."
+          },
+          "defaults": {
+            "$ref": "#/components/schemas/RuleSettings"
+          }
+        },
+        "type": "object",
+        "required": [
+          "values",
+          "defaults"
+        ],
+        "title": "SettingsOut"
+      },
+      "SettingsSaved": {
+        "properties": {
+          "values": {
+            "$ref": "#/components/schemas/RuleSettings",
+            "description": "The settings in effect."
+          },
+          "defaults": {
+            "$ref": "#/components/schemas/RuleSettings"
+          },
+          "engine": {
+            "$ref": "#/components/schemas/EngineRun"
+          }
+        },
+        "type": "object",
+        "required": [
+          "values",
+          "defaults",
+          "engine"
+        ],
+        "title": "SettingsSaved"
       },
       "ValidationError": {
         "properties": {

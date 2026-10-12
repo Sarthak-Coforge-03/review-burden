@@ -164,6 +164,54 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Settings
+         * @description The rule thresholds and health score weights in effect, and their defaults. Manager only.
+         */
+        get: operations["get_settings_api_settings_get"];
+        /**
+         * Save Settings
+         * @description Save every setting and re-run the rules with them. Manager only.
+         */
+        put: operations["save_settings_api_settings_put"];
+        post?: never;
+        /**
+         * Reset Settings
+         * @description Go back to the defaults and re-run the rules. Manager only.
+         */
+        delete: operations["reset_settings_api_settings_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/settings/run-engine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Rerun Engine
+         * @description Re-run the rules with the current settings, as of now. Manager only.
+         */
+        post: operations["rerun_engine_api_settings_run_engine_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/health": {
         parameters: {
             query?: never;
@@ -185,6 +233,25 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * EngineRun
+         * @description What re-running the rules changed. Open flags that no longer fire are removed; triaged ones are kept.
+         */
+        EngineRun: {
+            /** Created */
+            created: number;
+            /** Updated */
+            updated: number;
+            /** Removed */
+            removed: number;
+            /** Kept Triaged */
+            kept_triaged: number;
+            /**
+             * Open Flags
+             * @description Open flags after the run.
+             */
+            open_flags: number;
+        };
         /** FlagOut */
         FlagOut: {
             /** Id */
@@ -651,6 +718,107 @@ export interface components {
          * @enum {string}
          */
         RuleKey: "merged_unreviewed" | "merged_changes_pending" | "self_approval" | "rubber_stamp" | "escape" | "stale_backlog" | "load_concentration";
+        /**
+         * RuleSettings
+         * @description Every rule threshold and health score weight; the same fields as the backend's RuleParams.
+         */
+        RuleSettings: {
+            /**
+             * Rubber Stamp Min Lines
+             * @description rubber_stamp: PRs with at least this many changed lines.
+             */
+            rubber_stamp_min_lines: number;
+            /**
+             * Rubber Stamp Max Seconds
+             * @description rubber_stamp: an approval faster than this is a stamp.
+             */
+            rubber_stamp_max_seconds: number;
+            /**
+             * Substantive Min Chars
+             * @description Substantive: a line comment at least this long...
+             */
+            substantive_min_chars: number;
+            /**
+             * Stock Phrases
+             * @description ...and not one of these phrases (case-insensitive). Sorted, unique.
+             */
+            stock_phrases: string[];
+            /**
+             * Escape Window Days
+             * @description escape: a fix within this many days of merge.
+             */
+            escape_window_days: number;
+            /**
+             * Stale After Hours
+             * @description stale_backlog: a review request unanswered for longer than this.
+             */
+            stale_after_hours: number;
+            /**
+             * Load Window Days
+             * @description load_concentration: window in days.
+             */
+            load_window_days: number;
+            /**
+             * Load Top2 Share
+             * @description load_concentration: top two reviewers above this share.
+             */
+            load_top2_share: number;
+            /**
+             * Load Median Multiple
+             * @description load_concentration: or anyone above this × median.
+             */
+            load_median_multiple: number;
+            /**
+             * Pattern Window Days
+             * @description Repeat pattern: flags of one rule in this window...
+             */
+            pattern_window_days: number;
+            /**
+             * Pattern Min Count
+             * @description ...at least this many times.
+             */
+            pattern_min_count: number;
+            /**
+             * Self Approval Pattern Window Days
+             * @description The same, for self-approvals.
+             */
+            self_approval_pattern_window_days: number;
+            /** Self Approval Pattern Min Count */
+            self_approval_pattern_min_count: number;
+            /**
+             * Health Window Days
+             * @description Health score: measured over this many days.
+             */
+            health_window_days: number;
+            /** Health Weight Coverage */
+            health_weight_coverage: number;
+            /** Health Weight Depth */
+            health_weight_depth: number;
+            /** Health Weight Escapes */
+            health_weight_escapes: number;
+            /** Health Weight Responsiveness */
+            health_weight_responsiveness: number;
+            /** Health Weight Load Balance */
+            health_weight_load_balance: number;
+            /**
+             * Health Escape Rate Floor
+             * @description Health score: an escape rate this high scores 0.
+             */
+            health_escape_rate_floor: number;
+        };
+        /** SettingsOut */
+        SettingsOut: {
+            /** @description The settings in effect. */
+            values: components["schemas"]["RuleSettings"];
+            defaults: components["schemas"]["RuleSettings"];
+        };
+        /** SettingsSaved */
+        SettingsSaved: {
+            /** @description The settings in effect. */
+            values: components["schemas"]["RuleSettings"];
+            defaults: components["schemas"]["RuleSettings"];
+            engine: components["schemas"]["EngineRun"];
+        };
         /** ValidationError */
         ValidationError: {
             /** Location */
@@ -925,6 +1093,138 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Overview"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_settings_api_settings_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Who is viewing. Demo only: there is no real auth. */
+                "x-viewer-id"?: number | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SettingsOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    save_settings_api_settings_put: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Who is viewing. Demo only: there is no real auth. */
+                "x-viewer-id"?: number | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RuleSettings"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SettingsSaved"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reset_settings_api_settings_delete: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Who is viewing. Demo only: there is no real auth. */
+                "x-viewer-id"?: number | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SettingsSaved"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    rerun_engine_api_settings_run_engine_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Who is viewing. Demo only: there is no real auth. */
+                "x-viewer-id"?: number | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EngineRun"];
                 };
             };
             /** @description Validation Error */

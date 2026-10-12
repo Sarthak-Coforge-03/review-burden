@@ -1,5 +1,6 @@
 """Replace everything in the database with the demo: data/seed.json, the flags the rule engine finds
-in it, and the starting triage from data/triage.json (read from next to the seed file, if present).
+in it with the default settings, and the starting triage from data/triage.json (read from next to the
+seed file, if present). Settings saved from the UI are cleared.
 
     python -m backend.seed [path/to/seed.json]
 """
@@ -27,6 +28,7 @@ from backend.models import (
     ReviewComment,
     ReviewRequest,
     RuleKey,
+    RuleParamOverride,
 )
 from backend.rules.engine import EngineResult, run_engine
 from backend.rules.params import DEFAULT_PARAMS
@@ -64,9 +66,10 @@ def _to_row(model: type[Base], record: dict[str, Any]) -> dict[str, Any]:
 
 
 def load_seed(session: Session, data: dict[str, Any]) -> dict[str, int]:
-    """Delete all rows, flags included, then insert `data`. Returns rows inserted per table.
+    """Delete all rows, flags and saved settings included, then insert `data`. Returns rows inserted per table.
     Caller owns the transaction."""
     session.execute(delete(Flag))
+    session.execute(delete(RuleParamOverride))
     for _, model in reversed(TABLES):
         session.execute(delete(model))
     counts = {}

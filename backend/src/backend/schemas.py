@@ -4,7 +4,7 @@ from datetime import datetime
 from enum import StrEnum
 from typing import Any, Self
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from backend.models import FlagRole, FlagStatus, Role, RuleKey
 
@@ -206,6 +206,65 @@ class Overview(BaseModel):
         description="The score as it stood at the end of each of the last `weeks` weeks, oldest first. "
         "Earlier weeks whose window starts before the first PR are left out; the last point is always `as_of`."
     )
+
+
+class RuleSettings(BaseModel):
+    """Every rule threshold and health score weight; the same fields as the backend's RuleParams."""
+
+    rubber_stamp_min_lines: int = Field(ge=1, description="rubber_stamp: PRs with at least this many changed lines.")
+    rubber_stamp_max_seconds: int = Field(ge=0, description="rubber_stamp: an approval faster than this is a stamp.")
+    substantive_min_chars: int = Field(ge=0, description="Substantive: a line comment at least this long...")
+    stock_phrases: list[str] = Field(description="...and not one of these phrases (case-insensitive). Sorted, unique.")
+    escape_window_days: int = Field(ge=1, le=365, description="escape: a fix within this many days of merge.")
+    stale_after_hours: int = Field(ge=1, description="stale_backlog: a review request unanswered for longer than this.")
+    load_window_days: int = Field(ge=1, le=365, description="load_concentration: window in days.")
+    load_top2_share: float = Field(gt=0, lt=1, description="load_concentration: top two reviewers above this share.")
+    load_median_multiple: float = Field(ge=1, description="load_concentration: or anyone above this × median.")
+    pattern_window_days: int = Field(ge=1, le=365, description="Repeat pattern: flags of one rule in this window...")
+    pattern_min_count: int = Field(ge=2, description="...at least this many times.")
+    self_approval_pattern_window_days: int = Field(ge=1, le=365, description="The same, for self-approvals.")
+    self_approval_pattern_min_count: int = Field(ge=2)
+    health_window_days: int = Field(ge=1, le=365, description="Health score: measured over this many days.")
+    health_weight_coverage: float = Field(ge=0, le=1)
+    health_weight_depth: float = Field(ge=0, le=1)
+    health_weight_escapes: float = Field(ge=0, le=1)
+    health_weight_responsiveness: float = Field(ge=0, le=1)
+    health_weight_load_balance: float = Field(ge=0, le=1)
+    health_escape_rate_floor: float = Field(gt=0, le=1, description="Health score: an escape rate this high scores 0.")
+
+    @field_validator("stock_phrases")
+    @classmethod
+    def _normalize_phrases(cls, phrases: list[str]) -> list[str]:
+        return sorted({p.strip().lower() for p in phrases if p.strip()})
+
+    @model_validator(mode="after")
+    def _weights_add_up(self) -> Self:
+        total = (
+            self.health_weight_coverage + self.health_weight_depth + self.health_weight_escapes
+            + self.health_weight_responsiveness + self.health_weight_load_balance
+        )
+        if abs(total - 1) > 0.001:
+            raise ValueError(f"the health score weights must add up to 100%, not {total:.0%}")
+        return self
+
+
+class SettingsOut(BaseModel):
+    values: RuleSettings = Field(description="The settings in effect.")
+    defaults: RuleSettings
+
+
+class EngineRun(BaseModel):
+    """What re-running the rules changed. Open flags that no longer fire are removed; triaged ones are kept."""
+
+    created: int
+    updated: int
+    removed: int
+    kept_triaged: int
+    open_flags: int = Field(description="Open flags after the run.")
+
+
+class SettingsSaved(SettingsOut):
+    engine: EngineRun
 
 
 class FlagUpdate(BaseModel):

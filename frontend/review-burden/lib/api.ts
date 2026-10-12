@@ -9,6 +9,8 @@ export class ApiError extends Error {
   constructor(
     readonly status: number,
     readonly path: string,
+    /** The parsed JSON error body (FastAPI's `{detail: ...}`), or null if there was none. */
+    readonly body: unknown = null,
   ) {
     super(`API ${path} responded ${status}`);
   }
@@ -33,6 +35,6 @@ export async function apiFetch<T>(
     if (viewerId !== null) requestHeaders.set("X-Viewer-Id", String(viewerId));
   }
   const res = await fetch(`${API_URL}${path}`, { ...init, headers: requestHeaders });
-  if (!res.ok) throw new ApiError(res.status, path);
+  if (!res.ok) throw new ApiError(res.status, path, await res.json().catch(() => null));
   return (await res.json()) as T;
 }

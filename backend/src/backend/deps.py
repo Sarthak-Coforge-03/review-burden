@@ -1,4 +1,4 @@
-"""Shared FastAPI dependencies: the database session and the current viewer."""
+"""Shared FastAPI dependencies: the database session, the current viewer and the rule parameters in effect."""
 
 from typing import Annotated
 
@@ -8,8 +8,17 @@ from sqlalchemy.orm import Session
 
 from backend.db import get_session
 from backend.models import Developer, Role
+from backend.params_store import load_params
+from backend.rules.params import RuleParams
 
 SessionDep = Annotated[Session, Depends(get_session)]
+
+
+def get_params(session: SessionDep) -> RuleParams:
+    return load_params(session)
+
+
+ParamsDep = Annotated[RuleParams, Depends(get_params)]
 
 
 def get_viewer(
