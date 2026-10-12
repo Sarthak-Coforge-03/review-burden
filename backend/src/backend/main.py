@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from backend.db import create_tables
-from backend.routes import people
+from backend.routes import flags, people
 
 
 @asynccontextmanager
@@ -28,6 +28,7 @@ app.add_middleware(
 )
 
 app.include_router(people.router)
+app.include_router(flags.router)
 
 
 class HealthResponse(BaseModel):
