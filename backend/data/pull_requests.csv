@@ -1,0 +1,254 @@
+id,title,author_id,merged_by_id,opened_at,merged_at,additions,deletions,fixes_pr_id,kind
+1,perf(onboarding): add feature flag for api,6,6,2026-07-20T08:36:51Z,2026-07-21T01:02:32Z,51,10,,normal
+2,perf(onboarding): improve error messages in billing,3,2,2026-07-20T16:16:08Z,2026-07-20T23:41:46Z,21,11,,normal
+3,chore(search): retry failed calls in search,4,4,2026-07-21T10:48:31Z,2026-07-22T04:31:26Z,59,36,,normal
+4,refactor(settings): migrate dashboard to the new client,4,2,2026-07-21T11:34:24Z,2026-07-21T17:18:04Z,10,4,,normal
+5,perf(api): tighten permissions for billing,5,5,2026-07-21T12:55:28Z,2026-07-22T00:13:13Z,126,35,,normal
+6,perf(audit-log): validate input for uploads,3,3,2026-07-21T14:37:20Z,2026-07-22T09:43:34Z,131,81,,normal
+7,fix(settings): cache lookups for scheduler,4,4,2026-07-22T08:38:14Z,2026-07-22T16:28:44Z,28,7,,normal
+8,feat(settings): retry failed calls in notifications,5,2,2026-07-23T11:14:37Z,2026-07-24T14:54:41Z,143,31,,normal
+9,feat(settings): fix timezone handling in onboarding,7,7,2026-07-24T10:06:23Z,2026-07-24T11:50:10Z,57,19,,normal
+10,perf(billing): add feature flag for notifications,6,6,2026-07-24T12:14:20Z,2026-07-24T16:51:26Z,101,25,,normal
+11,refactor(api): tighten permissions for audit-log,6,6,2026-07-24T14:22:04Z,2026-07-25T19:49:13Z,46,15,,normal
+12,feat(onboarding): retry failed calls in uploads,2,2,2026-07-24T15:38:14Z,2026-07-25T00:50:03Z,59,19,,normal
+13,refactor(webhooks): fix timezone handling in dashboard,3,1,2026-07-24T16:14:24Z,2026-07-25T18:22:04Z,32,10,,normal
+14,perf(billing): remove dead code from billing,3,3,2026-07-27T11:21:31Z,2026-07-27T22:32:14Z,30,19,,normal
+15,feat(webhooks): add metrics to api,2,2,2026-07-27T15:15:24Z,2026-07-28T09:29:00Z,25,5,,normal
+16,chore(auth): add pagination to cache,2,3,2026-07-27T16:40:08Z,2026-07-28T05:50:40Z,56,15,,normal
+17,fix(export): add feature flag for dashboard,4,4,2026-07-28T12:41:28Z,2026-07-28T19:46:14Z,12,5,,normal
+18,fix(export): split settings into smaller modules,6,6,2026-07-28T14:52:33Z,2026-07-28T20:43:15Z,73,25,,normal
+19,refactor(reports): speed up queries in billing,4,4,2026-07-28T15:32:45Z,2026-07-28T21:14:35Z,84,55,,normal
+20,refactor(billing): cache lookups for notifications,2,2,2026-07-28T16:03:19Z,2026-07-29T03:05:16Z,54,32,,normal
+21,refactor(audit-log): improve error messages in export,4,2,2026-07-28T16:50:24Z,2026-07-29T00:59:53Z,44,24,,normal
+22,feat(auth): cache lookups for auth,4,1,2026-07-29T09:16:43Z,2026-07-30T02:33:01Z,31,16,,normal
+23,refactor(dashboard): fix timezone handling in reports,8,8,2026-07-29T14:11:52Z,2026-07-29T16:51:19Z,426,81,,normal
+24,chore(notifications): fix timezone handling in search,4,4,2026-07-30T08:27:06Z,2026-07-30T15:27:30Z,38,16,,normal
+25,fix(dashboard): fix timezone handling in settings,4,4,2026-07-30T14:44:47Z,2026-07-30T20:53:54Z,42,14,,normal
+26,refactor(uploads): validate input for scheduler,7,1,2026-07-31T11:15:53Z,2026-07-31T22:36:21Z,34,10,,normal
+27,perf(export): remove dead code from uploads,4,4,2026-07-31T13:58:28Z,2026-08-01T04:32:55Z,830,288,,normal
+28,feat(uploads): support bulk edits in audit-log,4,4,2026-08-03T12:26:11Z,2026-08-04T03:38:18Z,77,35,,normal
+29,perf(webhooks): add pagination to api,5,5,2026-08-03T14:20:17Z,2026-08-03T17:47:07Z,194,36,,normal
+30,chore(reports): tweak log level,6,6,2026-08-03T16:25:21Z,2026-08-03T16:31:29Z,5,4,,normal
+31,fix(auth): tighten permissions for auth,6,6,2026-08-03T17:09:56Z,2026-08-04T07:18:52Z,25,7,,normal
+32,fix(search): speed up queries in api,7,7,2026-08-04T08:32:05Z,2026-08-04T23:34:47Z,288,145,,normal
+33,fix(notifications): tighten permissions for onboarding,3,2,2026-08-04T12:39:42Z,2026-08-04T23:49:36Z,820,156,,normal
+34,fix(audit-log): improve error messages in auth,3,3,2026-08-04T17:15:42Z,2026-08-05T06:29:36Z,91,17,,normal
+35,refactor(notifications): add pagination to reports,3,3,2026-08-05T10:02:18Z,2026-08-06T07:20:49Z,44,19,,normal
+36,perf(cache): add metrics to reports,6,6,2026-08-05T11:07:13Z,2026-08-05T20:36:15Z,19,4,,normal
+37,fix(billing): tighten permissions for webhooks,4,1,2026-08-05T13:30:21Z,2026-08-05T16:27:01Z,66,15,,normal
+38,refactor(dashboard): remove dead code from search,8,8,2026-08-05T13:39:36Z,2026-08-06T04:21:51Z,431,119,,normal
+39,feat(dashboard): support bulk edits in billing,8,2,2026-08-06T10:38:29Z,2026-08-06T18:33:26Z,26,6,,normal
+40,fix(audit-log): tighten permissions for cache,4,5,2026-08-06T16:52:40Z,2026-08-07T09:41:34Z,54,26,,normal
+41,feat(reports): add pagination to auth,5,1,2026-08-06T16:55:39Z,2026-08-07T02:03:47Z,66,21,,normal
+42,feat(auth): retry failed calls in webhooks,2,7,2026-08-07T09:55:08Z,2026-08-07T12:20:18Z,11,4,,normal
+43,perf(cache): migrate notifications to the new client,2,1,2026-08-07T13:39:30Z,2026-08-07T19:15:27Z,34,17,,normal
+44,refactor(billing): improve error messages in search,2,2,2026-08-10T08:22:14Z,2026-08-10T16:11:41Z,24,12,,normal
+45,feat(billing): validate input for webhooks,8,8,2026-08-10T09:27:17Z,2026-08-12T06:14:01Z,110,49,,normal
+46,perf(uploads): fix timezone handling in auth,3,3,2026-08-10T13:35:30Z,2026-08-10T16:31:08Z,549,206,,normal
+47,feat(notifications): fix timezone handling in auth,3,3,2026-08-10T15:59:23Z,2026-08-11T02:33:32Z,174,90,,normal
+48,chore(export): cache lookups for uploads,5,5,2026-08-11T08:20:36Z,2026-08-11T22:54:31Z,269,65,,normal
+49,refactor(auth): add metrics to settings,7,7,2026-08-11T08:45:09Z,2026-08-12T02:54:26Z,35,15,,normal
+50,feat(cache): speed up queries in uploads,8,8,2026-08-11T09:53:09Z,2026-08-11T14:49:02Z,29,12,,normal
+51,fix(uploads): tighten permissions for search,4,2,2026-08-11T12:39:01Z,2026-08-12T01:20:41Z,248,67,,normal
+52,feat(export): add feature flag for cache,6,6,2026-08-11T13:54:18Z,2026-08-12T04:22:36Z,58,16,,normal
+53,perf(notifications): split settings into smaller modules,5,5,2026-08-11T16:27:07Z,2026-08-12T06:32:02Z,49,21,,normal
+54,perf(cache): remove dead code from settings,6,6,2026-08-11T16:29:49Z,2026-08-12T08:41:36Z,27,9,,normal
+55,chore(reports): add pagination to export,7,7,2026-08-12T13:00:08Z,2026-08-12T21:12:57Z,58,20,,normal
+56,chore(audit-log): handle empty state in audit-log,3,3,2026-08-12T17:40:07Z,2026-08-12T23:22:33Z,32,8,,normal
+57,refactor(dashboard): add metrics to dashboard,7,7,2026-08-14T10:16:05Z,2026-08-14T14:26:08Z,100,47,,normal
+58,fix(audit-log): remove dead code from dashboard,5,5,2026-08-14T11:09:29Z,2026-08-14T18:59:25Z,72,34,,normal
+59,fix(cache): handle empty state in onboarding,6,6,2026-08-14T11:49:50Z,2026-08-15T05:10:15Z,31,8,,normal
+60,feat(audit-log): add feature flag for dashboard,7,7,2026-08-14T14:16:53Z,2026-08-15T19:26:04Z,13,9,,normal
+61,chore(api): support bulk edits in uploads,8,8,2026-08-14T15:03:25Z,2026-08-15T06:04:21Z,42,11,,normal
+62,feat(auth): split search into smaller modules,8,8,2026-08-17T09:03:12Z,2026-08-17T12:36:23Z,22,7,,normal
+63,fix(reports): improve error messages in search,7,7,2026-08-17T15:23:11Z,2026-08-17T21:32:11Z,36,21,,normal
+64,refactor(api): improve error messages in notifications,6,6,2026-08-17T16:51:28Z,2026-08-18T11:20:54Z,55,29,,normal
+65,perf(auth): validate input for reports,4,4,2026-08-18T11:06:34Z,2026-08-19T12:45:11Z,60,17,,normal
+66,chore(notifications): speed up queries in uploads,4,4,2026-08-18T12:48:01Z,2026-08-19T01:42:52Z,13,4,,normal
+67,refactor(webhooks): cache lookups for api,4,4,2026-08-18T17:38:29Z,2026-08-19T00:05:44Z,12,5,,normal
+68,feat(auth): remove dead code from export,3,3,2026-08-18T17:53:07Z,2026-08-19T13:14:31Z,51,16,,normal
+69,feat(webhooks): tighten permissions for notifications,3,3,2026-08-19T09:18:13Z,2026-08-19T21:04:27Z,61,12,,normal
+70,chore(api): add metrics to notifications,2,2,2026-08-19T09:51:32Z,2026-08-20T10:27:32Z,34,13,,normal
+71,perf(billing): tighten permissions for cache,4,4,2026-08-19T10:56:48Z,2026-08-19T21:22:14Z,35,24,,normal
+72,perf(export): improve error messages in onboarding,3,2,2026-08-19T15:04:29Z,2026-08-20T00:10:50Z,133,34,,normal
+73,feat(cache): improve error messages in settings,2,2,2026-08-19T15:34:54Z,2026-08-20T04:31:18Z,33,13,,normal
+74,perf(webhooks): add feature flag for onboarding,5,2,2026-08-19T15:38:30Z,2026-08-20T01:53:50Z,23,9,,normal
+75,chore(settings): rename env var,8,8,2026-08-19T17:33:56Z,2026-08-19T18:09:05Z,12,3,,normal
+76,chore(webhooks): add pagination to scheduler,6,6,2026-08-20T08:04:13Z,2026-08-21T18:48:38Z,21,11,,normal
+77,fix(settings): support bulk edits in onboarding,5,5,2026-08-20T11:22:49Z,2026-08-20T16:18:39Z,36,23,,normal
+78,chore(notifications): split onboarding into smaller modules,4,4,2026-08-20T17:05:11Z,2026-08-21T07:30:43Z,7,2,,normal
+79,perf(notifications): add pagination to uploads,3,3,2026-08-21T08:23:04Z,2026-08-21T18:54:11Z,25,9,,normal
+80,fix(auth): fix timezone handling in audit-log,4,4,2026-08-21T11:40:41Z,2026-08-21T22:45:30Z,54,29,,normal
+81,chore(reports): split uploads into smaller modules,6,6,2026-08-24T08:19:42Z,2026-08-24T12:21:31Z,21,9,,normal
+82,refactor(cache): remove dead code from onboarding,2,2,2026-08-24T12:19:16Z,2026-08-24T18:57:02Z,125,76,,normal
+83,perf(settings): migrate dashboard to the new client,8,8,2026-08-24T12:31:57Z,2026-08-25T10:48:01Z,46,18,,normal
+84,refactor(api): validate input for reports,4,4,2026-08-24T15:43:24Z,2026-08-25T04:43:33Z,20,5,,normal
+85,refactor(webhooks): fix timezone handling in api,5,5,2026-08-24T17:32:57Z,2026-08-24T21:56:22Z,55,24,,normal
+86,refactor(onboarding): cache lookups for webhooks,5,5,2026-08-24T17:32:57Z,2026-08-25T14:49:05Z,19,8,,normal
+87,feat(scheduler): fix timezone handling in scheduler,6,6,2026-08-25T08:05:07Z,2026-08-25T19:12:50Z,117,35,,normal
+88,feat(billing): cache lookups for dashboard,7,2,2026-08-25T17:16:55Z,2026-08-26T01:16:21Z,43,12,,normal
+89,fix(billing): add metrics to settings,5,5,2026-08-26T12:01:31Z,2026-08-27T12:33:04Z,19,10,,normal
+90,fix(webhooks): cache lookups for notifications,3,3,2026-08-26T14:01:32Z,2026-08-27T12:15:34Z,81,21,,normal
+91,refactor(audit-log): split cache into smaller modules,6,6,2026-08-26T14:47:06Z,2026-08-27T01:45:19Z,33,8,,normal
+92,refactor(scheduler): speed up queries in uploads,6,6,2026-08-26T16:17:36Z,2026-08-27T03:03:59Z,60,13,,normal
+93,perf(billing): remove dead code from export,5,5,2026-08-26T16:25:50Z,2026-08-26T22:01:11Z,16,9,,normal
+94,fix(reports): migrate uploads to the new client,3,3,2026-08-26T17:47:58Z,2026-08-27T12:57:22Z,145,66,,normal
+95,fix(scheduler): speed up queries in billing,4,2,2026-08-27T11:12:45Z,2026-08-27T17:11:49Z,16,6,,normal
+96,refactor(billing): tighten permissions for reports,3,3,2026-08-27T17:56:58Z,2026-08-28T15:57:30Z,84,18,,normal
+97,chore(auth): cache lookups for reports,2,2,2026-08-28T08:24:59Z,2026-08-28T14:19:52Z,63,21,,normal
+98,chore(audit-log): retry failed calls in audit-log,7,7,2026-08-28T08:30:07Z,2026-08-28T15:39:48Z,136,75,,normal
+99,feat(reports): handle empty state in uploads,3,3,2026-08-28T15:05:17Z,2026-08-28T16:28:21Z,507,242,,normal
+100,fix(onboarding): improve error messages in audit-log,7,7,2026-08-28T16:31:29Z,2026-08-29T03:05:43Z,237,78,,normal
+101,refactor(search): speed up queries in search,6,6,2026-08-31T10:24:53Z,2026-08-31T13:11:30Z,709,173,,normal
+102,chore(webhooks): adjust timeout,5,5,2026-08-31T10:33:18Z,2026-08-31T10:39:01Z,14,7,,normal
+103,fix(onboarding): migrate export to the new client,8,8,2026-09-01T09:25:26Z,2026-09-02T09:16:46Z,56,13,,normal
+104,chore(audit-log): support bulk edits in reports,6,2,2026-09-01T10:01:24Z,2026-09-02T01:47:08Z,59,31,,normal
+105,perf(settings): add feature flag for cache,7,7,2026-09-01T12:09:52Z,2026-09-01T22:26:53Z,38,24,,normal
+106,feat(webhooks): add pagination to export,7,1,2026-09-01T12:35:42Z,2026-09-01T23:32:28Z,89,26,,normal
+107,refactor(uploads): tighten permissions for api,8,8,2026-09-01T13:37:08Z,2026-09-02T16:07:35Z,35,11,,normal
+108,refactor(billing): split scheduler into smaller modules,2,2,2026-09-01T14:11:12Z,2026-09-02T09:27:34Z,183,56,,normal
+109,perf(uploads): split billing into smaller modules,5,2,2026-09-01T14:16:58Z,2026-09-02T00:26:27Z,66,39,,normal
+110,perf(audit-log): improve error messages in cache,8,8,2026-09-01T14:58:13Z,2026-09-01T22:22:13Z,119,56,,normal
+111,chore(onboarding): add feature flag for export,8,1,2026-09-01T17:16:48Z,2026-09-02T02:48:47Z,25,9,,normal
+112,hotfix(search): guard null result,8,8,2026-09-01T20:15:53Z,2026-09-01T21:19:19Z,46,12,99,hotfix
+113,refactor(reports): tighten permissions for scheduler,2,2,2026-09-02T10:14:45Z,2026-09-02T16:27:38Z,159,85,,normal
+114,chore(dashboard): support bulk edits in search,7,7,2026-09-02T17:50:30Z,2026-09-03T00:34:37Z,131,26,,normal
+115,refactor(webhooks): validate input for scheduler,7,7,2026-09-03T09:02:55Z,2026-09-03T18:48:05Z,15,10,,normal
+116,refactor(reports): speed up queries in onboarding,4,4,2026-09-03T09:36:31Z,2026-09-03T21:22:44Z,58,14,,normal
+117,feat(billing): split dashboard into smaller modules,4,4,2026-09-03T12:02:04Z,2026-09-04T00:37:43Z,115,27,,normal
+118,perf(settings): improve error messages in audit-log,8,8,2026-09-03T12:49:44Z,2026-09-03T15:11:05Z,89,26,,normal
+119,fix(onboarding): improve error messages in reports,4,4,2026-09-03T13:32:56Z,2026-09-04T06:02:30Z,3,3,,normal
+120,perf(notifications): split onboarding into smaller modules,4,1,2026-09-03T15:09:03Z,2026-09-04T08:49:33Z,33,6,,normal
+121,feat(reports): cache lookups for webhooks,2,2,2026-09-03T17:37:10Z,2026-09-03T23:34:39Z,27,8,,normal
+122,fix(uploads): split uploads into smaller modules,6,6,2026-09-04T08:23:06Z,2026-09-05T02:39:39Z,67,14,,normal
+123,feat(uploads): split settings into smaller modules,6,1,2026-09-07T08:08:04Z,2026-09-07T20:27:05Z,60,22,,normal
+124,perf(scheduler): add metrics to cache,2,2,2026-09-07T12:45:46Z,2026-09-07T14:57:04Z,60,22,,normal
+125,feat(api): validate input for notifications,7,7,2026-09-07T13:37:52Z,2026-09-08T19:44:56Z,87,33,,normal
+126,chore(billing): migrate reports to the new client,2,5,2026-09-07T16:11:17Z,2026-09-08T06:03:58Z,38,26,,normal
+127,feat(search): add metrics to cache,2,8,2026-09-08T08:23:44Z,2026-09-08T15:40:57Z,23,8,,normal
+128,fix(reports): validate input for audit-log,8,2,2026-09-08T10:00:43Z,2026-09-08T15:40:54Z,71,28,,normal
+129,chore(auth): retry failed calls in dashboard,3,5,2026-09-08T12:57:46Z,2026-09-08T22:31:27Z,280,111,,normal
+130,feat(audit-log): cache lookups for billing,4,4,2026-09-08T14:01:46Z,2026-09-09T05:49:31Z,33,14,,normal
+131,perf(reports): add feature flag for webhooks,6,6,2026-09-08T14:33:50Z,2026-09-09T00:05:21Z,13,7,,normal
+132,fix(search): fix timezone handling in search,4,4,2026-09-09T08:33:42Z,2026-09-09T12:12:20Z,7,3,,normal
+133,fix(notifications): add feature flag for notifications,3,3,2026-09-09T08:56:50Z,2026-09-09T17:50:22Z,10,7,,normal
+134,fix(reports): migrate audit-log to the new client,4,4,2026-09-09T10:22:48Z,2026-09-11T12:23:08Z,59,31,,normal
+135,feat(notifications): add metrics to auth,6,6,2026-09-09T11:50:54Z,2026-09-09T20:50:54Z,112,57,,normal
+136,chore(audit-log): speed up queries in export,3,3,2026-09-09T14:38:01Z,2026-09-10T04:25:24Z,36,9,,normal
+137,feat(reports): remove dead code from reports,4,4,2026-09-09T14:58:35Z,2026-09-10T04:08:30Z,116,21,,normal
+138,perf(reports): add metrics to notifications,6,6,2026-09-09T16:35:14Z,2026-09-10T04:33:27Z,238,61,,normal
+139,refactor(settings): migrate onboarding to the new client,7,7,2026-09-10T08:48:09Z,2026-09-10T23:58:45Z,124,30,,normal
+140,fix(notifications): fix timezone handling in dashboard,3,3,2026-09-10T09:44:42Z,2026-09-10T18:40:47Z,63,12,,normal
+141,refactor(onboarding): validate input for settings,6,2,2026-09-10T10:27:49Z,2026-09-10T22:24:13Z,251,69,,normal
+142,perf(audit-log): support bulk edits in scheduler,3,3,2026-09-10T11:11:30Z,2026-09-10T16:53:19Z,52,19,,normal
+143,feat(scheduler): speed up queries in api,7,2,2026-09-10T12:08:38Z,2026-09-11T04:34:00Z,48,31,,normal
+144,perf(notifications): migrate notifications to the new client,4,4,2026-09-10T15:42:56Z,2026-09-10T22:47:40Z,55,12,,normal
+145,fix(auth): speed up queries in webhooks,8,8,2026-09-11T10:23:25Z,2026-09-11T23:08:35Z,125,54,,normal
+146,fix(cache): speed up queries in notifications,4,1,2026-09-14T08:36:19Z,2026-09-14T14:00:08Z,76,22,,normal
+147,chore(uploads): remove dead code from cache,8,8,2026-09-14T10:47:41Z,2026-09-15T07:10:20Z,56,28,,normal
+148,fix(dashboard): improve error messages in onboarding,5,5,2026-09-14T11:20:38Z,2026-09-15T16:02:43Z,177,71,,normal
+149,refactor(settings): split notifications into smaller modules,8,8,2026-09-14T14:09:22Z,2026-09-14T21:58:46Z,194,87,,normal
+150,chore(auth): add feature flag for api,5,2,2026-09-14T15:41:40Z,2026-09-15T02:24:03Z,26,12,,normal
+151,feat(search): migrate api to the new client,5,5,2026-09-15T10:32:55Z,2026-09-15T11:12:23Z,728,154,,normal
+152,perf(settings): add metrics to search,3,2,2026-09-15T11:25:44Z,2026-09-15T19:36:23Z,67,24,,normal
+153,perf(reports): support bulk edits in settings,5,2,2026-09-15T11:38:03Z,2026-09-16T00:58:04Z,88,30,,normal
+154,perf(notifications): migrate api to the new client,7,7,2026-09-15T13:26:41Z,2026-09-16T02:34:38Z,298,77,,normal
+155,perf(onboarding): add metrics to billing,4,4,2026-09-15T14:15:01Z,2026-09-17T03:11:34Z,69,14,,normal
+156,perf(notifications): migrate onboarding to the new client,2,2,2026-09-15T14:34:11Z,2026-09-16T05:59:34Z,118,28,,normal
+157,chore(scheduler): split api into smaller modules,4,4,2026-09-15T17:07:01Z,2026-09-15T18:51:01Z,38,9,,normal
+158,chore(onboarding): cache lookups for billing,7,7,2026-09-16T08:59:38Z,2026-09-17T06:42:00Z,178,107,,normal
+159,feat(cache): handle empty state in settings,7,7,2026-09-16T14:39:25Z,2026-09-16T21:32:23Z,52,25,,normal
+160,refactor(scheduler): add feature flag for export,3,5,2026-09-16T17:07:19Z,2026-09-16T22:31:30Z,42,9,,normal
+161,fix(webhooks): tighten permissions for scheduler,2,2,2026-09-17T09:06:24Z,2026-09-17T13:22:04Z,38,19,,normal
+162,fix(settings): add feature flag for reports,4,1,2026-09-17T10:32:34Z,2026-09-17T22:14:05Z,22,16,,normal
+163,fix(cache): add feature flag for auth,5,5,2026-09-17T11:58:09Z,2026-09-18T02:22:50Z,73,38,,normal
+164,refactor(audit-log): add metrics to cache,4,4,2026-09-17T12:40:31Z,2026-09-18T00:02:40Z,13,6,,normal
+165,perf(api): add pagination to audit-log,3,3,2026-09-17T14:17:04Z,2026-09-17T22:40:18Z,18,5,,normal
+166,chore(billing): fix timezone handling in auth,4,4,2026-09-17T16:49:15Z,2026-09-18T03:58:33Z,67,31,,normal
+167,chore(api): improve error messages in scheduler,4,4,2026-09-17T17:43:06Z,2026-09-18T08:43:52Z,20,6,,normal
+168,perf(settings): speed up queries in auth,4,4,2026-09-18T09:01:11Z,2026-09-18T12:26:01Z,131,43,,normal
+169,refactor(api): tighten permissions for notifications,7,7,2026-09-18T17:03:00Z,2026-09-19T00:29:01Z,8,6,,normal
+170,feat(search): fix timezone handling in scheduler,3,3,2026-09-21T12:21:25Z,2026-09-21T15:55:12Z,221,95,,normal
+171,"Revert ""fix(dashboard): improve error messages in onboarding""",5,5,2026-09-21T17:06:41Z,2026-09-21T18:07:48Z,84,48,148,revert
+172,feat(scheduler): tighten permissions for billing,3,3,2026-09-21T17:49:46Z,2026-09-22T03:31:27Z,27,16,,normal
+173,fix(notifications): add pagination to scheduler,5,2,2026-09-21T17:50:47Z,2026-09-22T22:58:59Z,189,105,,normal
+174,chore(settings): add feature flag for reports,3,3,2026-09-22T11:30:37Z,2026-09-22T16:59:02Z,62,29,,normal
+175,fix(notifications): retry failed calls in audit-log,5,5,2026-09-22T13:06:53Z,2026-09-23T02:12:13Z,141,57,,normal
+176,fix(onboarding): remove dead code from search,3,3,2026-09-22T15:01:47Z,2026-09-22T23:08:46Z,62,12,,normal
+177,perf(webhooks): add pagination to settings,3,3,2026-09-22T17:32:22Z,2026-09-23T01:51:32Z,299,58,,normal
+178,perf(search): split reports into smaller modules,8,8,2026-09-23T08:03:49Z,2026-09-24T03:32:45Z,38,21,,normal
+179,fix(onboarding): add metrics to scheduler,6,2,2026-09-23T09:20:51Z,2026-09-23T19:05:00Z,64,25,,normal
+180,feat(dashboard): fix timezone handling in webhooks,4,4,2026-09-23T09:39:59Z,2026-09-23T18:31:12Z,33,19,,normal
+181,refactor(auth): fix timezone handling in notifications,7,7,2026-09-23T10:40:43Z,2026-09-23T17:52:55Z,36,9,,normal
+182,fix(scheduler): retry failed calls in uploads,6,6,2026-09-23T12:31:59Z,2026-09-23T17:46:50Z,7,6,,normal
+183,refactor(export): retry failed calls in auth,3,2,2026-09-23T13:06:01Z,2026-09-23T20:51:57Z,11,5,,normal
+184,chore(dashboard): split webhooks into smaller modules,8,3,2026-09-23T15:27:28Z,2026-09-23T20:54:31Z,39,19,,normal
+185,perf(export): remove dead code from settings,5,2,2026-09-24T08:02:05Z,2026-09-24T17:50:48Z,67,24,,normal
+186,fix(audit-log): migrate scheduler to the new client,3,1,2026-09-24T08:30:00Z,2026-09-24T22:06:50Z,16,8,,normal
+187,chore(dashboard): add metrics to export,7,7,2026-09-24T08:59:14Z,2026-09-25T06:55:08Z,88,35,,normal
+188,chore(scheduler): cache lookups for export,5,5,2026-09-24T11:53:54Z,2026-09-24T13:39:23Z,647,240,,normal
+189,fix(auth): fix timezone handling in onboarding,6,2,2026-09-24T16:28:50Z,2026-09-25T02:54:35Z,132,33,,normal
+190,perf(auth): add pagination to api,6,6,2026-09-24T17:39:07Z,2026-09-25T10:03:08Z,32,17,,normal
+191,fix(search): add feature flag for webhooks,3,3,2026-09-25T08:22:06Z,2026-09-26T03:55:43Z,27,8,,normal
+192,feat(search): add feature flag for scheduler,7,7,2026-09-25T11:02:42Z,2026-09-25T21:01:37Z,134,29,,normal
+193,chore(reports): migrate uploads to the new client,5,1,2026-09-25T12:41:04Z,2026-09-26T00:03:14Z,80,24,,normal
+194,chore(api): handle empty state in settings,8,8,2026-09-25T15:09:44Z,2026-09-26T04:09:51Z,191,110,,normal
+195,fix(api): validate input for auth,6,6,2026-09-25T16:10:20Z,2026-09-26T17:13:32Z,52,17,,normal
+196,refactor(scheduler): fix timezone handling in webhooks,3,3,2026-09-28T08:14:43Z,2026-09-28T21:33:07Z,8,5,,normal
+197,feat(search): speed up queries in notifications,8,8,2026-09-28T09:50:56Z,2026-09-29T01:31:45Z,138,46,,normal
+198,refactor(onboarding): validate input for uploads,4,4,2026-09-28T11:48:08Z,2026-09-28T17:39:34Z,231,155,,normal
+199,fix(webhooks): migrate reports to the new client,2,2,2026-09-28T14:41:27Z,2026-09-29T01:47:02Z,103,69,,normal
+200,feat(export): migrate onboarding to the new client,5,5,2026-09-28T14:47:30Z,2026-09-29T03:37:32Z,168,50,,normal
+201,fix(onboarding): support bulk edits in settings,7,1,2026-09-28T15:34:29Z,2026-09-30T10:52:51Z,44,14,,normal
+202,refactor(search): migrate scheduler to the new client,5,2,2026-09-28T16:32:38Z,2026-09-29T05:06:08Z,57,16,,normal
+203,refactor(dashboard): retry failed calls in notifications,8,8,2026-09-29T08:07:14Z,2026-09-30T22:49:25Z,14,4,,normal
+204,feat(api): add metrics to onboarding,8,2,2026-09-29T11:09:00Z,2026-10-01T01:59:16Z,124,58,,normal
+205,chore(search): speed up queries in scheduler,5,5,2026-09-29T13:29:23Z,2026-09-29T23:10:00Z,28,6,,normal
+206,perf(scheduler): remove dead code from dashboard,5,5,2026-09-29T14:36:32Z,2026-09-30T16:46:47Z,59,33,,normal
+207,feat(reports): add metrics to uploads,2,6,2026-09-29T16:12:17Z,2026-09-30T04:44:30Z,27,14,,normal
+208,perf(onboarding): retry failed calls in billing,8,2,2026-09-29T16:40:21Z,2026-09-30T18:01:54Z,65,17,,normal
+209,perf(export): improve error messages in cache,5,5,2026-09-29T17:25:21Z,2026-09-29T18:10:56Z,539,144,,normal
+210,chore(notifications): add metrics to dashboard,3,3,2026-09-30T11:26:07Z,2026-10-01T00:43:52Z,29,7,,normal
+211,perf(reports): speed up queries in api,6,1,2026-09-30T11:52:08Z,2026-09-30T23:48:08Z,48,13,,normal
+212,fix(scheduler): speed up queries in reports,8,2,2026-09-30T13:05:48Z,2026-09-30T19:56:23Z,16,3,,normal
+213,feat(cache): split api into smaller modules,7,7,2026-09-30T15:28:44Z,2026-09-30T16:12:28Z,40,19,,normal
+214,fix(audit-log): fix timezone handling in notifications,6,6,2026-09-30T16:16:37Z,2026-09-30T22:35:38Z,68,14,,normal
+215,perf(audit-log): add metrics to auth,7,7,2026-09-30T17:02:59Z,2026-10-01T07:01:13Z,84,31,,normal
+216,hotfix(webhooks): restore previous timeout,3,3,2026-10-01T03:56:41Z,2026-10-01T04:48:44Z,6,4,188,hotfix
+217,refactor(onboarding): handle empty state in onboarding,3,2,2026-10-01T15:46:31Z,2026-10-03T10:06:12Z,17,4,,normal
+218,feat(export): migrate auth to the new client,4,4,2026-10-01T16:38:55Z,2026-10-02T03:21:11Z,27,5,,normal
+219,chore(reports): speed up queries in uploads,5,5,2026-10-01T16:43:50Z,2026-10-02T00:31:13Z,110,59,,normal
+220,feat(auth): handle empty state in audit-log,2,2,2026-10-01T17:39:12Z,2026-10-02T04:43:47Z,38,25,,normal
+221,chore(dashboard): bump config values,3,3,2026-10-01T17:42:06Z,2026-10-01T18:13:23Z,20,11,,normal
+222,chore(uploads): speed up queries in api,3,,2026-10-02T10:20:00Z,,121,78,,normal
+223,perf(scheduler): split audit-log into smaller modules,3,3,2026-10-02T15:39:46Z,2026-10-03T02:00:08Z,244,105,,normal
+224,fix(api): remove dead code from auth,7,7,2026-10-05T10:51:58Z,2026-10-06T06:15:06Z,43,15,,normal
+225,feat(webhooks): add metrics to api,2,4,2026-10-05T11:23:21Z,2026-10-06T07:03:34Z,36,8,,normal
+226,chore(audit-log): add feature flag for billing,8,8,2026-10-05T12:17:24Z,2026-10-05T21:52:13Z,38,14,,normal
+227,feat(api): retry failed calls in export,3,5,2026-10-06T09:15:11Z,2026-10-07T03:34:01Z,61,36,,normal
+228,perf(billing): speed up queries in cache,3,3,2026-10-06T09:42:06Z,2026-10-06T18:03:57Z,33,12,,normal
+229,refactor(uploads): improve error messages in uploads,3,2,2026-10-06T10:29:06Z,2026-10-07T11:18:30Z,37,9,,normal
+230,fix(webhooks): support bulk edits in reports,8,,2026-10-06T14:05:00Z,,159,73,,normal
+231,chore(api): add metrics to scheduler,7,7,2026-10-06T14:45:56Z,2026-10-06T23:01:50Z,59,15,,normal
+232,perf(export): add feature flag for audit-log,5,5,2026-10-06T14:48:34Z,2026-10-06T21:58:30Z,68,29,,normal
+233,feat(billing): remove dead code from auth,3,3,2026-10-06T17:44:16Z,2026-10-06T23:07:26Z,24,15,,normal
+234,perf(reports): validate input for reports,2,2,2026-10-07T10:31:08Z,2026-10-07T18:13:11Z,69,30,,normal
+235,chore(webhooks): speed up queries in webhooks,5,5,2026-10-07T12:22:03Z,2026-10-08T02:35:57Z,34,21,,normal
+236,perf(billing): support bulk edits in settings,5,5,2026-10-07T13:14:49Z,2026-10-09T05:27:48Z,132,68,,normal
+237,feat(billing): add metrics to cache,6,6,2026-10-07T14:02:42Z,2026-10-09T03:42:42Z,3,3,,normal
+238,refactor(search): support bulk edits in audit-log,3,3,2026-10-07T14:03:29Z,2026-10-08T09:34:11Z,28,16,,normal
+239,refactor(reports): remove dead code from onboarding,2,2,2026-10-07T14:54:24Z,2026-10-08T20:51:21Z,57,35,,normal
+240,chore(billing): split audit-log into smaller modules,7,7,2026-10-07T15:41:38Z,2026-10-07T15:58:50Z,34,22,,normal
+241,fix(cache): add metrics to search,2,2,2026-10-07T17:46:05Z,2026-10-08T00:15:16Z,112,22,,normal
+242,fix(notifications): add pagination to api,6,1,2026-10-08T09:38:14Z,2026-10-09T02:17:09Z,70,28,,normal
+243,fix(notifications): handle empty state in webhooks,5,,2026-10-08T10:00:00Z,,130,38,,normal
+244,refactor(search): split reports into smaller modules,7,7,2026-10-08T10:39:07Z,2026-10-09T05:06:36Z,91,26,,normal
+245,chore(onboarding): improve error messages in export,2,2,2026-10-08T13:56:44Z,2026-10-09T08:22:10Z,86,16,,normal
+246,chore(reports): add metrics to dashboard,3,,2026-10-08T15:19:42Z,,53,32,,normal
+247,fix(search): improve error messages in dashboard,2,2,2026-10-08T16:03:03Z,2026-10-08T18:25:15Z,248,130,,normal
+248,refactor(export): handle empty state in reports,6,6,2026-10-08T17:56:05Z,2026-10-09T16:07:39Z,36,23,,normal
+249,feat(search): migrate audit-log to the new client,2,,2026-10-09T08:26:51Z,,46,18,,normal
+250,chore(scheduler): support bulk edits in notifications,6,,2026-10-09T09:00:00Z,,151,76,,normal
+251,chore(uploads): rename env var,6,6,2026-10-09T10:00:15Z,2026-10-09T10:07:29Z,26,11,,normal
+252,refactor(auth): handle empty state in dashboard,5,,2026-10-09T13:58:09Z,,47,29,,normal
+253,perf(uploads): remove dead code from reports,8,,2026-10-09T14:36:20Z,,89,33,,normal

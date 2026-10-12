@@ -1,0 +1,279 @@
+{
+ "as_of": "2026-10-09T18:00:00Z",
+ "flag_counts": {
+  "rubber_stamp": 8,
+  "merged_unreviewed": 5,
+  "escape": 3,
+  "merged_changes_pending": 1,
+  "self_approval": 2,
+  "stale_backlog": 2,
+  "load_concentration": 1
+ },
+ "load": {
+  "counts": {
+   "2": 82,
+   "3": 13,
+   "4": 9,
+   "5": 13,
+   "6": 14,
+   "7": 11,
+   "8": 5
+  },
+  "top2_share": 0.653,
+  "median": 13,
+  "over_2x_median": [
+   2
+  ]
+ },
+ "flags": [
+  {
+   "rule_key": "escape",
+   "pr_id": 99,
+   "person_id": 4,
+   "role": "reviewer",
+   "evidence": {
+    "fix_pr_id": 112,
+    "kind": "hotfix"
+   }
+  },
+  {
+   "rule_key": "escape",
+   "pr_id": 148,
+   "person_id": 2,
+   "role": "reviewer",
+   "evidence": {
+    "fix_pr_id": 171,
+    "kind": "revert"
+   }
+  },
+  {
+   "rule_key": "escape",
+   "pr_id": 188,
+   "person_id": 4,
+   "role": "reviewer",
+   "evidence": {
+    "fix_pr_id": 216,
+    "kind": "hotfix"
+   }
+  },
+  {
+   "rule_key": "load_concentration",
+   "pr_id": null,
+   "person_id": null,
+   "role": null,
+   "evidence": {
+    "counts": {
+     "2": 82,
+     "3": 13,
+     "4": 9,
+     "5": 13,
+     "6": 14,
+     "7": 11,
+     "8": 5
+    },
+    "top2_share": 0.653,
+    "median": 13,
+    "over_2x_median": [
+     2
+    ]
+   }
+  },
+  {
+   "rule_key": "merged_changes_pending",
+   "pr_id": 135,
+   "person_id": 6,
+   "role": "author",
+   "evidence": {}
+  },
+  {
+   "rule_key": "merged_unreviewed",
+   "pr_id": 30,
+   "person_id": 6,
+   "role": "author",
+   "evidence": {
+    "lines": 9
+   }
+  },
+  {
+   "rule_key": "merged_unreviewed",
+   "pr_id": 75,
+   "person_id": 8,
+   "role": "author",
+   "evidence": {
+    "lines": 15
+   }
+  },
+  {
+   "rule_key": "merged_unreviewed",
+   "pr_id": 102,
+   "person_id": 5,
+   "role": "author",
+   "evidence": {
+    "lines": 21
+   }
+  },
+  {
+   "rule_key": "merged_unreviewed",
+   "pr_id": 221,
+   "person_id": 3,
+   "role": "author",
+   "evidence": {
+    "lines": 31
+   }
+  },
+  {
+   "rule_key": "merged_unreviewed",
+   "pr_id": 251,
+   "person_id": 6,
+   "role": "author",
+   "evidence": {
+    "lines": 37
+   }
+  },
+  {
+   "rule_key": "rubber_stamp",
+   "pr_id": 23,
+   "person_id": 4,
+   "role": "reviewer",
+   "evidence": {
+    "lines": 507,
+    "seconds_to_approve": 56,
+    "substantive_comments": 0
+   }
+  },
+  {
+   "rule_key": "rubber_stamp",
+   "pr_id": 46,
+   "person_id": 4,
+   "role": "reviewer",
+   "evidence": {
+    "lines": 755,
+    "seconds_to_approve": 67,
+    "substantive_comments": 0
+   }
+  },
+  {
+   "rule_key": "rubber_stamp",
+   "pr_id": 99,
+   "person_id": 4,
+   "role": "reviewer",
+   "evidence": {
+    "lines": 749,
+    "seconds_to_approve": 81,
+    "substantive_comments": 0
+   }
+  },
+  {
+   "rule_key": "rubber_stamp",
+   "pr_id": 101,
+   "person_id": 7,
+   "role": "reviewer",
+   "evidence": {
+    "lines": 882,
+    "seconds_to_approve": 44,
+    "substantive_comments": 0
+   }
+  },
+  {
+   "rule_key": "rubber_stamp",
+   "pr_id": 151,
+   "person_id": 4,
+   "role": "reviewer",
+   "evidence": {
+    "lines": 882,
+    "seconds_to_approve": 103,
+    "substantive_comments": 0
+   }
+  },
+  {
+   "rule_key": "rubber_stamp",
+   "pr_id": 188,
+   "person_id": 4,
+   "role": "reviewer",
+   "evidence": {
+    "lines": 887,
+    "seconds_to_approve": 104,
+    "substantive_comments": 0
+   }
+  },
+  {
+   "rule_key": "rubber_stamp",
+   "pr_id": 209,
+   "person_id": 4,
+   "role": "reviewer",
+   "evidence": {
+    "lines": 683,
+    "seconds_to_approve": 104,
+    "substantive_comments": 0
+   }
+  },
+  {
+   "rule_key": "rubber_stamp",
+   "pr_id": 247,
+   "person_id": 4,
+   "role": "reviewer",
+   "evidence": {
+    "lines": 378,
+    "seconds_to_approve": 90,
+    "substantive_comments": 0
+   }
+  },
+  {
+   "rule_key": "self_approval",
+   "pr_id": 213,
+   "person_id": 7,
+   "role": "author",
+   "evidence": {}
+  },
+  {
+   "rule_key": "self_approval",
+   "pr_id": 240,
+   "person_id": 7,
+   "role": "author",
+   "evidence": {}
+  },
+  {
+   "rule_key": "stale_backlog",
+   "pr_id": 222,
+   "person_id": 2,
+   "role": "reviewer",
+   "evidence": {
+    "waiting_hours": 175.7
+   }
+  },
+  {
+   "rule_key": "stale_backlog",
+   "pr_id": 230,
+   "person_id": 2,
+   "role": "reviewer",
+   "evidence": {
+    "waiting_hours": 75.9
+   }
+  }
+ ],
+ "repeat_patterns": [
+  {
+   "person_id": 4,
+   "role": "reviewer",
+   "rule_key": "rubber_stamp",
+   "window_days": 30,
+   "count": 3,
+   "pr_ids": [
+    188,
+    209,
+    247
+   ]
+  },
+  {
+   "person_id": 7,
+   "role": "author",
+   "rule_key": "self_approval",
+   "window_days": 14,
+   "count": 2,
+   "pr_ids": [
+    213,
+    240
+   ]
+  }
+ ]
+}

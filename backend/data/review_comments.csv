@@ -1,0 +1,492 @@
+id,review_id,body,is_line_comment,created_at
+1,1,"Cache key is missing the tenant id, so one tenant could be served another tenant's cached result.",true,2026-07-20T12:34:13Z
+2,1,"This mutates the shared config dict, so concurrent requests could see each other's overrides. Please copy it first.",true,2026-07-20T12:37:46Z
+3,1,The migration drops the column in the same release that stops writing it. Safer to split into two deploys.,true,2026-07-20T12:39:22Z
+4,1,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-07-20T12:51:36Z
+5,3,"The feature flag default is true in this file but false in the config service, so staging will differ from prod.",true,2026-07-20T19:57:53Z
+6,3,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-07-20T20:12:43Z
+7,4,Looks good!,false,2026-07-20T22:33:57Z
+8,6,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-07-21T14:09:56Z
+9,6,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-07-21T14:11:35Z
+10,6,"This query runs inside the loop, so it issues one SELECT per row. Can we batch it with an IN clause?",true,2026-07-21T14:13:57Z
+11,6,"The feature flag default is true in this file but false in the config service, so staging will differ from prod.",true,2026-07-21T14:18:56Z
+12,7,👍,false,2026-07-21T15:21:37Z
+13,9,"Could we add a comment on why 30 seconds? It looks arbitrary, and the SLA doc says 45.",true,2026-07-21T15:58:34Z
+14,10,"Good approach overall. One concern: the lock is released before the write completes, so two workers can interleave.",true,2026-07-21T16:22:20Z
+15,11,"We compare datetimes without a timezone here, which breaks across the DST boundary. Use aware datetimes.",true,2026-07-21T17:11:58Z
+16,11,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-07-21T17:14:18Z
+17,12,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-07-22T01:35:22Z
+18,12,Looks good!,false,2026-07-22T01:47:13Z
+19,15,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-07-24T06:16:52Z
+20,15,"The feature flag default is true in this file but false in the config service, so staging will differ from prod.",true,2026-07-24T06:29:31Z
+21,16,The new helper duplicates the retry logic in the client module. Could we reuse that instead of adding a second backoff?,true,2026-07-24T10:58:29Z
+22,16,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-07-24T11:05:38Z
+23,17,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-07-24T12:42:10Z
+24,18,"This query runs inside the loop, so it issues one SELECT per row. Can we batch it with an IN clause?",true,2026-07-24T14:22:14Z
+25,18,"This mutates the shared config dict, so concurrent requests could see each other's overrides. Please copy it first.",true,2026-07-24T14:36:39Z
+26,20,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-07-24T14:43:39Z
+27,19,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-07-24T14:46:28Z
+28,19,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-07-24T14:56:00Z
+29,20,👍,false,2026-07-24T15:06:05Z
+30,21,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-07-24T18:25:28Z
+31,23,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-07-24T19:45:49Z
+32,23,LGTM,false,2026-07-24T19:55:45Z
+33,24,"The index on (account_id, created_at) will not help this filter because of the OR. Can we rewrite as a UNION?",true,2026-07-24T19:59:57Z
+34,24,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-07-24T20:12:15Z
+35,25,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-07-24T23:52:29Z
+36,25,"This query runs inside the loop, so it issues one SELECT per row. Can we batch it with an IN clause?",true,2026-07-24T23:57:25Z
+37,25,I think the off-by-one here drops the last page of results when the count is an exact multiple of the page size.,true,2026-07-25T00:00:05Z
+38,26,"Good approach overall. One concern: the lock is released before the write completes, so two workers can interleave.",true,2026-07-25T11:13:36Z
+39,28,"The index on (account_id, created_at) will not help this filter because of the OR. Can we rewrite as a UNION?",true,2026-07-27T12:08:34Z
+40,28,"Cache key is missing the tenant id, so one tenant could be served another tenant's cached result.",true,2026-07-27T12:15:45Z
+41,28,The new helper duplicates the retry logic in the client module. Could we reuse that instead of adding a second backoff?,true,2026-07-27T12:16:02Z
+42,28,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-07-27T12:19:17Z
+43,30,"Could we add a comment on why 30 seconds? It looks arbitrary, and the SLA doc says 45.",true,2026-07-27T18:18:13Z
+44,30,"The index on (account_id, created_at) will not help this filter because of the OR. Can we rewrite as a UNION?",true,2026-07-27T18:39:14Z
+45,33,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-07-28T01:42:07Z
+46,32,"The feature flag default is true in this file but false in the config service, so staging will differ from prod.",true,2026-07-28T01:43:56Z
+47,32,Looks good!,false,2026-07-28T01:52:41Z
+48,33,👍,false,2026-07-28T01:57:59Z
+49,36,The migration drops the column in the same release that stops writing it. Safer to split into two deploys.,true,2026-07-28T16:23:02Z
+50,36,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-07-28T16:27:58Z
+51,36,The new helper duplicates the retry logic in the client module. Could we reuse that instead of adding a second backoff?,true,2026-07-28T16:33:30Z
+52,36,LGTM,false,2026-07-28T16:42:03Z
+53,37,👍,false,2026-07-28T19:17:11Z
+54,40,"The feature flag default is true in this file but false in the config service, so staging will differ from prod.",true,2026-07-29T23:55:01Z
+55,42,LGTM,false,2026-07-30T16:24:34Z
+56,43,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-07-30T18:22:13Z
+57,43,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-07-30T18:38:49Z
+58,44,Does this need to be public? Keeping it private avoids a second caller depending on the ordering quirk.,true,2026-07-31T19:21:07Z
+59,44,Looks good!,false,2026-07-31T19:28:00Z
+60,45,"This query runs inside the loop, so it issues one SELECT per row. Can we batch it with an IN clause?",true,2026-07-31T22:52:54Z
+61,46,I think the off-by-one here drops the last page of results when the count is an exact multiple of the page size.,true,2026-07-31T22:58:13Z
+62,46,"Could we add a comment on why 30 seconds? It looks arbitrary, and the SLA doc says 45.",true,2026-07-31T22:59:50Z
+63,45,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-07-31T23:02:09Z
+64,45,Does this need to be public? Keeping it private avoids a second caller depending on the ordering quirk.,true,2026-07-31T23:11:06Z
+65,45,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-07-31T23:12:14Z
+66,46,"The loop recomputes the total on every iteration. Hoist it out, it is O(n^2) for large invoices.",true,2026-07-31T23:12:58Z
+67,48,If the upstream call times out here we swallow the exception and return an empty list. Should this surface an error?,true,2026-08-03T22:09:23Z
+68,50,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-08-04T11:56:31Z
+69,50,If the upstream call times out here we swallow the exception and return an empty list. Should this surface an error?,true,2026-08-04T11:59:04Z
+70,51,"The index on (account_id, created_at) will not help this filter because of the OR. Can we rewrite as a UNION?",true,2026-08-04T13:18:02Z
+71,51,I think the off-by-one here drops the last page of results when the count is an exact multiple of the page size.,true,2026-08-04T13:18:08Z
+72,51,The migration drops the column in the same release that stops writing it. Safer to split into two deploys.,true,2026-08-04T13:20:17Z
+73,51,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-08-04T13:21:46Z
+74,51,Naming nit with a real consequence: `status` here means HTTP status but later it means job status. Rename one of them.,true,2026-08-04T13:30:52Z
+75,53,"The index on (account_id, created_at) will not help this filter because of the OR. Can we rewrite as a UNION?",true,2026-08-04T20:24:39Z
+76,52,"The loop recomputes the total on every iteration. Hoist it out, it is O(n^2) for large invoices.",true,2026-08-04T20:26:57Z
+77,52,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-08-04T20:36:43Z
+78,52,I think the off-by-one here drops the last page of results when the count is an exact multiple of the page size.,true,2026-08-04T20:37:42Z
+79,53,I think the off-by-one here drops the last page of results when the count is an exact multiple of the page size.,true,2026-08-04T20:38:22Z
+80,53,"We compare datetimes without a timezone here, which breaks across the DST boundary. Use aware datetimes.",true,2026-08-04T20:39:04Z
+81,54,The new helper duplicates the retry logic in the client module. Could we reuse that instead of adding a second backoff?,true,2026-08-04T20:41:41Z
+82,53,The migration drops the column in the same release that stops writing it. Safer to split into two deploys.,true,2026-08-04T20:44:23Z
+83,54,LGTM,false,2026-08-04T20:50:52Z
+84,55,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-08-05T01:06:43Z
+85,55,"This query runs inside the loop, so it issues one SELECT per row. Can we batch it with an IN clause?",true,2026-08-05T01:17:56Z
+86,55,I think the off-by-one here drops the last page of results when the count is an exact multiple of the page size.,true,2026-08-05T01:25:35Z
+87,55,LGTM,false,2026-08-05T01:28:32Z
+88,56,"The loop recomputes the total on every iteration. Hoist it out, it is O(n^2) for large invoices.",true,2026-08-05T13:20:13Z
+89,56,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-08-05T13:21:23Z
+90,59,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-08-05T18:23:38Z
+91,59,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-08-05T18:24:07Z
+92,60,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-08-05T22:41:18Z
+93,60,👍,false,2026-08-05T22:44:52Z
+94,61,Does this need to be public? Keeping it private avoids a second caller depending on the ordering quirk.,true,2026-08-05T22:56:41Z
+95,61,"Cache key is missing the tenant id, so one tenant could be served another tenant's cached result.",true,2026-08-05T23:00:52Z
+96,61,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-08-05T23:02:44Z
+97,62,"Could we add a comment on why 30 seconds? It looks arbitrary, and the SLA doc says 45.",true,2026-08-06T06:31:40Z
+98,62,LGTM,false,2026-08-06T06:41:38Z
+99,63,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-08-06T13:29:28Z
+100,64,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-08-06T18:56:39Z
+101,64,Looks good!,false,2026-08-06T19:18:21Z
+102,65,Looks good!,false,2026-08-06T20:58:20Z
+103,67,Looks good!,false,2026-08-07T11:43:28Z
+104,68,I think the off-by-one here drops the last page of results when the count is an exact multiple of the page size.,true,2026-08-07T13:52:19Z
+105,68,"The feature flag default is true in this file but false in the config service, so staging will differ from prod.",true,2026-08-07T13:59:08Z
+106,69,👍,false,2026-08-10T13:32:58Z
+107,72,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-08-10T20:01:28Z
+108,73,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-08-11T07:01:56Z
+109,73,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-08-11T07:08:34Z
+110,73,"Good approach overall. One concern: the lock is released before the write completes, so two workers can interleave.",true,2026-08-11T07:18:06Z
+111,73,"The loop recomputes the total on every iteration. Hoist it out, it is O(n^2) for large invoices.",true,2026-08-11T07:18:27Z
+112,74,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-08-11T11:03:48Z
+113,74,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-08-11T11:09:55Z
+114,74,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-08-11T11:13:43Z
+115,74,Does this need to be public? Keeping it private avoids a second caller depending on the ordering quirk.,true,2026-08-11T11:23:23Z
+116,75,Does this need to be public? Keeping it private avoids a second caller depending on the ordering quirk.,true,2026-08-11T12:15:02Z
+117,75,I think the off-by-one here drops the last page of results when the count is an exact multiple of the page size.,true,2026-08-11T12:17:37Z
+118,76,The migration drops the column in the same release that stops writing it. Safer to split into two deploys.,true,2026-08-11T12:30:58Z
+119,76,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-08-11T12:31:28Z
+120,76,LGTM,false,2026-08-11T12:42:31Z
+121,77,If the upstream call times out here we swallow the exception and return an empty list. Should this surface an error?,true,2026-08-11T15:18:40Z
+122,77,Naming nit with a real consequence: `status` here means HTTP status but later it means job status. Rename one of them.,true,2026-08-11T15:21:12Z
+123,77,I think the off-by-one here drops the last page of results when the count is an exact multiple of the page size.,true,2026-08-11T15:25:43Z
+124,77,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-08-11T15:35:01Z
+125,77,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-08-11T15:35:02Z
+126,78,"Good approach overall. One concern: the lock is released before the write completes, so two workers can interleave.",true,2026-08-11T15:49:57Z
+127,78,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-08-11T15:59:36Z
+128,78,"Could we add a comment on why 30 seconds? It looks arbitrary, and the SLA doc says 45.",true,2026-08-11T16:05:23Z
+129,78,👍,false,2026-08-11T16:10:40Z
+130,79,I think the off-by-one here drops the last page of results when the count is an exact multiple of the page size.,true,2026-08-11T18:18:25Z
+131,79,"Could we add a comment on why 30 seconds? It looks arbitrary, and the SLA doc says 45.",true,2026-08-11T18:24:50Z
+132,79,"This mutates the shared config dict, so concurrent requests could see each other's overrides. Please copy it first.",true,2026-08-11T18:32:49Z
+133,80,Looks good!,false,2026-08-11T19:28:58Z
+134,81,"Good approach overall. One concern: the lock is released before the write completes, so two workers can interleave.",true,2026-08-11T19:37:54Z
+135,81,"Could we add a comment on why 30 seconds? It looks arbitrary, and the SLA doc says 45.",true,2026-08-11T19:40:10Z
+136,81,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-08-11T19:42:13Z
+137,81,If the upstream call times out here we swallow the exception and return an empty list. Should this surface an error?,true,2026-08-11T19:43:39Z
+138,81,Does this need to be public? Keeping it private avoids a second caller depending on the ordering quirk.,true,2026-08-11T19:53:28Z
+139,81,👍,false,2026-08-11T20:01:05Z
+140,82,"The feature flag default is true in this file but false in the config service, so staging will differ from prod.",true,2026-08-11T20:20:17Z
+141,82,I think the off-by-one here drops the last page of results when the count is an exact multiple of the page size.,true,2026-08-11T20:22:22Z
+142,82,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-08-11T20:28:27Z
+143,83,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-08-11T23:33:01Z
+144,83,👍,false,2026-08-11T23:51:14Z
+145,84,LGTM,false,2026-08-12T00:49:38Z
+146,85,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-08-12T02:28:30Z
+147,85,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-08-12T02:38:55Z
+148,87,The new helper duplicates the retry logic in the client module. Could we reuse that instead of adding a second backoff?,true,2026-08-12T15:44:06Z
+149,88,"The feature flag default is true in this file but false in the config service, so staging will differ from prod.",true,2026-08-12T19:12:13Z
+150,89,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-08-14T11:14:01Z
+151,89,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-08-14T11:28:15Z
+152,90,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-08-14T15:48:17Z
+153,90,"The loop recomputes the total on every iteration. Hoist it out, it is O(n^2) for large invoices.",true,2026-08-14T16:01:58Z
+154,90,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-08-14T16:09:17Z
+155,91,"Cache key is missing the tenant id, so one tenant could be served another tenant's cached result.",true,2026-08-14T17:13:35Z
+156,91,"Good approach overall. One concern: the lock is released before the write completes, so two workers can interleave.",true,2026-08-14T17:24:12Z
+157,93,Naming nit with a real consequence: `status` here means HTTP status but later it means job status. Rename one of them.,true,2026-08-14T23:47:42Z
+158,93,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-08-14T23:49:06Z
+159,93,"Good approach overall. One concern: the lock is released before the write completes, so two workers can interleave.",true,2026-08-14T23:57:07Z
+160,93,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-08-15T00:07:20Z
+161,94,👍,false,2026-08-15T02:53:29Z
+162,95,👍,false,2026-08-15T12:26:03Z
+163,96,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-08-17T11:43:36Z
+164,97,Looks good!,false,2026-08-17T18:22:52Z
+165,98,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-08-17T20:58:39Z
+166,98,The new helper duplicates the retry logic in the client module. Could we reuse that instead of adding a second backoff?,true,2026-08-17T20:59:22Z
+167,98,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-08-17T21:02:38Z
+168,99,The new helper duplicates the retry logic in the client module. Could we reuse that instead of adding a second backoff?,true,2026-08-18T05:34:59Z
+169,100,"This mutates the shared config dict, so concurrent requests could see each other's overrides. Please copy it first.",true,2026-08-18T16:28:37Z
+170,100,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-08-18T16:33:07Z
+171,100,"We compare datetimes without a timezone here, which breaks across the DST boundary. Use aware datetimes.",true,2026-08-18T16:36:00Z
+172,100,"Cache key is missing the tenant id, so one tenant could be served another tenant's cached result.",true,2026-08-18T16:38:16Z
+173,103,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-08-18T21:24:38Z
+174,103,"The feature flag default is true in this file but false in the config service, so staging will differ from prod.",true,2026-08-18T21:29:48Z
+175,103,"We compare datetimes without a timezone here, which breaks across the DST boundary. Use aware datetimes.",true,2026-08-18T21:33:37Z
+176,103,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-08-18T21:39:20Z
+177,105,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-08-19T08:41:24Z
+178,107,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-08-19T12:40:46Z
+179,107,Naming nit with a real consequence: `status` here means HTTP status but later it means job status. Rename one of them.,true,2026-08-19T12:40:57Z
+180,108,"Cache key is missing the tenant id, so one tenant could be served another tenant's cached result.",true,2026-08-19T13:48:52Z
+181,108,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-08-19T13:51:54Z
+182,108,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-08-19T14:09:32Z
+183,111,"The index on (account_id, created_at) will not help this filter because of the OR. Can we rewrite as a UNION?",true,2026-08-19T19:45:49Z
+184,111,LGTM,false,2026-08-19T20:03:35Z
+185,113,"Cache key is missing the tenant id, so one tenant could be served another tenant's cached result.",true,2026-08-19T23:22:21Z
+186,116,Does this need to be public? Keeping it private avoids a second caller depending on the ordering quirk.,true,2026-08-20T15:19:30Z
+187,116,If the upstream call times out here we swallow the exception and return an empty list. Should this surface an error?,true,2026-08-20T15:40:30Z
+188,117,"We compare datetimes without a timezone here, which breaks across the DST boundary. Use aware datetimes.",true,2026-08-20T19:21:19Z
+189,117,"The feature flag default is true in this file but false in the config service, so staging will differ from prod.",true,2026-08-20T19:29:31Z
+190,117,The migration drops the column in the same release that stops writing it. Safer to split into two deploys.,true,2026-08-20T19:37:23Z
+191,118,The new helper duplicates the retry logic in the client module. Could we reuse that instead of adding a second backoff?,true,2026-08-21T03:45:36Z
+192,118,Naming nit with a real consequence: `status` here means HTTP status but later it means job status. Rename one of them.,true,2026-08-21T03:55:33Z
+193,119,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-08-21T13:47:47Z
+194,120,Looks good!,false,2026-08-21T17:38:35Z
+195,122,👍,false,2026-08-24T09:18:22Z
+196,123,Naming nit with a real consequence: `status` here means HTTP status but later it means job status. Rename one of them.,true,2026-08-24T14:43:58Z
+197,123,The new helper duplicates the retry logic in the client module. Could we reuse that instead of adding a second backoff?,true,2026-08-24T14:53:46Z
+198,123,Does this need to be public? Keeping it private avoids a second caller depending on the ordering quirk.,true,2026-08-24T14:59:35Z
+199,123,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-08-24T15:00:12Z
+200,124,Does this need to be public? Keeping it private avoids a second caller depending on the ordering quirk.,true,2026-08-24T15:10:54Z
+201,124,"Good approach overall. One concern: the lock is released before the write completes, so two workers can interleave.",true,2026-08-24T15:17:34Z
+202,124,"Cache key is missing the tenant id, so one tenant could be served another tenant's cached result.",true,2026-08-24T15:22:22Z
+203,124,LGTM,false,2026-08-24T15:34:54Z
+204,125,"This query runs inside the loop, so it issues one SELECT per row. Can we batch it with an IN clause?",true,2026-08-24T20:44:50Z
+205,126,Does this need to be public? Keeping it private avoids a second caller depending on the ordering quirk.,true,2026-08-24T20:47:34Z
+206,126,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-08-24T20:47:50Z
+207,125,"Good approach overall. One concern: the lock is released before the write completes, so two workers can interleave.",true,2026-08-24T20:50:27Z
+208,126,Looks good!,false,2026-08-24T21:07:12Z
+209,129,The migration drops the column in the same release that stops writing it. Safer to split into two deploys.,true,2026-08-25T17:58:47Z
+210,129,I think the off-by-one here drops the last page of results when the count is an exact multiple of the page size.,true,2026-08-25T18:08:33Z
+211,130,"The feature flag default is true in this file but false in the config service, so staging will differ from prod.",true,2026-08-25T23:02:50Z
+212,134,"Good approach overall. One concern: the lock is released before the write completes, so two workers can interleave.",true,2026-08-26T21:37:17Z
+213,136,"Good approach overall. One concern: the lock is released before the write completes, so two workers can interleave.",true,2026-08-27T04:30:11Z
+214,137,I think the off-by-one here drops the last page of results when the count is an exact multiple of the page size.,true,2026-08-27T06:07:03Z
+215,137,"The index on (account_id, created_at) will not help this filter because of the OR. Can we rewrite as a UNION?",true,2026-08-27T06:15:00Z
+216,138,Does this need to be public? Keeping it private avoids a second caller depending on the ordering quirk.,true,2026-08-27T08:03:45Z
+217,138,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-08-27T08:18:48Z
+218,139,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-08-27T15:59:57Z
+219,139,The migration drops the column in the same release that stops writing it. Safer to split into two deploys.,true,2026-08-27T16:09:45Z
+220,139,👍,false,2026-08-27T16:13:01Z
+221,140,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-08-28T07:46:59Z
+222,140,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-08-28T07:57:15Z
+223,141,I think the off-by-one here drops the last page of results when the count is an exact multiple of the page size.,true,2026-08-28T09:09:09Z
+224,141,"Good approach overall. One concern: the lock is released before the write completes, so two workers can interleave.",true,2026-08-28T09:11:54Z
+225,141,👍,false,2026-08-28T09:31:32Z
+226,142,Does this need to be public? Keeping it private avoids a second caller depending on the ordering quirk.,true,2026-08-28T11:47:58Z
+227,143,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-08-28T13:32:27Z
+228,143,"We compare datetimes without a timezone here, which breaks across the DST boundary. Use aware datetimes.",true,2026-08-28T13:36:10Z
+229,143,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-08-28T13:36:32Z
+230,144,LGTM,false,2026-08-28T15:06:35Z
+231,145,If the upstream call times out here we swallow the exception and return an empty list. Should this surface an error?,true,2026-08-28T18:57:52Z
+232,145,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-08-28T19:05:21Z
+233,145,LGTM,false,2026-08-28T19:08:09Z
+234,146,"This query runs inside the loop, so it issues one SELECT per row. Can we batch it with an IN clause?",true,2026-08-28T19:25:46Z
+235,146,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-08-28T19:34:22Z
+236,146,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-08-28T19:38:29Z
+237,147,LGTM,false,2026-08-31T10:25:34Z
+238,148,"This query runs inside the loop, so it issues one SELECT per row. Can we batch it with an IN clause?",true,2026-09-01T14:16:02Z
+239,148,"Cache key is missing the tenant id, so one tenant could be served another tenant's cached result.",true,2026-09-01T14:21:31Z
+240,149,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-09-01T14:37:00Z
+241,149,👍,false,2026-09-01T14:37:59Z
+242,150,"The loop recomputes the total on every iteration. Hoist it out, it is O(n^2) for large invoices.",true,2026-09-01T15:53:32Z
+243,151,"Good approach overall. One concern: the lock is released before the write completes, so two workers can interleave.",true,2026-09-01T16:00:49Z
+244,150,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-09-01T16:01:37Z
+245,151,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-09-01T16:05:13Z
+246,150,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-09-01T16:05:58Z
+247,152,"Good approach overall. One concern: the lock is released before the write completes, so two workers can interleave.",true,2026-09-01T16:48:01Z
+248,152,"Cache key is missing the tenant id, so one tenant could be served another tenant's cached result.",true,2026-09-01T16:52:51Z
+249,154,"The index on (account_id, created_at) will not help this filter because of the OR. Can we rewrite as a UNION?",true,2026-09-01T20:19:54Z
+250,155,LGTM,false,2026-09-01T23:28:40Z
+251,157,Looks good!,false,2026-09-02T02:28:27Z
+252,159,Looks good!,false,2026-09-02T12:22:34Z
+253,160,The migration drops the column in the same release that stops writing it. Safer to split into two deploys.,true,2026-09-02T13:00:54Z
+254,160,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-09-02T13:01:21Z
+255,160,"This query runs inside the loop, so it issues one SELECT per row. Can we batch it with an IN clause?",true,2026-09-02T13:02:21Z
+256,161,Looks good!,false,2026-09-02T20:01:20Z
+257,162,The migration drops the column in the same release that stops writing it. Safer to split into two deploys.,true,2026-09-03T09:45:56Z
+258,164,If the upstream call times out here we swallow the exception and return an empty list. Should this surface an error?,true,2026-09-03T13:16:44Z
+259,164,Looks good!,false,2026-09-03T13:34:53Z
+260,165,"This mutates the shared config dict, so concurrent requests could see each other's overrides. Please copy it first.",true,2026-09-03T13:42:26Z
+261,165,Does this need to be public? Keeping it private avoids a second caller depending on the ordering quirk.,true,2026-09-03T13:43:04Z
+262,166,Naming nit with a real consequence: `status` here means HTTP status but later it means job status. Rename one of them.,true,2026-09-03T15:33:22Z
+263,168,LGTM,false,2026-09-03T19:42:13Z
+264,171,The new helper duplicates the retry logic in the client module. Could we reuse that instead of adding a second backoff?,true,2026-09-04T19:02:33Z
+265,171,Does this need to be public? Keeping it private avoids a second caller depending on the ordering quirk.,true,2026-09-04T19:05:52Z
+266,171,"This mutates the shared config dict, so concurrent requests could see each other's overrides. Please copy it first.",true,2026-09-04T19:08:38Z
+267,174,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-09-07T13:05:55Z
+268,175,The migration drops the column in the same release that stops writing it. Safer to split into two deploys.,true,2026-09-07T16:04:03Z
+269,175,"The loop recomputes the total on every iteration. Hoist it out, it is O(n^2) for large invoices.",true,2026-09-07T16:05:45Z
+270,175,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-09-07T16:14:41Z
+271,175,"Could we add a comment on why 30 seconds? It looks arbitrary, and the SLA doc says 45.",true,2026-09-07T16:22:33Z
+272,176,"We compare datetimes without a timezone here, which breaks across the DST boundary. Use aware datetimes.",true,2026-09-07T17:38:22Z
+273,176,Naming nit with a real consequence: `status` here means HTTP status but later it means job status. Rename one of them.,true,2026-09-07T17:42:11Z
+274,176,👍,false,2026-09-07T18:00:26Z
+275,177,Naming nit with a real consequence: `status` here means HTTP status but later it means job status. Rename one of them.,true,2026-09-07T22:44:17Z
+276,177,👍,false,2026-09-07T22:47:56Z
+277,178,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-09-08T09:54:44Z
+278,178,The migration drops the column in the same release that stops writing it. Safer to split into two deploys.,true,2026-09-08T10:13:21Z
+279,180,Looks good!,false,2026-09-08T12:41:03Z
+280,181,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-09-08T14:05:01Z
+281,181,Naming nit with a real consequence: `status` here means HTTP status but later it means job status. Rename one of them.,true,2026-09-08T14:05:43Z
+282,181,Looks good!,false,2026-09-08T14:12:57Z
+283,182,"The index on (account_id, created_at) will not help this filter because of the OR. Can we rewrite as a UNION?",true,2026-09-08T16:03:03Z
+284,182,"This mutates the shared config dict, so concurrent requests could see each other's overrides. Please copy it first.",true,2026-09-08T16:07:20Z
+285,183,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-09-08T17:08:32Z
+286,183,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-09-08T17:11:30Z
+287,183,I think the off-by-one here drops the last page of results when the count is an exact multiple of the page size.,true,2026-09-08T17:13:36Z
+288,183,"The loop recomputes the total on every iteration. Hoist it out, it is O(n^2) for large invoices.",true,2026-09-08T17:25:44Z
+289,184,Naming nit with a real consequence: `status` here means HTTP status but later it means job status. Rename one of them.,true,2026-09-08T20:28:12Z
+290,188,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-09-09T15:35:32Z
+291,189,"The feature flag default is true in this file but false in the config service, so staging will differ from prod.",true,2026-09-09T16:28:46Z
+292,189,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-09-09T16:32:55Z
+293,189,"The index on (account_id, created_at) will not help this filter because of the OR. Can we rewrite as a UNION?",true,2026-09-09T16:47:12Z
+294,190,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-09-09T18:47:39Z
+295,190,"The index on (account_id, created_at) will not help this filter because of the OR. Can we rewrite as a UNION?",true,2026-09-09T18:49:21Z
+296,190,"The feature flag default is true in this file but false in the config service, so staging will differ from prod.",true,2026-09-09T18:53:20Z
+297,191,Does this need to be public? Keeping it private avoids a second caller depending on the ordering quirk.,true,2026-09-09T20:17:21Z
+298,192,"The index on (account_id, created_at) will not help this filter because of the OR. Can we rewrite as a UNION?",true,2026-09-09T20:20:24Z
+299,192,The migration drops the column in the same release that stops writing it. Safer to split into two deploys.,true,2026-09-09T20:23:42Z
+300,191,Looks good!,false,2026-09-09T20:25:55Z
+301,193,"This query runs inside the loop, so it issues one SELECT per row. Can we batch it with an IN clause?",true,2026-09-10T00:02:28Z
+302,193,Looks good!,false,2026-09-10T00:07:37Z
+303,194,Naming nit with a real consequence: `status` here means HTTP status but later it means job status. Rename one of them.,true,2026-09-10T12:47:38Z
+304,194,"The loop recomputes the total on every iteration. Hoist it out, it is O(n^2) for large invoices.",true,2026-09-10T12:47:55Z
+305,194,"This mutates the shared config dict, so concurrent requests could see each other's overrides. Please copy it first.",true,2026-09-10T13:04:32Z
+306,194,LGTM,false,2026-09-10T13:10:17Z
+307,195,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-09-10T13:41:17Z
+308,195,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-09-10T13:47:21Z
+309,195,"The index on (account_id, created_at) will not help this filter because of the OR. Can we rewrite as a UNION?",true,2026-09-10T13:50:03Z
+310,195,The migration drops the column in the same release that stops writing it. Safer to split into two deploys.,true,2026-09-10T13:52:43Z
+311,197,LGTM,false,2026-09-10T18:00:15Z
+312,198,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-09-10T19:26:38Z
+313,198,"The feature flag default is true in this file but false in the config service, so staging will differ from prod.",true,2026-09-10T19:30:20Z
+314,198,If the upstream call times out here we swallow the exception and return an empty list. Should this surface an error?,true,2026-09-10T19:47:24Z
+315,198,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-09-10T19:47:42Z
+316,200,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-09-10T20:19:43Z
+317,200,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-09-10T20:22:25Z
+318,200,"The feature flag default is true in this file but false in the config service, so staging will differ from prod.",true,2026-09-10T20:34:56Z
+319,200,Naming nit with a real consequence: `status` here means HTTP status but later it means job status. Rename one of them.,true,2026-09-10T20:41:14Z
+320,201,"Cache key is missing the tenant id, so one tenant could be served another tenant's cached result.",true,2026-09-10T22:00:57Z
+321,204,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-09-11T16:10:35Z
+322,205,"The loop recomputes the total on every iteration. Hoist it out, it is O(n^2) for large invoices.",true,2026-09-14T11:49:46Z
+323,205,"This query runs inside the loop, so it issues one SELECT per row. Can we batch it with an IN clause?",true,2026-09-14T11:53:11Z
+324,208,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-09-14T16:14:32Z
+325,207,LGTM,false,2026-09-14T16:14:54Z
+326,208,"Could we add a comment on why 30 seconds? It looks arbitrary, and the SLA doc says 45.",true,2026-09-14T16:26:54Z
+327,211,👍,false,2026-09-14T21:55:32Z
+328,215,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-09-15T15:45:02Z
+329,215,"This query runs inside the loop, so it issues one SELECT per row. Can we batch it with an IN clause?",true,2026-09-15T15:46:50Z
+330,215,The migration drops the column in the same release that stops writing it. Safer to split into two deploys.,true,2026-09-15T15:57:18Z
+331,215,If the upstream call times out here we swallow the exception and return an empty list. Should this surface an error?,true,2026-09-15T16:04:12Z
+332,216,"Cache key is missing the tenant id, so one tenant could be served another tenant's cached result.",true,2026-09-15T16:58:33Z
+333,216,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-09-15T17:08:44Z
+334,217,"The feature flag default is true in this file but false in the config service, so staging will differ from prod.",true,2026-09-15T18:07:20Z
+335,217,Looks good!,false,2026-09-15T18:13:43Z
+336,219,"The feature flag default is true in this file but false in the config service, so staging will differ from prod.",true,2026-09-15T19:51:06Z
+337,219,"This mutates the shared config dict, so concurrent requests could see each other's overrides. Please copy it first.",true,2026-09-15T20:11:41Z
+338,221,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-09-16T01:00:45Z
+339,221,The new helper duplicates the retry logic in the client module. Could we reuse that instead of adding a second backoff?,true,2026-09-16T01:04:32Z
+340,221,If the upstream call times out here we swallow the exception and return an empty list. Should this surface an error?,true,2026-09-16T01:13:02Z
+341,223,I think the off-by-one here drops the last page of results when the count is an exact multiple of the page size.,true,2026-09-16T10:58:45Z
+342,223,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-09-16T11:17:27Z
+343,224,The new helper duplicates the retry logic in the client module. Could we reuse that instead of adding a second backoff?,true,2026-09-16T15:57:22Z
+344,224,Naming nit with a real consequence: `status` here means HTTP status but later it means job status. Rename one of them.,true,2026-09-16T15:58:20Z
+345,225,"The index on (account_id, created_at) will not help this filter because of the OR. Can we rewrite as a UNION?",true,2026-09-16T17:06:04Z
+346,225,LGTM,false,2026-09-16T17:21:05Z
+347,226,"The index on (account_id, created_at) will not help this filter because of the OR. Can we rewrite as a UNION?",true,2026-09-16T17:49:02Z
+348,228,👍,false,2026-09-17T00:46:02Z
+349,232,The new helper duplicates the retry logic in the client module. Could we reuse that instead of adding a second backoff?,true,2026-09-17T17:21:20Z
+350,232,"Good approach overall. One concern: the lock is released before the write completes, so two workers can interleave.",true,2026-09-17T17:32:45Z
+351,232,LGTM,false,2026-09-17T17:37:12Z
+352,233,The new helper duplicates the retry logic in the client module. Could we reuse that instead of adding a second backoff?,true,2026-09-17T18:24:14Z
+353,233,LGTM,false,2026-09-17T18:40:51Z
+354,235,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-09-17T22:40:52Z
+355,236,LGTM,false,2026-09-18T07:01:15Z
+356,238,Looks good!,false,2026-09-18T22:40:52Z
+357,239,Does this need to be public? Keeping it private avoids a second caller depending on the ordering quirk.,true,2026-09-21T14:38:07Z
+358,239,The migration drops the column in the same release that stops writing it. Safer to split into two deploys.,true,2026-09-21T14:38:51Z
+359,239,I think the off-by-one here drops the last page of results when the count is an exact multiple of the page size.,true,2026-09-21T14:43:18Z
+360,239,"This query runs inside the loop, so it issues one SELECT per row. Can we batch it with an IN clause?",true,2026-09-21T14:50:17Z
+361,239,"Cache key is missing the tenant id, so one tenant could be served another tenant's cached result.",true,2026-09-21T14:53:42Z
+362,239,LGTM,false,2026-09-21T14:58:38Z
+363,240,If the upstream call times out here we swallow the exception and return an empty list. Should this surface an error?,true,2026-09-21T14:58:42Z
+364,240,"This query runs inside the loop, so it issues one SELECT per row. Can we batch it with an IN clause?",true,2026-09-21T14:59:28Z
+365,240,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-09-21T15:05:59Z
+366,240,"Good approach overall. One concern: the lock is released before the write completes, so two workers can interleave.",true,2026-09-21T15:13:22Z
+367,241,"The loop recomputes the total on every iteration. Hoist it out, it is O(n^2) for large invoices.",true,2026-09-21T17:36:26Z
+368,242,"This query runs inside the loop, so it issues one SELECT per row. Can we batch it with an IN clause?",true,2026-09-21T18:29:18Z
+369,242,LGTM,false,2026-09-21T18:42:24Z
+370,243,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-09-21T20:06:09Z
+371,245,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-09-22T13:03:57Z
+372,245,"Cache key is missing the tenant id, so one tenant could be served another tenant's cached result.",true,2026-09-22T13:12:26Z
+373,245,"This query runs inside the loop, so it issues one SELECT per row. Can we batch it with an IN clause?",true,2026-09-22T13:15:57Z
+374,247,LGTM,false,2026-09-22T18:55:39Z
+375,250,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-09-22T20:06:47Z
+376,250,"The index on (account_id, created_at) will not help this filter because of the OR. Can we rewrite as a UNION?",true,2026-09-22T20:13:50Z
+377,249,If the upstream call times out here we swallow the exception and return an empty list. Should this surface an error?,true,2026-09-22T20:16:12Z
+378,250,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-09-22T20:28:33Z
+379,249,Looks good!,false,2026-09-22T20:30:13Z
+380,251,"The feature flag default is true in this file but false in the config service, so staging will differ from prod.",true,2026-09-22T20:39:47Z
+381,251,"Could we add a comment on why 30 seconds? It looks arbitrary, and the SLA doc says 45.",true,2026-09-22T20:50:09Z
+382,252,"We compare datetimes without a timezone here, which breaks across the DST boundary. Use aware datetimes.",true,2026-09-22T23:01:04Z
+383,252,👍,false,2026-09-22T23:08:35Z
+384,253,"Could we add a comment on why 30 seconds? It looks arbitrary, and the SLA doc says 45.",true,2026-09-23T10:47:55Z
+385,253,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-09-23T10:49:14Z
+386,254,"Could we add a comment on why 30 seconds? It looks arbitrary, and the SLA doc says 45.",true,2026-09-23T11:46:43Z
+387,254,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-09-23T11:47:24Z
+388,254,Does this need to be public? Keeping it private avoids a second caller depending on the ordering quirk.,true,2026-09-23T11:48:29Z
+389,258,"We compare datetimes without a timezone here, which breaks across the DST boundary. Use aware datetimes.",true,2026-09-23T16:53:14Z
+390,259,👍,false,2026-09-23T17:15:20Z
+391,264,I think the off-by-one here drops the last page of results when the count is an exact multiple of the page size.,true,2026-09-24T11:51:58Z
+392,264,"The feature flag default is true in this file but false in the config service, so staging will differ from prod.",true,2026-09-24T11:53:14Z
+393,264,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-09-24T11:56:13Z
+394,264,Does this need to be public? Keeping it private avoids a second caller depending on the ordering quirk.,true,2026-09-24T11:59:35Z
+395,267,"This mutates the shared config dict, so concurrent requests could see each other's overrides. Please copy it first.",true,2026-09-24T19:30:22Z
+396,268,"This query runs inside the loop, so it issues one SELECT per row. Can we batch it with an IN clause?",true,2026-09-24T22:37:41Z
+397,268,The new helper duplicates the retry logic in the client module. Could we reuse that instead of adding a second backoff?,true,2026-09-24T22:43:27Z
+398,272,Naming nit with a real consequence: `status` here means HTTP status but later it means job status. Rename one of them.,true,2026-09-25T15:47:53Z
+399,274,"The feature flag default is true in this file but false in the config service, so staging will differ from prod.",true,2026-09-25T18:32:42Z
+400,274,The migration drops the column in the same release that stops writing it. Safer to split into two deploys.,true,2026-09-25T18:43:25Z
+401,275,"Cache key is missing the tenant id, so one tenant could be served another tenant's cached result.",true,2026-09-25T19:49:44Z
+402,275,I think the off-by-one here drops the last page of results when the count is an exact multiple of the page size.,true,2026-09-25T19:51:11Z
+403,277,I think the off-by-one here drops the last page of results when the count is an exact multiple of the page size.,true,2026-09-25T22:01:47Z
+404,277,"This mutates the shared config dict, so concurrent requests could see each other's overrides. Please copy it first.",true,2026-09-25T22:13:01Z
+405,277,"The feature flag default is true in this file but false in the config service, so staging will differ from prod.",true,2026-09-25T22:14:25Z
+406,277,"The loop recomputes the total on every iteration. Hoist it out, it is O(n^2) for large invoices.",true,2026-09-25T22:18:45Z
+407,277,LGTM,false,2026-09-25T22:26:28Z
+408,278,Naming nit with a real consequence: `status` here means HTTP status but later it means job status. Rename one of them.,true,2026-09-26T03:24:55Z
+409,278,Looks good!,false,2026-09-26T03:35:04Z
+410,279,Looks good!,false,2026-09-26T09:53:37Z
+411,280,"Cache key is missing the tenant id, so one tenant could be served another tenant's cached result.",true,2026-09-28T14:36:24Z
+412,281,"Cache key is missing the tenant id, so one tenant could be served another tenant's cached result.",true,2026-09-28T14:41:02Z
+413,280,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-09-28T14:45:16Z
+414,281,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-09-28T14:53:31Z
+415,281,"We compare datetimes without a timezone here, which breaks across the DST boundary. Use aware datetimes.",true,2026-09-28T14:54:47Z
+416,280,Naming nit with a real consequence: `status` here means HTTP status but later it means job status. Rename one of them.,true,2026-09-28T14:57:52Z
+417,282,"Good approach overall. One concern: the lock is released before the write completes, so two workers can interleave.",true,2026-09-28T16:16:01Z
+418,282,"Cache key is missing the tenant id, so one tenant could be served another tenant's cached result.",true,2026-09-28T16:24:45Z
+419,283,Looks good!,false,2026-09-28T18:11:31Z
+420,284,"Good approach overall. One concern: the lock is released before the write completes, so two workers can interleave.",true,2026-09-28T20:59:33Z
+421,285,👍,false,2026-09-28T22:06:28Z
+422,287,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-09-28T23:34:32Z
+423,289,"This mutates the shared config dict, so concurrent requests could see each other's overrides. Please copy it first.",true,2026-09-29T10:21:15Z
+424,289,"The loop recomputes the total on every iteration. Hoist it out, it is O(n^2) for large invoices.",true,2026-09-29T10:23:26Z
+425,289,"Good approach overall. One concern: the lock is released before the write completes, so two workers can interleave.",true,2026-09-29T10:33:29Z
+426,289,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-09-29T10:37:35Z
+427,290,Nothing covers the case where the token is expired but the refresh succeeds. Worth a test before this merges.,true,2026-09-29T15:17:00Z
+428,292,LGTM,false,2026-09-29T17:27:02Z
+429,293,Looks good!,false,2026-09-30T03:33:34Z
+430,295,If the upstream call times out here we swallow the exception and return an empty list. Should this surface an error?,true,2026-09-30T10:12:10Z
+431,297,LGTM,false,2026-09-30T15:16:33Z
+432,301,"Good approach overall. One concern: the lock is released before the write completes, so two workers can interleave.",true,2026-09-30T19:16:36Z
+433,301,"We compare datetimes without a timezone here, which breaks across the DST boundary. Use aware datetimes.",true,2026-09-30T19:23:10Z
+434,301,"Cache key is missing the tenant id, so one tenant could be served another tenant's cached result.",true,2026-09-30T19:34:18Z
+435,301,"The feature flag default is true in this file but false in the config service, so staging will differ from prod.",true,2026-09-30T19:34:18Z
+436,304,Does this need to be public? Keeping it private avoids a second caller depending on the ordering quirk.,true,2026-09-30T23:01:50Z
+437,304,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-09-30T23:03:45Z
+438,305,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-10-01T02:19:30Z
+439,305,"The loop recomputes the total on every iteration. Hoist it out, it is O(n^2) for large invoices.",true,2026-10-01T02:34:59Z
+440,305,Looks good!,false,2026-10-01T02:39:48Z
+441,306,"This mutates the shared config dict, so concurrent requests could see each other's overrides. Please copy it first.",true,2026-10-01T04:07:09Z
+442,308,I think the off-by-one here drops the last page of results when the count is an exact multiple of the page size.,true,2026-10-01T17:46:11Z
+443,308,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-10-01T17:50:57Z
+444,308,"The index on (account_id, created_at) will not help this filter because of the OR. Can we rewrite as a UNION?",true,2026-10-01T17:57:10Z
+445,309,"This mutates the shared config dict, so concurrent requests could see each other's overrides. Please copy it first.",true,2026-10-01T18:13:19Z
+446,310,Looks good!,false,2026-10-01T19:30:29Z
+447,311,Looks good!,false,2026-10-01T22:04:56Z
+448,312,If the upstream call times out here we swallow the exception and return an empty list. Should this surface an error?,true,2026-10-02T14:44:42Z
+449,313,"Cache key is missing the tenant id, so one tenant could be served another tenant's cached result.",true,2026-10-02T18:13:54Z
+450,313,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-10-02T18:18:40Z
+451,313,This catch block is too broad and will hide programming errors. Catch the specific exception type instead.,true,2026-10-02T18:26:46Z
+452,314,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-10-02T19:07:32Z
+453,314,If the upstream call times out here we swallow the exception and return an empty list. Should this surface an error?,true,2026-10-02T19:20:45Z
+454,314,Looks good!,false,2026-10-02T19:31:50Z
+455,315,If the upstream call times out here we swallow the exception and return an empty list. Should this surface an error?,true,2026-10-03T03:40:57Z
+456,316,"The index on (account_id, created_at) will not help this filter because of the OR. Can we rewrite as a UNION?",true,2026-10-05T14:40:31Z
+457,316,"We compare datetimes without a timezone here, which breaks across the DST boundary. Use aware datetimes.",true,2026-10-05T14:43:02Z
+458,316,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-10-05T14:43:54Z
+459,318,LGTM,false,2026-10-05T20:20:01Z
+460,320,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-10-06T04:33:36Z
+461,320,Looks good!,false,2026-10-06T04:56:34Z
+462,323,Looks good!,false,2026-10-06T12:29:47Z
+463,324,LGTM,false,2026-10-06T12:59:20Z
+464,325,"This mutates the shared config dict, so concurrent requests could see each other's overrides. Please copy it first.",true,2026-10-06T15:59:56Z
+465,326,Looks good!,false,2026-10-06T17:50:25Z
+466,327,If the upstream call times out here we swallow the exception and return an empty list. Should this surface an error?,true,2026-10-06T17:53:20Z
+467,327,Does this need to be public? Keeping it private avoids a second caller depending on the ordering quirk.,true,2026-10-06T17:56:19Z
+468,335,Returning a mutable default argument here means state leaks between calls. Use None and build it inside.,true,2026-10-07T19:30:54Z
+469,335,LGTM,false,2026-10-07T19:36:58Z
+470,336,If the upstream call times out here we swallow the exception and return an empty list. Should this surface an error?,true,2026-10-07T20:01:28Z
+471,337,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-10-08T03:47:49Z
+472,338,"Cache key is missing the tenant id, so one tenant could be served another tenant's cached result.",true,2026-10-08T13:08:25Z
+473,338,"Could we add a comment on why 30 seconds? It looks arbitrary, and the SLA doc says 45.",true,2026-10-08T13:16:53Z
+474,339,I think the off-by-one here drops the last page of results when the count is an exact multiple of the page size.,true,2026-10-08T15:12:58Z
+475,341,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-10-08T15:54:06Z
+476,341,"Cache key is missing the tenant id, so one tenant could be served another tenant's cached result.",true,2026-10-08T15:59:34Z
+477,344,"The index on (account_id, created_at) will not help this filter because of the OR. Can we rewrite as a UNION?",true,2026-10-08T22:00:33Z
+478,344,"Could we add a comment on why 30 seconds? It looks arbitrary, and the SLA doc says 45.",true,2026-10-08T22:05:52Z
+479,344,"The loop recomputes the total on every iteration. Hoist it out, it is O(n^2) for large invoices.",true,2026-10-08T22:11:09Z
+480,345,"This mutates the shared config dict, so concurrent requests could see each other's overrides. Please copy it first.",true,2026-10-08T23:17:48Z
+481,345,"Cache key is missing the tenant id, so one tenant could be served another tenant's cached result.",true,2026-10-08T23:26:16Z
+482,347,Does this need to be public? Keeping it private avoids a second caller depending on the ordering quirk.,true,2026-10-09T05:25:26Z
+483,347,Looks good!,false,2026-10-09T05:48:58Z
+484,349,"This mutates the shared config dict, so concurrent requests could see each other's overrides. Please copy it first.",true,2026-10-09T10:36:14Z
+485,348,👍,false,2026-10-09T10:48:46Z
+486,349,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-10-09T10:49:22Z
+487,349,If the upstream call times out here we swallow the exception and return an empty list. Should this surface an error?,true,2026-10-09T10:57:26Z
+488,350,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-10-09T13:24:58Z
+489,351,This test only asserts the status code. Please also assert the response body so a wrong payload fails the test.,true,2026-10-09T16:32:44Z
+490,351,"The index on (account_id, created_at) will not help this filter because of the OR. Can we rewrite as a UNION?",true,2026-10-09T16:35:14Z
+491,351,"On failure we log the full request body, which includes the customer email. Please redact before logging.",true,2026-10-09T16:52:48Z

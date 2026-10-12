@@ -1,0 +1,26 @@
+[
+ {
+  "rule_key": "rubber_stamp",
+  "pr_id": 151,
+  "person_id": 4,
+  "role": "reviewer",
+  "status": "dismissed",
+  "dismiss_reason": "Live pairing session: author and reviewer walked through the diff together."
+ },
+ {
+  "rule_key": "merged_unreviewed",
+  "pr_id": 102,
+  "person_id": 5,
+  "role": "author",
+  "status": "acknowledged",
+  "note": "Config-only change agreed in standup."
+ },
+ {
+  "rule_key": "escape",
+  "pr_id": 99,
+  "person_id": 4,
+  "role": "reviewer",
+  "status": "acknowledged",
+  "note": "To raise in the next retro."
+ }
+]
