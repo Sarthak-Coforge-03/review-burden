@@ -78,6 +78,15 @@ def self_approval(prs: Sequence[PullRequest], params: RuleParams) -> list[FlagCa
     ]
 
 
+def is_rubber_stamp(pr: PullRequest, review: Review, params: RuleParams) -> bool:
+    """An approval of a big PR that came too fast or without a single substantive comment."""
+    if review.state != ReviewState.approved or pr.lines_changed < params.rubber_stamp_min_lines:
+        return False
+    seconds = (review.submitted_at - pr.opened_at).total_seconds()
+    substantive = sum(1 for c in review.comments if is_substantive(c, params))
+    return seconds < params.rubber_stamp_max_seconds or substantive == 0
+
+
 def rubber_stamp(prs: Sequence[PullRequest], params: RuleParams) -> list[FlagCandidate]:
     """An approval on a big PR that came within seconds of opening or without one substantive comment.
 
@@ -85,39 +94,31 @@ def rubber_stamp(prs: Sequence[PullRequest], params: RuleParams) -> list[FlagCan
     """
     flags = []
     for pr in prs:
-        if pr.lines_changed < params.rubber_stamp_min_lines:
-            continue
         flagged_reviewers: set[int] = set()
         for review in _reviews_in_order(pr):
-            if review.state != ReviewState.approved or review.reviewer_id in flagged_reviewers:
+            if review.reviewer_id in flagged_reviewers or not is_rubber_stamp(pr, review, params):
                 continue
+            flagged_reviewers.add(review.reviewer_id)
             seconds = (review.submitted_at - pr.opened_at).total_seconds()
             substantive = sum(1 for c in review.comments if is_substantive(c, params))
-            if seconds < params.rubber_stamp_max_seconds or substantive == 0:
-                flagged_reviewers.add(review.reviewer_id)
-                flags.append(FlagCandidate(
-                    RuleKey.rubber_stamp, pr.id, review.reviewer_id, FlagRole.reviewer, review.submitted_at,
-                    {"lines": pr.lines_changed, "seconds_to_approve": int(seconds), "substantive_comments": substantive},
-                ))
+            flags.append(FlagCandidate(
+                RuleKey.rubber_stamp, pr.id, review.reviewer_id, FlagRole.reviewer, review.submitted_at,
+                {"lines": pr.lines_changed, "seconds_to_approve": int(seconds), "substantive_comments": substantive},
+            ))
     return flags
 
 
-def escape(prs: Sequence[PullRequest], params: RuleParams) -> list[FlagCandidate]:
-    """A revert or hotfix (a PR with `fixes_pr_id`) opened within the window after a merge.
-
-    Flags every approver of the original PR, as reviewer; the author is not flagged. Uses the
-    earliest qualifying fix if there are several.
-    """
+def escaping_fixes(prs: Sequence[PullRequest], params: RuleParams) -> dict[int, PullRequest]:
+    """Merged PR id -> the earliest revert or hotfix (a PR with `fixes_pr_id`) opened within the window after merge."""
     fixes_by_pr: dict[int, list[PullRequest]] = {}
     for candidate in prs:
         if candidate.fixes_pr_id is not None:
             fixes_by_pr.setdefault(candidate.fixes_pr_id, []).append(candidate)
 
     window = timedelta(days=params.escape_window_days)
-    flags = []
+    escaped = {}
     for pr in prs:
-        approvers = _approver_ids(pr)
-        if pr.merged_at is None or not approvers:
+        if pr.merged_at is None:
             continue
         fix = next(
             (
@@ -126,9 +127,24 @@ def escape(prs: Sequence[PullRequest], params: RuleParams) -> list[FlagCandidate
             ),
             None,
         )
+        if fix is not None:
+            escaped[pr.id] = fix
+    return escaped
+
+
+def escape(prs: Sequence[PullRequest], params: RuleParams) -> list[FlagCandidate]:
+    """A revert or hotfix opened within the window after a merge.
+
+    Flags every approver of the original PR, as reviewer; the author is not flagged. Uses the
+    earliest qualifying fix if there are several.
+    """
+    escaped = escaping_fixes(prs, params)
+    flags = []
+    for pr in prs:
+        fix = escaped.get(pr.id)
         if fix is None:
             continue
-        for approver in sorted(approvers):
+        for approver in sorted(_approver_ids(pr)):
             flags.append(FlagCandidate(
                 RuleKey.escape, pr.id, approver, FlagRole.reviewer, fix.opened_at,
                 {"fix_pr_id": fix.id, "kind": fix.kind.value},

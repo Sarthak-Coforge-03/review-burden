@@ -6,6 +6,8 @@ from backend.models import PullRequest, PullRequestKind, Review, ReviewComment, 
 from backend.rules.params import DEFAULT_PARAMS, RuleParams
 from backend.rules.pr_rules import (
     escape,
+    escaping_fixes,
+    is_rubber_stamp,
     is_substantive,
     merged_changes_pending,
     merged_unreviewed,
@@ -214,3 +216,19 @@ def test_earliest_fix_is_used():
     fixes = [_fix(MERGED_AT + 3 * H, pr_id=3), _fix(MERGED_AT + 2 * H, pr_id=2)]
     [flag] = escape([original, *fixes], DEFAULT_PARAMS)
     assert flag.evidence["fix_pr_id"] == 2
+
+
+def test_escaping_fixes_maps_the_original_to_its_earliest_fix_even_when_unreviewed():
+    fixes = [_fix(MERGED_AT + 3 * H, pr_id=3), _fix(MERGED_AT + 2 * H, pr_id=2)]
+    assert {pr_id: fix.id for pr_id, fix in escaping_fixes([_original([]), *fixes], DEFAULT_PARAMS).items()} == {1: 2}
+
+
+# ---------------------------------------------------------------- is_rubber_stamp (shared with the quality report)
+
+def test_is_rubber_stamp_matches_the_rule():
+    big = pr(lines=400)
+    assert is_rubber_stamp(big, review(ALICE, APPROVED, 60 * S, [comment()]), DEFAULT_PARAMS)  # too fast
+    assert is_rubber_stamp(big, review(ALICE, APPROVED, 2 * H), DEFAULT_PARAMS)  # no substantive comment
+    assert not is_rubber_stamp(big, review(ALICE, APPROVED, 2 * H, [comment()]), DEFAULT_PARAMS)
+    assert not is_rubber_stamp(big, review(ALICE, COMMENTED, 60 * S), DEFAULT_PARAMS)
+    assert not is_rubber_stamp(pr(lines=299), review(ALICE, APPROVED, 60 * S), DEFAULT_PARAMS)
