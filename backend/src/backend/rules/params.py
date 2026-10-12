@@ -32,5 +32,14 @@ class RuleParams:
     self_approval_pattern_window_days: int = 14
     self_approval_pattern_min_count: int = 2
 
+    # health score: a weighted average of five parts, each 0-100, over the last window
+    health_window_days: int = 28
+    health_weight_coverage: float = 0.25
+    health_weight_depth: float = 0.25
+    health_weight_escapes: float = 0.20
+    health_weight_responsiveness: float = 0.15
+    health_weight_load_balance: float = 0.15
+    health_escape_rate_floor: float = 0.10  # an escape rate at or above this scores 0
+
 
 DEFAULT_PARAMS = RuleParams()

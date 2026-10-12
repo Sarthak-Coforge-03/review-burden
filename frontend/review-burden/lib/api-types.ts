@@ -19,3 +19,6 @@ export type LoadReport = Schemas["LoadReport"];
 export type LoadRow = Schemas["LoadRow"];
 export type QualityReport = Schemas["QualityReport"];
 export type QualityRow = Schemas["QualityRow"];
+export type Overview = Schemas["Overview"];
+export type HealthPart = Schemas["HealthPart"];
+export type HealthPartKey = Schemas["HealthPartKey"];

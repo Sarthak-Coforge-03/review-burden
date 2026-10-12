@@ -26,7 +26,8 @@ Types for API responses and requests are generated from the backend's OpenAPI sc
 | Path | What |
 |---|---|
 | `app/layout.tsx` | Header (brand, nav, role switcher) and page frame |
-| `app/*/page.tsx` | One folder per screen; most are placeholders until their feature branch lands |
+| `app/*/page.tsx` | One folder per screen; `app/settings/` is still a placeholder |
+| `app/page.tsx`, `components/health-trend-chart.tsx` | Team overview (manager only): health score and its five parts, KPI tiles, weekly score trend |
 | `app/flags/` | Flag inbox: status tabs, rule/person filters (URL search params), triage via the `triageFlag` Server Action |
 | `app/people/`, `app/people/[id]/` | Developer cards (manager only) and one person's profile |
 | `app/load/`, `components/load-charts.tsx` | Review load (manager only): weekly and 28-day charts (Recharts, client component), per-person table |

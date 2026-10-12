@@ -1,6 +1,7 @@
 """API request and response models. The frontend's TypeScript types are generated from these."""
 
 from datetime import datetime
+from enum import StrEnum
 from typing import Any, Self
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
@@ -147,6 +148,64 @@ class QualityReport(BaseModel):
     escape_window_days: int
     medians: QualityMedians
     people: list[QualityRow] = Field(description="Developers, by name.")
+
+
+class HealthPartKey(StrEnum):
+    coverage = "coverage"
+    depth = "depth"
+    escapes = "escapes"
+    responsiveness = "responsiveness"
+    load_balance = "load_balance"
+
+
+class HealthPart(BaseModel):
+    """One part of the health score. `good` of `total` went well; how that maps to `score` depends on the part."""
+
+    key: HealthPartKey
+    weight: float
+    good: int = Field(
+        description="coverage: merged PRs approved by someone other than the author before merging; "
+        "depth: big-PR approvals that are not rubber stamps; escapes: approved merged PRs with no revert or hotfix; "
+        "responsiveness: review requests answered (or the PR merged) within the stale threshold; "
+        "load_balance: reviews done by everyone except the two busiest developers."
+    )
+    total: int
+    score: int | None = Field(
+        description="0-100; null when there was nothing to measure, and the other parts share its weight."
+    )
+
+
+class HealthSnapshot(BaseModel):
+    as_of: datetime
+    score: int | None = Field(
+        description="Weighted average of the parts' scores, 0-100; null when no part could be measured."
+    )
+
+
+class OverviewKpis(BaseModel):
+    open_flags: int = Field(description="Flags not yet acknowledged or dismissed, at any age.")
+    prs_merged: int = Field(description="PRs merged in the window.")
+    median_hours_to_first_review: float | None = Field(
+        description="PRs opened in the window: median hours until someone other than the author reviewed."
+    )
+    waiting_reviews: int = Field(description="Review requests still unanswered on unmerged PRs.")
+    stale_reviews: int = Field(description="Of those, how many have waited past the stale threshold.")
+
+
+class Overview(BaseModel):
+    as_of: datetime
+    since: datetime
+    window_days: int
+    escape_rate_floor: float = Field(description="An escape rate at or above this scores 0 on the escapes part.")
+    top2_share_threshold: float = Field(description="Load balance scores 100 while the top two do at most this share.")
+    stale_after_hours: int = Field(description="Responsiveness counts a request answered within this many hours.")
+    score: int | None
+    parts: list[HealthPart]
+    kpis: OverviewKpis
+    trend: list[HealthSnapshot] = Field(
+        description="The score as it stood at the end of each of the last `weeks` weeks, oldest first. "
+        "Earlier weeks whose window starts before the first PR are left out; the last point is always `as_of`."
+    )
 
 
 class FlagUpdate(BaseModel):
