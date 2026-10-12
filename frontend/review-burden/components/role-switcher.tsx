@@ -35,7 +35,7 @@ export function RoleSwitcher({ people, currentId }: RoleSwitcherProps) {
 
   return (
     <label className="flex items-center gap-2 text-sm">
-      <span className="opacity-70 whitespace-nowrap">Viewing as</span>
+      <span className="hidden xl:inline opacity-70 whitespace-nowrap">Viewing as</span>
       <select
         className="select select-sm w-44"
         value={currentId ?? ""}

@@ -21,7 +21,7 @@ export async function ViewerBar() {
 
   return (
     <>
-      <nav className="flex-1 min-w-0">
+      <nav className="flex-1 min-w-0 overflow-x-auto">
         <NavLinks items={nav} />
       </nav>
       <div className="flex-none">

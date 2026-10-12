@@ -11,7 +11,7 @@ export type NavItem = {
 export function NavLinks({ items }: { items: NavItem[] }) {
   const pathname = usePathname();
   return (
-    <ul className="menu menu-horizontal gap-1 px-1">
+    <ul className="menu menu-horizontal flex-nowrap gap-1 px-1 whitespace-nowrap">
       {items.map((item) => {
         const active =
           item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
