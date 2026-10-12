@@ -85,6 +85,32 @@ class PersonProfile(BaseModel):
     activity: ReviewActivity
 
 
+class LoadRow(BaseModel):
+    person: Person
+    weekly: list[int] = Field(description="Reviews per week, aligned with LoadReport.week_starts.")
+    reviews: int = Field(description="Reviews in the load window.")
+    share: float = Field(description="reviews / team_reviews, 0 to 1.")
+    median_multiple: float | None = Field(description="reviews / team_median; null when the median is 0.")
+    over_median_multiple: bool
+    pending: int = Field(description="Review requests waiting on this person now.")
+    oldest_pending_hours: float | None = Field(description="Age of the oldest waiting request; null if none.")
+
+
+class LoadReport(BaseModel):
+    as_of: datetime
+    week_starts: list[datetime] = Field(
+        description="Oldest first. Each week is the 7 days after its start; the last one ends at as_of."
+    )
+    window_days: int
+    team_reviews: int = Field(description="Reviews by all developers in the window (the manager is not counted).")
+    team_median: float
+    top2_share: float = Field(description="Share of team_reviews done by the two busiest developers.")
+    top2_share_threshold: float
+    median_multiple_threshold: float
+    concentrated: bool = Field(description="Whether the load_concentration rule fires on these numbers.")
+    people: list[LoadRow] = Field(description="Developers, busiest reviewer first.")
+
+
 class FlagUpdate(BaseModel):
     status: FlagStatus
     note: str | None = Field(
