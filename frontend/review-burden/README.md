@@ -1,36 +1,27 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frontend
 
-## Getting Started
-
-First, run the development server:
+Next.js 16 (App Router) with Tailwind 4 + DaisyUI 5 and Recharts. See the root README for running everything with Docker.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000, API expected on http://localhost:8000
+npm run build   # production build (standalone output, used by the Dockerfile)
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## How data is fetched
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Pages are Server Components and call the API through `apiFetch` in `lib/api.ts`. It runs on the server only and adds `X-Viewer-Id` from the `viewer_id` cookie.
+- `cacheComponents` is enabled, so anything that reads cookies or fetches per-request data must render inside a `<Suspense>` boundary (see `components/viewer-bar.tsx`), otherwise `next build` fails.
+- The role switcher changes the viewer through the `setViewer` Server Action in `app/actions.ts`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Where things are
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Path | What |
+|---|---|
+| `app/layout.tsx` | Header (brand, nav, role switcher) and page frame |
+| `app/*/page.tsx` | One folder per screen; most are placeholders until their feature branch lands |
+| `components/viewer-bar.tsx` | Loads people and the current viewer, picks manager or developer nav |
+| `components/role-switcher.tsx` | "Viewing as" dropdown |
+| `components/nav-links.tsx` | Nav links with active state |
+| `lib/api.ts`, `lib/viewer.ts` | Server-only API client and viewer cookie helpers |
