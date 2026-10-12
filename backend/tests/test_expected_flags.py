@@ -1,42 +1,36 @@
-"""The rules, run on the seeded data, must find exactly the planted problems in data/expected_flags.json."""
+"""End to end: seeding the demo (data, rule engine, triage) must reproduce data/expected_flags.json
+exactly: every flag and its evidence, the counts, the load numbers and the repeat patterns."""
 
 import json
 from collections import Counter
+from collections.abc import Iterator
+from dataclasses import asdict
 
 import pytest
 from sqlalchemy import select
-from sqlalchemy.orm import selectinload
 
 from backend import clock
 from backend.db import SessionLocal
-from backend.models import Developer, PullRequest, Review, ReviewRequest, RuleKey
+from backend.models import Flag, FlagStatus, RuleKey
 from backend.rules.params import DEFAULT_PARAMS
-from backend.rules.pr_rules import PR_RULES
-from backend.rules.types import FlagCandidate
-from backend.rules.window_rules import load_concentration, stale_backlog
-from backend.seed import DEFAULT_SEED_PATH
+from backend.rules.patterns import active_patterns
+from backend.seed import DEFAULT_SEED_PATH, seed_demo
 
 EXPECTED = json.loads((DEFAULT_SEED_PATH.parent / "expected_flags.json").read_text())
 
 
-def flag_key(rule_key, pr_id, person_id, role) -> tuple:
+def plain_key(rule_key, pr_id, person_id, role) -> tuple:
     return (str(rule_key), pr_id, person_id, None if role is None else str(role))
 
 
 @pytest.fixture(scope="module")
-def found(seeded_db) -> list[FlagCandidate]:
-    now = clock.now()
+def flags(seed_data, triage_data) -> Iterator[list[Flag]]:
+    """The demo as `python -m backend.seed` builds it, in a transaction rolled back after this module."""
     with SessionLocal() as session:
-        prs = session.scalars(
-            select(PullRequest).options(selectinload(PullRequest.reviews).selectinload(Review.comments))
-        ).all()
-        requests = session.scalars(select(ReviewRequest).options(selectinload(ReviewRequest.pull_request))).all()
-        reviews = session.scalars(select(Review)).all()
-        developers = session.scalars(select(Developer)).all()
-    flags = [f for rule in PR_RULES for f in rule(prs, DEFAULT_PARAMS)]
-    flags += stale_backlog(requests, now, DEFAULT_PARAMS)
-    flags += load_concentration(reviews, developers, now, DEFAULT_PARAMS)
-    return flags
+        seed_demo(session, seed_data, triage_data)
+        session.expire_all()  # read evidence back from the database, not the objects that wrote it
+        yield list(session.scalars(select(Flag)))
+        session.rollback()
 
 
 def test_clock_defaults_to_the_data_as_of():
@@ -44,10 +38,10 @@ def test_clock_defaults_to_the_data_as_of():
 
 
 @pytest.mark.parametrize("rule_key", list(RuleKey))
-def test_rule_matches_expected_flags(rule_key, found):
-    got = {flag_key(*f.key): f.evidence for f in found if f.rule_key == rule_key}
+def test_rule_matches_expected_flags(rule_key, flags):
+    got = {plain_key(*f.key): f.evidence for f in flags if f.rule_key == rule_key}
     want = {
-        flag_key(f["rule_key"], f["pr_id"], f["person_id"], f["role"]): f["evidence"]
+        plain_key(f["rule_key"], f["pr_id"], f["person_id"], f["role"]): f["evidence"]
         for f in EXPECTED["flags"]
         if f["rule_key"] == rule_key
     }
@@ -59,17 +53,32 @@ def test_rule_matches_expected_flags(rule_key, found):
         assert evidence.items() <= got[key].items(), key
 
 
-def test_flag_counts_match(found):
-    assert Counter(str(f.rule_key) for f in found) == EXPECTED["flag_counts"]
+def test_flag_counts_match(flags):
+    assert Counter(str(f.rule_key) for f in flags) == EXPECTED["flag_counts"]
 
 
-def test_no_two_flags_share_an_identity(found):
-    assert len({f.key for f in found}) == len(found)
+def test_load_numbers_match(flags):
+    [load] = [f for f in flags if f.rule_key == RuleKey.load_concentration]
+    for field in ("counts", "top2_share", "median", "over_median_multiple"):
+        assert load.evidence[field] == EXPECTED["load"][field], field
 
 
-def test_load_numbers_match(found):
-    [load] = [f for f in found if f.rule_key == RuleKey.load_concentration]
-    assert load.evidence["counts"] == EXPECTED["load"]["counts"]
-    assert load.evidence["top2_share"] == EXPECTED["load"]["top2_share"]
-    assert load.evidence["median"] == EXPECTED["load"]["median"]
-    assert load.evidence["over_median_multiple"] == EXPECTED["load"]["over_median_multiple"]
+def test_triage_is_applied_and_everything_else_is_open(flags, triage_data):
+    want = {plain_key(t["rule_key"], t["pr_id"], t["person_id"], t["role"]): t for t in triage_data}
+    for flag in flags:
+        entry = want.get(plain_key(*flag.key))
+        if entry is None:
+            assert flag.status == FlagStatus.open
+        else:
+            assert flag.status == entry["status"]
+            assert flag.note == entry.get("note")
+            assert flag.dismiss_reason == entry.get("dismiss_reason")
+
+
+def test_repeat_patterns_match(flags):
+    found = [
+        {**asdict(p), "role": str(p.role), "rule_key": str(p.rule_key), "pr_ids": list(p.pr_ids)}
+        for p in active_patterns(flags, clock.now(), DEFAULT_PARAMS)
+    ]
+    order = lambda p: (p["person_id"], p["rule_key"])  # noqa: E731
+    assert sorted(found, key=order) == sorted(EXPECTED["repeat_patterns"], key=order)

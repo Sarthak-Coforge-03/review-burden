@@ -1,7 +1,5 @@
 """Repeat patterns: unit cases on in-memory flags, then the planted patterns in the seeded data."""
 
-import json
-from dataclasses import asdict
 from datetime import datetime, timedelta, timezone
 
 from sqlalchemy import select
@@ -11,7 +9,6 @@ from backend.models import Flag, FlagRole, FlagStatus, RuleKey
 from backend.rules.engine import run_engine
 from backend.rules.params import DEFAULT_PARAMS
 from backend.rules.patterns import RepeatPattern, active_patterns
-from backend.seed import DEFAULT_SEED_PATH
 
 NOW = datetime(2026, 10, 9, 18, 0, tzinfo=timezone.utc)
 D = timedelta(days=1)
@@ -92,26 +89,7 @@ def test_team_level_flags_are_ignored():
     assert not active_patterns(team, NOW, DEFAULT_PARAMS)
 
 
-# ---------------------------------------------------------------- seeded data
-
-EXPECTED_PATTERNS = json.loads((DEFAULT_SEED_PATH.parent / "expected_flags.json").read_text())["repeat_patterns"]
-
-
-def as_plain(patterns: list[RepeatPattern]) -> list[dict]:
-    return sorted(
-        ({**asdict(p), "role": str(p.role), "rule_key": str(p.rule_key), "pr_ids": list(p.pr_ids)} for p in patterns),
-        key=lambda p: (p["person_id"], p["rule_key"]),
-    )
-
-
-def test_planted_patterns_with_the_pairing_session_dismissed(session):
-    run_engine(session)
-    pairing = session.scalar(select(Flag).where(Flag.rule_key == RuleKey.rubber_stamp, Flag.pr_id == 151))
-    pairing.status = FlagStatus.dismissed
-
-    found = as_plain(active_patterns(session.scalars(select(Flag)), clock.now(), DEFAULT_PARAMS))
-    assert found == sorted(EXPECTED_PATTERNS, key=lambda p: (p["person_id"], p["rule_key"]))
-
+# ---------------------------------------------------------------- seeded data (patterns with triage: test_expected_flags)
 
 def test_without_the_dismissal_omar_has_four_stamps_in_the_window(session):
     run_engine(session)
