@@ -389,6 +389,72 @@
         }
       }
     },
+    "/api/quality": {
+      "get": {
+        "tags": [
+          "quality"
+        ],
+        "summary": "Get Quality",
+        "description": "Per reviewer: approval speed, comment depth, rubber stamps and escapes, with team medians. Manager only.",
+        "operationId": "get_quality_api_quality_get",
+        "parameters": [
+          {
+            "name": "weeks",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 52,
+              "minimum": 1,
+              "description": "How many weeks of reviews to include.",
+              "default": 12,
+              "title": "Weeks"
+            },
+            "description": "How many weeks of reviews to include."
+          },
+          {
+            "name": "x-viewer-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Who is viewing. Demo only: there is no real auth.",
+              "title": "X-Viewer-Id"
+            },
+            "description": "Who is viewing. Demo only: there is no real auth."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QualityReport"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/health": {
       "get": {
         "summary": "Health",
@@ -875,6 +941,217 @@
           "author_id"
         ],
         "title": "PullRequestRef"
+      },
+      "QualityMedians": {
+        "properties": {
+          "minutes_per_100_lines": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minutes Per 100 Lines"
+          },
+          "comments_per_100_lines": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comments Per 100 Lines"
+          },
+          "substantive_share": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Substantive Share"
+          },
+          "escape_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Escape Rate"
+          }
+        },
+        "type": "object",
+        "required": [
+          "minutes_per_100_lines",
+          "comments_per_100_lines",
+          "substantive_share",
+          "escape_rate"
+        ],
+        "title": "QualityMedians",
+        "description": "Medians across developers who have a value; null when nobody does."
+      },
+      "QualityReport": {
+        "properties": {
+          "as_of": {
+            "type": "string",
+            "format": "date-time",
+            "title": "As Of"
+          },
+          "since": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Since"
+          },
+          "weeks": {
+            "type": "integer",
+            "title": "Weeks"
+          },
+          "big_pr_lines": {
+            "type": "integer",
+            "title": "Big Pr Lines",
+            "description": "The rubber_stamp rule's size threshold."
+          },
+          "escape_window_days": {
+            "type": "integer",
+            "title": "Escape Window Days"
+          },
+          "medians": {
+            "$ref": "#/components/schemas/QualityMedians"
+          },
+          "people": {
+            "items": {
+              "$ref": "#/components/schemas/QualityRow"
+            },
+            "type": "array",
+            "title": "People",
+            "description": "Developers, by name."
+          }
+        },
+        "type": "object",
+        "required": [
+          "as_of",
+          "since",
+          "weeks",
+          "big_pr_lines",
+          "escape_window_days",
+          "medians",
+          "people"
+        ],
+        "title": "QualityReport"
+      },
+      "QualityRow": {
+        "properties": {
+          "person": {
+            "$ref": "#/components/schemas/Person"
+          },
+          "reviews": {
+            "type": "integer",
+            "title": "Reviews",
+            "description": "Reviews submitted in the period, any verdict."
+          },
+          "approvals": {
+            "type": "integer",
+            "title": "Approvals",
+            "description": "PRs approved in the period (a re-approval of the same PR counts once)."
+          },
+          "minutes_per_100_lines": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minutes Per 100 Lines",
+            "description": "Median minutes from PR opened to first approval, per 100 changed lines; null with no approvals."
+          },
+          "comments": {
+            "type": "integer",
+            "title": "Comments"
+          },
+          "comments_per_100_lines": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comments Per 100 Lines",
+            "description": "Comments per 100 lines of the PRs reviewed."
+          },
+          "substantive_share": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Substantive Share",
+            "description": "Share of comments that are substantive (the rubber_stamp rule's test); null with no comments."
+          },
+          "big_approvals": {
+            "type": "integer",
+            "title": "Big Approvals",
+            "description": "Approved PRs at or over the rubber_stamp size threshold."
+          },
+          "stamped_big_approvals": {
+            "type": "integer",
+            "title": "Stamped Big Approvals",
+            "description": "Of those, how many the rubber_stamp rule would flag."
+          },
+          "approved_merged": {
+            "type": "integer",
+            "title": "Approved Merged",
+            "description": "Approved PRs merged by as_of."
+          },
+          "escapes": {
+            "type": "integer",
+            "title": "Escapes",
+            "description": "Of those, how many needed a revert or hotfix within the escape window."
+          },
+          "escape_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Escape Rate",
+            "description": "escapes / approved_merged; null when nothing approved was merged."
+          }
+        },
+        "type": "object",
+        "required": [
+          "person",
+          "reviews",
+          "approvals",
+          "minutes_per_100_lines",
+          "comments",
+          "comments_per_100_lines",
+          "substantive_share",
+          "big_approvals",
+          "stamped_big_approvals",
+          "approved_merged",
+          "escapes",
+          "escape_rate"
+        ],
+        "title": "QualityRow"
       },
       "ReviewActivity": {
         "properties": {
