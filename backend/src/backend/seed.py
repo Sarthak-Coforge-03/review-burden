@@ -14,7 +14,7 @@ from sqlalchemy.orm import Session
 
 from backend import clock
 from backend.db import Base, SessionLocal, UTCDateTime, create_tables
-from backend.models import Developer, PullRequest, Review, ReviewComment, ReviewRequest
+from backend.models import Developer, Flag, PullRequest, Review, ReviewComment, ReviewRequest
 
 DEFAULT_SEED_PATH = Path(__file__).resolve().parents[2] / "data" / "seed.json"
 
@@ -40,7 +40,9 @@ def _to_row(model: type[Base], record: dict[str, Any]) -> dict[str, Any]:
 
 
 def load_seed(session: Session, data: dict[str, Any]) -> dict[str, int]:
-    """Delete all rows, then insert `data`. Returns rows inserted per table. Caller owns the transaction."""
+    """Delete all rows, flags included, then insert `data`. Returns rows inserted per table.
+    Caller owns the transaction."""
+    session.execute(delete(Flag))
     for _, model in reversed(TABLES):
         session.execute(delete(model))
     counts = {}
