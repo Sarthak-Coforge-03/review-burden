@@ -1,4 +1,4 @@
-import type { Flag, FlagStatus, RuleKey } from "./api-types";
+import type { Flag, FlagStatus, Pattern, RuleKey } from "./api-types";
 
 export const RULE_LABELS: Record<RuleKey, string> = {
   merged_unreviewed: "Merged without review",
@@ -35,7 +35,7 @@ function listNames(personIds: number[], nameOf: NameOf): string {
   return names.length <= 1 ? (names[0] ?? "someone") : `${names.slice(0, -1).join(", ")} and ${names.at(-1)}`;
 }
 
-function duration(seconds: number): string {
+export function duration(seconds: number): string {
   if (seconds < 120) return plural(Math.round(seconds), "second");
   if (seconds < 2 * 3600) return plural(Math.round(seconds / 60), "minute");
   if (seconds < 48 * 3600) return `${(seconds / 3600).toFixed(1)} hours`;
@@ -73,6 +73,15 @@ export function describeEvidence(flag: Flag, nameOf: NameOf): string {
         : `${sentence}; ${listNames(heavy, nameOf)} did far more than the median of ${num(e.median)}.`;
     }
   }
+}
+
+/** e.g. "Rubber-stamp approval as reviewer: 3 times in the last 30 days". */
+export function describePattern(pattern: Pattern): string {
+  return `${RULE_LABELS[pattern.rule_key]} as ${pattern.role}: ${pattern.count} times in the last ${pattern.window_days} days`;
+}
+
+export function percent(share: number): string {
+  return `${Math.round(share * 100)}%`;
 }
 
 const DATE_FORMAT = new Intl.DateTimeFormat("en-GB", {

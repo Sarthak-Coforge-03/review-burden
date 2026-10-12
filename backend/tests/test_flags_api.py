@@ -1,26 +1,15 @@
 """GET /api/flags and PATCH /api/flags/{id}."""
 
 import pytest
-from sqlalchemy import delete, select
+from sqlalchemy import select
 
 from backend.db import SessionLocal
 from backend.models import Flag
-from backend.rules.engine import run_engine
-from backend.seed import apply_triage
+
+pytestmark = pytest.mark.usefixtures("demo_flags")
 
 OMAR, ARJUN = 4, 2
 AS_OMAR = {"X-Viewer-Id": str(OMAR)}
-
-
-@pytest.fixture(scope="module", autouse=True)
-def demo_flags(triage_data):
-    """The seeded demo flags, committed for this module and removed afterwards: other modules expect none."""
-    with SessionLocal.begin() as session:
-        run_engine(session)
-        apply_triage(session, triage_data)
-    yield
-    with SessionLocal.begin() as session:
-        session.execute(delete(Flag))
 
 
 def flag_id(rule_key: str, pr_id: int, person_id: int) -> int:

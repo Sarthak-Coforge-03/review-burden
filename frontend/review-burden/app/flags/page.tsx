@@ -4,21 +4,15 @@ import { Suspense } from "react";
 
 import { apiFetch } from "@/lib/api";
 import type { Flag, FlagStatus, RuleKey } from "@/lib/api-types";
-import { describeEvidence, formatDate, RULE_LABELS, STATUS_LABELS } from "@/lib/flag-format";
+import { FlagTable } from "@/components/flag-table";
+import { RULE_LABELS, STATUS_LABELS } from "@/lib/flag-format";
 import { loadViewer } from "@/lib/people";
-
-import { TriageControls } from "./triage-controls";
 
 type StatusTab = FlagStatus | "all";
 type Filters = { status: StatusTab; rule?: RuleKey; person?: number };
 type SearchParams = Record<string, string | string[] | undefined>;
 
 const TABS: StatusTab[] = ["open", "acknowledged", "dismissed", "all"];
-const STATUS_BADGES: Record<FlagStatus, string> = {
-  open: "badge-warning",
-  acknowledged: "badge-info",
-  dismissed: "badge-ghost",
-};
 
 function first(value: string | string[] | undefined): string | undefined {
   return Array.isArray(value) ? value[0] : value;
@@ -82,9 +76,6 @@ async function FlagInbox({ searchParams }: { searchParams: Promise<SearchParams>
   for (const flag of flags) counts[flag.status] += 1;
   const shown = filters.status === "all" ? flags : flags.filter((f) => f.status === filters.status);
 
-  const names = new Map(people?.map((p) => [p.id, p.name]));
-  const nameOf = (id: number) => names.get(id) ?? `Person ${id}`;
-
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-end justify-between gap-3">
@@ -138,69 +129,8 @@ async function FlagInbox({ searchParams }: { searchParams: Promise<SearchParams>
         </Form>
       </div>
 
-      {shown.length === 0 ? (
-        <div className="rounded-box bg-base-100 p-8 text-center opacity-70">No flags match these filters.</div>
-      ) : (
-        <div className="overflow-x-auto rounded-box bg-base-100">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Flag</th>
-                <th>Pull request</th>
-                <th>Evidence</th>
-                <th>Status</th>
-                {isManager && <th className="w-px"><span className="sr-only">Actions</span></th>}
-              </tr>
-            </thead>
-            <tbody>
-              {shown.map((flag) => (
-                <FlagRow key={flag.id} flag={flag} evidence={describeEvidence(flag, nameOf)} canTriage={isManager} />
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      <FlagTable flags={shown} people={people} canTriage={isManager} emptyMessage="No flags match these filters." />
     </div>
   );
 }
 
-function FlagRow({ flag, evidence, canTriage }: { flag: Flag; evidence: string; canTriage: boolean }) {
-  const pr = flag.pull_request;
-  return (
-    <tr className="[&>td]:align-top">
-      <td className="min-w-44">
-        <div className="font-medium">{RULE_LABELS[flag.rule_key]}</div>
-        <div className="text-sm">
-          {flag.person ? flag.person.name : "Whole team"}
-          {flag.role && <span className="opacity-60"> as {flag.role}</span>}
-        </div>
-        <div className="text-xs opacity-60">{formatDate(flag.occurred_at)}</div>
-      </td>
-      <td className="w-52">
-        {pr ? (
-          <>
-            <div className="font-mono text-xs opacity-60">#{pr.id}</div>
-            <div className="line-clamp-2 text-sm">{pr.title}</div>
-          </>
-        ) : (
-          <span className="text-sm opacity-60">None</span>
-        )}
-      </td>
-      <td className="min-w-64">{evidence}</td>
-      <td className="w-40">
-        <span className={`badge badge-sm ${STATUS_BADGES[flag.status]}`}>{STATUS_LABELS[flag.status]}</span>
-        {flag.dismiss_reason && <p className="mt-1 text-xs opacity-70">{flag.dismiss_reason}</p>}
-        {flag.note && <p className="mt-1 text-xs italic opacity-70">Note: {flag.note}</p>}
-      </td>
-      {canTriage && (
-        <td className="w-px">
-          <TriageControls
-            flagId={flag.id}
-            status={flag.status}
-            label={`${RULE_LABELS[flag.rule_key]}${flag.person ? ` · ${flag.person.name}` : ""}${pr ? ` · #${pr.id}` : ""}`}
-          />
-        </td>
-      )}
-    </tr>
-  );
-}

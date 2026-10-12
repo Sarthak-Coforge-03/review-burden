@@ -4,7 +4,7 @@ import { useRef, useState, useTransition } from "react";
 
 import type { FlagStatus } from "@/lib/api-types";
 
-import { triageFlag } from "./actions";
+import { triageFlag } from "@/app/flags/actions";
 
 type TriageControlsProps = {
   flagId: number;
