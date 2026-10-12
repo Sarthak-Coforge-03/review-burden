@@ -70,7 +70,11 @@ npm run dev                         # http://localhost:3000, talks to the API on
 
 The header's "Viewing as" switcher stores the chosen person's id in a `viewer_id` cookie. Server-side API calls forward it as the `X-Viewer-Id` header, and the API decides what that viewer may see. Picking a developer opens their own page (`/me`); picking the manager opens the team overview.
 
-The switcher lists people from `GET /api/people`. Until that endpoint exists it shows "API unavailable"; this is expected on the current skeleton.
+The switcher lists people from `GET /api/people`, which is open to everyone. Every other endpoint resolves the viewer from `X-Viewer-Id` (`backend/deps.py`):
+
+- No header: the manager, matching the frontend's default before anyone is picked.
+- Unknown id: 401. Non-numeric id: 422.
+- The manager sees the whole team; a developer sees only data about themselves. Manager-only actions (such as triaging flags) return 403 for developers.
 
 ## Layout
 
@@ -78,7 +82,9 @@ The switcher lists people from `GET /api/people`. Until that endpoint exists it 
 review-burden/
 ├── docker-compose.yml          # api (:8000) + web (:3000), SQLite on the db-data volume
 ├── backend/                    # FastAPI, uv project, package `backend` under src/
-│   ├── src/backend/main.py     # app, CORS, routes
+│   ├── src/backend/main.py     # app, CORS, router registration
+│   ├── src/backend/routes/     # one module per API area; deps.py (session, viewer), schemas.py (API models)
+│   ├── src/backend/rules/      # rule engine: pure rules, params, patterns, engine runner
 │   ├── data/                   # deterministic synthetic data (see data/README.md)
 │   └── scripts/                # data generator
 └── frontend/review-burden/     # Next.js 16 (App Router), Tailwind + DaisyUI
