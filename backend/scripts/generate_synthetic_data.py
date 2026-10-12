@@ -453,7 +453,7 @@ def compute_flags(prs, reviews, comments, requests, dismissed=()):
     top2 = sum(sorted(counts.values(), reverse=True)[:2]) / total
     med = statistics.median(counts.values())
     heavy = [d for d, n in counts.items() if med and n > 2 * med]
-    load = {"counts": counts, "top2_share": round(top2, 3), "median": med, "over_2x_median": heavy}
+    load = {"counts": counts, "top2_share": round(top2, 3), "median": med, "over_median_multiple": heavy}
     if top2 > 0.6 or heavy:
         add("load_concentration", None, None, None, AS_OF, **load)
 

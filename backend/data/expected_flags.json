@@ -21,7 +21,7 @@
   },
   "top2_share": 0.653,
   "median": 13,
-  "over_2x_median": [
+  "over_median_multiple": [
    2
   ]
  },
@@ -73,7 +73,7 @@
     },
     "top2_share": 0.653,
     "median": 13,
-    "over_2x_median": [
+    "over_median_multiple": [
      2
     ]
    }
