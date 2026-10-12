@@ -1,6 +1,6 @@
 # Review Health Dashboard
 
-Shows whether code review is working on a team and whether review work is shared fairly. Every flag is produced by a deterministic rule and shows its evidence. See `../CLAUDE.md` for the product rules, data model and API.
+Shows whether code review is working on a team and whether review work is shared fairly. Every flag is produced by a deterministic rule and shows its evidence.
 
 ## Run with Docker
 
@@ -63,6 +63,7 @@ npm run dev                         # http://localhost:3000, talks to the API on
 |---|---|---|---|
 | `DATABASE_URL` | api | `sqlite:////data/review_health.db` in Docker | SQLite file, stored on the `db-data` volume |
 | `CORS_ORIGINS` | api | `http://localhost:3000` | Comma-separated origins allowed to call the API from a browser |
+| `AS_OF` | api | `2026-10-09T18:00:00Z` (the synthetic data's `as_of`) | What the rules treat as "now". An ISO 8601 timestamp, or `wall` for the real clock |
 | `API_URL` | web | `http://api:8000` in Docker, else `http://localhost:8000` | Where server-side Next.js code calls the API |
 | `NEXT_PUBLIC_API_URL` | web (build arg) | `http://localhost:8000` | API address baked into browser code at build time; changing it needs a rebuild |
 

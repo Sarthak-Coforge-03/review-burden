@@ -1,7 +1,7 @@
 [project]
 name = "backend"
 version = "0.1.0"
-description = "Add your description here"
+description = "Review Health Dashboard API"
 readme = "README.md"
 authors = [
     { name = "Sarthak-Coforge-03", email = "sarthak.kakkar@coforge.com" }
@@ -11,9 +11,6 @@ dependencies = [
     "fastapi>=0.143.0",
     "uvicorn[standard]>=0.54.0",
 ]
-
-[project.scripts]
-backend = "backend:main"
 
 [build-system]
 requires = ["uv_build>=0.12.23,<0.13.0"]
