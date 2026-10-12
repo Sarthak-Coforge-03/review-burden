@@ -15,7 +15,7 @@ RUN uv sync --locked --no-dev --no-install-project
 
 COPY src ./src
 RUN uv sync --locked --no-dev
-COPY data/seed.json ./data/seed.json
+COPY data/seed.json data/triage.json ./data/
 
 EXPOSE 8000
 

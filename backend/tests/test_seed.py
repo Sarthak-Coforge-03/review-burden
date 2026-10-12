@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from backend.db import SessionLocal
 from backend.models import PullRequest, PullRequestKind
-from backend.seed import TABLES, load_seed
+from backend.seed import TABLES, load_seed, seed_demo
 
 EXPECTED_COUNTS = {
     "developers": 8,
@@ -69,3 +69,9 @@ def test_fix_links_back_to_the_pr_it_fixes(session):
     fix = session.scalar(select(PullRequest).where(PullRequest.fixes_pr_id == 99))
     assert fix.kind is PullRequestKind.hotfix
     assert fix.fixes.id == 99
+
+
+def test_triage_for_a_flag_that_does_not_exist_is_rejected(seed_data, session):
+    bogus = [{"rule_key": "rubber_stamp", "pr_id": 1, "person_id": 2, "role": "reviewer", "status": "dismissed"}]
+    with pytest.raises(ValueError, match="matches no flag"):
+        seed_demo(session, seed_data, bogus)

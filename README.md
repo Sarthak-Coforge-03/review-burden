@@ -33,7 +33,7 @@ docker compose restart api          # reset the demo data (reseeds on start)
 docker compose run --rm api python -m backend.seed   # reseed without restarting the api
 ```
 
-The api container runs the seed every time it starts, replacing every row with `backend/data/seed.json`. Anything changed in the app (dismissed flags, edited thresholds) is lost on restart. The seed file is baked into the api image; rebuild the image after regenerating the data.
+The api container runs the seed every time it starts: it replaces every row with `backend/data/seed.json`, runs the rule engine, and applies the starting triage in `backend/data/triage.json`. Anything changed in the app (dismissed flags, edited thresholds) is lost on restart. Both files are baked into the api image; rebuild the image after regenerating the data.
 
 The images run production builds, so code changes need a rebuild (`--build`). For fast edit-and-refresh, run the services locally instead.
 
