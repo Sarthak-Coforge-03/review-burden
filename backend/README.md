@@ -7,8 +7,12 @@ uv sync                                               # install dependencies int
 uv run python -m backend.seed                         # replace all rows with data/seed.json (or pass a path)
 uv run uvicorn backend.main:app --reload --port 8000  # dev server, docs at http://localhost:8000/docs
 uv run pytest                                         # tests run against a throwaway SQLite file, never review_health.db
+uv run pytest tests/test_seed.py --no-cov             # one file; --no-cov skips the coverage minimum
+uv run pytest --cov-report=html                       # coverage as a browsable report in htmlcov/index.html
 uv add <package>                                      # add a dependency (updates pyproject.toml and uv.lock)
 ```
+
+`uv run pytest` also measures line and branch coverage and fails below 95% (settings in `pyproject.toml`). The report lists only files that are not fully covered, with the missing lines.
 
 In Docker the image installs from `uv.lock` (`uv sync --locked`), so commit `uv.lock` whenever dependencies change.
 
