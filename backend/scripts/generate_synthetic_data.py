@@ -3,7 +3,7 @@
 
 Stdlib only. Writes CSVs, an ingest-shaped seed.json, triage.json and expected_flags.json
 to backend/data/, then verifies that exactly the planted problems are detectable by the
-rules documented in CLAUDE.md (independent re-implementation, not the production engine).
+flag rules (independent re-implementation, not the production engine).
 
     python backend/scripts/generate_synthetic_data.py
 """
@@ -387,7 +387,7 @@ def flatten(specs):
     return prs, reviews, comments, requests
 
 
-# ---------------------------------------------------------------- independent verifier (CLAUDE.md rules)
+# ---------------------------------------------------------------- independent verifier (flag rules)
 STOP = {"lgtm", "nit", "+1", "approved", "ship it", "looks good", "👍"}
 DISMISSED_KEY = ("rubber_stamp", "dismissed")
 
