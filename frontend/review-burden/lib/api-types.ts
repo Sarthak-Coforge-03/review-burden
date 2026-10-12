@@ -22,3 +22,7 @@ export type QualityRow = Schemas["QualityRow"];
 export type Overview = Schemas["Overview"];
 export type HealthPart = Schemas["HealthPart"];
 export type HealthPartKey = Schemas["HealthPartKey"];
+export type RuleSettings = Schemas["RuleSettings"];
+export type SettingsOut = Schemas["SettingsOut"];
+export type SettingsSaved = Schemas["SettingsSaved"];
+export type EngineRun = Schemas["EngineRun"];

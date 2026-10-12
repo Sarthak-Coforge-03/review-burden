@@ -7,8 +7,17 @@ from sqlalchemy.orm import Session
 
 from backend.models import RuleParamOverride
 from backend.rules.params import DEFAULT_PARAMS, RuleParams
+from backend.schemas import RuleSettings
 
 _FIELDS = {f.name for f in fields(RuleParams)}
+
+
+def to_settings(params: RuleParams) -> RuleSettings:
+    return RuleSettings(**{name: getattr(params, name) for name in _FIELDS} | {"stock_phrases": params.stock_phrases})
+
+
+def from_settings(settings: RuleSettings) -> RuleParams:
+    return RuleParams(**settings.model_dump() | {"stock_phrases": frozenset(settings.stock_phrases)})
 
 
 def load_params(session: Session) -> RuleParams:

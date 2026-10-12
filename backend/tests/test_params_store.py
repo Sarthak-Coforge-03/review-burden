@@ -1,12 +1,13 @@
 """Saving and loading rule parameters. Each test's session is rolled back when it closes."""
 
-from dataclasses import replace
+from dataclasses import fields, replace
 
 from sqlalchemy import select
 
 from backend.models import RuleParamOverride
-from backend.params_store import load_params, save_params
-from backend.rules.params import DEFAULT_PARAMS
+from backend.params_store import from_settings, load_params, save_params, to_settings
+from backend.rules.params import DEFAULT_PARAMS, RuleParams
+from backend.schemas import RuleSettings
 from backend.seed import load_seed
 
 
@@ -37,6 +38,11 @@ def test_overrides_for_unknown_parameters_are_ignored(session):
     session.add(RuleParamOverride(name="retired_threshold", value=3))
     session.flush()
     assert load_params(session) == DEFAULT_PARAMS
+
+
+def test_settings_schema_covers_every_parameter():
+    assert set(RuleSettings.model_fields) == {f.name for f in fields(RuleParams)}
+    assert from_settings(to_settings(DEFAULT_PARAMS)) == DEFAULT_PARAMS
 
 
 def test_reseeding_clears_saved_settings(session, seed_data):
