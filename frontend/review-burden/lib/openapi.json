@@ -31,6 +31,123 @@
         }
       }
     },
+    "/api/people/profiles": {
+      "get": {
+        "tags": [
+          "people"
+        ],
+        "summary": "List Profiles",
+        "description": "Every developer's profile, by name. Manager only.",
+        "operationId": "list_profiles_api_people_profiles_get",
+        "parameters": [
+          {
+            "name": "x-viewer-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Who is viewing. Demo only: there is no real auth.",
+              "title": "X-Viewer-Id"
+            },
+            "description": "Who is viewing. Demo only: there is no real auth."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PersonProfile"
+                  },
+                  "title": "Response List Profiles Api People Profiles Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/people/{person_id}/profile": {
+      "get": {
+        "tags": [
+          "people"
+        ],
+        "summary": "Get Profile",
+        "description": "One person's profile. The manager can see anyone's; a developer only their own.",
+        "operationId": "get_profile_api_people__person_id__profile_get",
+        "parameters": [
+          {
+            "name": "person_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Person Id"
+            }
+          },
+          {
+            "name": "x-viewer-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Who is viewing. Demo only: there is no real auth.",
+              "title": "X-Viewer-Id"
+            },
+            "description": "Who is viewing. Demo only: there is no real auth."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonProfile"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/flags": {
       "get": {
         "tags": [
@@ -401,6 +518,70 @@
         ],
         "title": "HealthResponse"
       },
+      "PatternOut": {
+        "properties": {
+          "rule_key": {
+            "$ref": "#/components/schemas/RuleKey"
+          },
+          "role": {
+            "$ref": "#/components/schemas/FlagRole"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count",
+            "description": "Non-dismissed flags of this rule inside the window."
+          },
+          "window_days": {
+            "type": "integer",
+            "title": "Window Days"
+          },
+          "pull_requests": {
+            "items": {
+              "$ref": "#/components/schemas/PullRequestRef"
+            },
+            "type": "array",
+            "title": "Pull Requests"
+          }
+        },
+        "type": "object",
+        "required": [
+          "rule_key",
+          "role",
+          "count",
+          "window_days",
+          "pull_requests"
+        ],
+        "title": "PatternOut"
+      },
+      "PendingReview": {
+        "properties": {
+          "pull_request": {
+            "$ref": "#/components/schemas/PullRequestRef"
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Requested At"
+          },
+          "waiting_hours": {
+            "type": "number",
+            "title": "Waiting Hours"
+          },
+          "stale": {
+            "type": "boolean",
+            "title": "Stale",
+            "description": "Waiting longer than the stale_backlog threshold."
+          }
+        },
+        "type": "object",
+        "required": [
+          "pull_request",
+          "requested_at",
+          "waiting_hours",
+          "stale"
+        ],
+        "title": "PendingReview"
+      },
       "Person": {
         "properties": {
           "id": {
@@ -422,6 +603,48 @@
           "role"
         ],
         "title": "Person"
+      },
+      "PersonProfile": {
+        "properties": {
+          "person": {
+            "$ref": "#/components/schemas/Person"
+          },
+          "as_author": {
+            "$ref": "#/components/schemas/RoleSummary"
+          },
+          "as_reviewer": {
+            "$ref": "#/components/schemas/RoleSummary"
+          },
+          "patterns": {
+            "items": {
+              "$ref": "#/components/schemas/PatternOut"
+            },
+            "type": "array",
+            "title": "Patterns",
+            "description": "Active repeat patterns, computed now; dismissed flags don't count."
+          },
+          "review_debt": {
+            "items": {
+              "$ref": "#/components/schemas/PendingReview"
+            },
+            "type": "array",
+            "title": "Review Debt",
+            "description": "Review requests waiting on this person, oldest first."
+          },
+          "activity": {
+            "$ref": "#/components/schemas/ReviewActivity"
+          }
+        },
+        "type": "object",
+        "required": [
+          "person",
+          "as_author",
+          "as_reviewer",
+          "patterns",
+          "review_debt",
+          "activity"
+        ],
+        "title": "PersonProfile"
       },
       "PullRequestRef": {
         "properties": {
@@ -446,6 +669,53 @@
         ],
         "title": "PullRequestRef"
       },
+      "ReviewActivity": {
+        "properties": {
+          "window_days": {
+            "type": "integer",
+            "title": "Window Days"
+          },
+          "reviews_given": {
+            "type": "integer",
+            "title": "Reviews Given"
+          },
+          "team_reviews": {
+            "type": "integer",
+            "title": "Team Reviews",
+            "description": "Reviews by all developers in the window (the manager is not counted)."
+          },
+          "share": {
+            "type": "number",
+            "title": "Share",
+            "description": "reviews_given / team_reviews, 0 to 1."
+          },
+          "team_median": {
+            "type": "number",
+            "title": "Team Median",
+            "description": "Median reviews per developer in the window."
+          },
+          "over_median_multiple": {
+            "type": "boolean",
+            "title": "Over Median Multiple",
+            "description": "reviews_given is above the load_concentration rule's multiple of the team median."
+          },
+          "prs_opened": {
+            "type": "integer",
+            "title": "Prs Opened"
+          }
+        },
+        "type": "object",
+        "required": [
+          "window_days",
+          "reviews_given",
+          "team_reviews",
+          "share",
+          "team_median",
+          "over_median_multiple",
+          "prs_opened"
+        ],
+        "title": "ReviewActivity"
+      },
       "Role": {
         "type": "string",
         "enum": [
@@ -453,6 +723,46 @@
           "dev"
         ],
         "title": "Role"
+      },
+      "RoleSummary": {
+        "properties": {
+          "flags": {
+            "items": {
+              "$ref": "#/components/schemas/RuleCount"
+            },
+            "type": "array",
+            "title": "Flags",
+            "description": "Non-dismissed flags in this role, by rule; rules with none are left out."
+          },
+          "open": {
+            "type": "integer",
+            "title": "Open",
+            "description": "How many of those are still open (not yet acknowledged)."
+          }
+        },
+        "type": "object",
+        "required": [
+          "flags",
+          "open"
+        ],
+        "title": "RoleSummary"
+      },
+      "RuleCount": {
+        "properties": {
+          "rule_key": {
+            "$ref": "#/components/schemas/RuleKey"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "rule_key",
+          "count"
+        ],
+        "title": "RuleCount"
       },
       "RuleKey": {
         "type": "string",

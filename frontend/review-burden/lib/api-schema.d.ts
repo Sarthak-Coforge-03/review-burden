@@ -24,6 +24,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/people/profiles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Profiles
+         * @description Every developer's profile, by name. Manager only.
+         */
+        get: operations["list_profiles_api_people_profiles_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/people/{person_id}/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Profile
+         * @description One person's profile. The manager can see anyone's; a developer only their own.
+         */
+        get: operations["get_profile_api_people__person_id__profile_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/flags": {
         parameters: {
             query?: never;
@@ -147,6 +187,36 @@ export interface components {
             /** Status */
             status: string;
         };
+        /** PatternOut */
+        PatternOut: {
+            rule_key: components["schemas"]["RuleKey"];
+            role: components["schemas"]["FlagRole"];
+            /**
+             * Count
+             * @description Non-dismissed flags of this rule inside the window.
+             */
+            count: number;
+            /** Window Days */
+            window_days: number;
+            /** Pull Requests */
+            pull_requests: components["schemas"]["PullRequestRef"][];
+        };
+        /** PendingReview */
+        PendingReview: {
+            pull_request: components["schemas"]["PullRequestRef"];
+            /**
+             * Requested At
+             * Format: date-time
+             */
+            requested_at: string;
+            /** Waiting Hours */
+            waiting_hours: number;
+            /**
+             * Stale
+             * @description Waiting longer than the stale_backlog threshold.
+             */
+            stale: boolean;
+        };
         /** Person */
         Person: {
             /** Id */
@@ -154,6 +224,23 @@ export interface components {
             /** Name */
             name: string;
             role: components["schemas"]["Role"];
+        };
+        /** PersonProfile */
+        PersonProfile: {
+            person: components["schemas"]["Person"];
+            as_author: components["schemas"]["RoleSummary"];
+            as_reviewer: components["schemas"]["RoleSummary"];
+            /**
+             * Patterns
+             * @description Active repeat patterns, computed now; dismissed flags don't count.
+             */
+            patterns: components["schemas"]["PatternOut"][];
+            /**
+             * Review Debt
+             * @description Review requests waiting on this person, oldest first.
+             */
+            review_debt: components["schemas"]["PendingReview"][];
+            activity: components["schemas"]["ReviewActivity"];
         };
         /** PullRequestRef */
         PullRequestRef: {
@@ -164,11 +251,59 @@ export interface components {
             /** Author Id */
             author_id: number;
         };
+        /** ReviewActivity */
+        ReviewActivity: {
+            /** Window Days */
+            window_days: number;
+            /** Reviews Given */
+            reviews_given: number;
+            /**
+             * Team Reviews
+             * @description Reviews by all developers in the window (the manager is not counted).
+             */
+            team_reviews: number;
+            /**
+             * Share
+             * @description reviews_given / team_reviews, 0 to 1.
+             */
+            share: number;
+            /**
+             * Team Median
+             * @description Median reviews per developer in the window.
+             */
+            team_median: number;
+            /**
+             * Over Median Multiple
+             * @description reviews_given is above the load_concentration rule's multiple of the team median.
+             */
+            over_median_multiple: boolean;
+            /** Prs Opened */
+            prs_opened: number;
+        };
         /**
          * Role
          * @enum {string}
          */
         Role: "manager" | "dev";
+        /** RoleSummary */
+        RoleSummary: {
+            /**
+             * Flags
+             * @description Non-dismissed flags in this role, by rule; rules with none are left out.
+             */
+            flags: components["schemas"]["RuleCount"][];
+            /**
+             * Open
+             * @description How many of those are still open (not yet acknowledged).
+             */
+            open: number;
+        };
+        /** RuleCount */
+        RuleCount: {
+            rule_key: components["schemas"]["RuleKey"];
+            /** Count */
+            count: number;
+        };
         /**
          * RuleKey
          * @enum {string}
@@ -212,6 +347,72 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Person"][];
+                };
+            };
+        };
+    };
+    list_profiles_api_people_profiles_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Who is viewing. Demo only: there is no real auth. */
+                "x-viewer-id"?: number | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PersonProfile"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_profile_api_people__person_id__profile_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Who is viewing. Demo only: there is no real auth. */
+                "x-viewer-id"?: number | null;
+            };
+            path: {
+                person_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PersonProfile"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

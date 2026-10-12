@@ -11,11 +11,14 @@ os.environ.pop("AS_OF", None)
 
 import pytest  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
+from sqlalchemy import delete  # noqa: E402
 from sqlalchemy.orm import Session  # noqa: E402
 
 from backend.db import SessionLocal, create_tables  # noqa: E402
 from backend.main import app  # noqa: E402
-from backend.seed import DEFAULT_SEED_PATH, TRIAGE_FILENAME, load_seed  # noqa: E402
+from backend.models import Flag  # noqa: E402
+from backend.rules.engine import run_engine  # noqa: E402
+from backend.seed import DEFAULT_SEED_PATH, TRIAGE_FILENAME, apply_triage, load_seed  # noqa: E402
 
 
 @pytest.fixture(scope="session")
@@ -34,6 +37,20 @@ def seeded_db(seed_data: dict[str, Any]) -> None:
     create_tables()
     with SessionLocal.begin() as session:
         load_seed(session, seed_data)
+
+
+@pytest.fixture(scope="module")
+def demo_flags(triage_data: list[dict[str, Any]]) -> Iterator[None]:
+    """The demo's flags and triage, committed for one test module and removed afterwards.
+
+    For API tests, whose requests commit. Other modules expect an empty flags table.
+    """
+    with SessionLocal.begin() as s:
+        run_engine(s)
+        apply_triage(s, triage_data)
+    yield
+    with SessionLocal.begin() as s:
+        s.execute(delete(Flag))
 
 
 @pytest.fixture
