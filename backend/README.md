@@ -6,6 +6,7 @@ FastAPI service for the Review Health Dashboard. Packaged with uv; the importabl
 uv sync                                               # install dependencies into .venv
 uv run python -m backend.seed                         # replace all rows with data/seed.json (or pass a path)
 uv run uvicorn backend.main:app --reload --port 8000  # dev server, docs at http://localhost:8000/docs
+uv run pytest                                         # tests run against a throwaway SQLite file, never review_health.db
 uv add <package>                                      # add a dependency (updates pyproject.toml and uv.lock)
 ```
 
