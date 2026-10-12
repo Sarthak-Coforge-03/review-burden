@@ -7,7 +7,7 @@ Shows whether code review is working on a team and whether review work is shared
 Prerequisite: Docker Desktop running. Run every command from this folder (`review-burden/`).
 
 ```bash
-docker compose up --build -d        # build both images and start them in the background
+docker compose up --build -d        # build both images and start them in the background (api seeds itself)
 docker compose ps                   # both services should be "Up"; api should be "healthy"
 docker compose logs -f              # follow logs (Ctrl+C stops following, not the app)
 docker compose down                 # stop and remove the containers (data is kept)
@@ -29,13 +29,11 @@ docker compose up --build -d api    # rebuild and restart only the backend after
 docker compose logs -f api          # logs for one service
 docker compose exec api sh          # shell inside the running api container
 docker compose down -v              # stop AND delete the SQLite volume (wipes all data)
+docker compose restart api          # reset the demo data (reseeds on start)
+docker compose run --rm api python -m backend.seed   # reseed without restarting the api
 ```
 
-Reseeding (once the seed module lands on `main`):
-
-```bash
-docker compose run --rm api python -m backend.seed
-```
+The api container runs the seed every time it starts, replacing every row with `backend/data/seed.json`. Anything changed in the app (dismissed flags, edited thresholds) is lost on restart. The seed file is baked into the api image; rebuild the image after regenerating the data.
 
 The images run production builds, so code changes need a rebuild (`--build`). For fast edit-and-refresh, run the services locally instead.
 
@@ -46,6 +44,7 @@ Backend (Python 3.12 via [uv](https://docs.astral.sh/uv/)):
 ```bash
 cd backend
 uv sync
+uv run python -m backend.seed       # creates review_health.db in backend/ with the demo data
 uv run uvicorn backend.main:app --reload --port 8000
 ```
 

@@ -1,6 +1,8 @@
 services:
   api:
     build: ./backend
+    # Reseed on every start so the demo always begins from data/seed.json; exec keeps uvicorn as PID 1 for clean shutdown.
+    command: ["sh", "-c", "python -m backend.seed && exec uvicorn backend.main:app --host 0.0.0.0 --port 8000"]
     environment:
       DATABASE_URL: sqlite:////data/review_health.db
       CORS_ORIGINS: http://localhost:3000
