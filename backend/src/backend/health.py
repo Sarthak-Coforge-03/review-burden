@@ -81,7 +81,7 @@ def health_parts(
                 decided += 1
 
     load = review_load([r for pr in prs for r in pr.reviews], developers, at, params)
-    top2 = sum(sorted(load.counts.values(), reverse=True)[:2])
+    top2 = sum(sorted(load.counted.values(), reverse=True)[:2])
     if not load.total:
         balance = None
     elif load.top2_share <= params.load_top2_share:
@@ -162,6 +162,7 @@ def build_overview(session: Session, now: datetime, params: RuleParams, weeks: i
         window_days=params.health_window_days,
         escape_rate_floor=params.health_escape_rate_floor,
         top2_share_threshold=params.load_top2_share,
+        dedicated_reviewers=len(params.load_dedicated_reviewers),
         stale_after_hours=params.stale_after_hours,
         score=health_score(parts),
         parts=parts,

@@ -1147,7 +1147,7 @@
           "team_reviews": {
             "type": "integer",
             "title": "Team Reviews",
-            "description": "Reviews by all developers in the window (the manager is not counted)."
+            "description": "Reviews by developers in the window; the manager and dedicated reviewers are not counted."
           },
           "team_median": {
             "type": "number",
@@ -1213,10 +1213,22 @@
             "title": "Reviews",
             "description": "Reviews in the load window."
           },
+          "dedicated": {
+            "type": "boolean",
+            "title": "Dedicated",
+            "description": "A dedicated reviewer: left out of the team figures and the load rule."
+          },
           "share": {
-            "type": "number",
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Share",
-            "description": "reviews / team_reviews, 0 to 1."
+            "description": "reviews / team_reviews, 0 to 1; null for dedicated reviewers."
           },
           "median_multiple": {
             "anyOf": [
@@ -1228,7 +1240,7 @@
               }
             ],
             "title": "Median Multiple",
-            "description": "reviews / team_median; null when the median is 0."
+            "description": "reviews / team_median; null when the median is 0 or for dedicated reviewers."
           },
           "over_median_multiple": {
             "type": "boolean",
@@ -1257,6 +1269,7 @@
           "person",
           "weekly",
           "reviews",
+          "dedicated",
           "share",
           "median_multiple",
           "over_median_multiple",
@@ -1290,6 +1303,11 @@
             "type": "number",
             "title": "Top2 Share Threshold",
             "description": "Load balance scores 100 while the top two do at most this share."
+          },
+          "dedicated_reviewers": {
+            "type": "integer",
+            "title": "Dedicated Reviewers",
+            "description": "Dedicated reviewers left out of load balance."
           },
           "stale_after_hours": {
             "type": "integer",
@@ -1333,6 +1351,7 @@
           "window_days",
           "escape_rate_floor",
           "top2_share_threshold",
+          "dedicated_reviewers",
           "stale_after_hours",
           "score",
           "parts",
@@ -1761,12 +1780,24 @@
           "team_reviews": {
             "type": "integer",
             "title": "Team Reviews",
-            "description": "Reviews by all developers in the window (the manager is not counted)."
+            "description": "Reviews by developers in the window; the manager and dedicated reviewers are not counted."
+          },
+          "dedicated": {
+            "type": "boolean",
+            "title": "Dedicated",
+            "description": "A dedicated reviewer: left out of the team figures and the load rule."
           },
           "share": {
-            "type": "number",
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Share",
-            "description": "reviews_given / team_reviews, 0 to 1."
+            "description": "reviews_given / team_reviews, 0 to 1; null for dedicated reviewers."
           },
           "team_median": {
             "type": "number",
@@ -1788,6 +1819,7 @@
           "window_days",
           "reviews_given",
           "team_reviews",
+          "dedicated",
           "share",
           "team_median",
           "over_median_multiple",
@@ -1917,6 +1949,14 @@
             "title": "Load Median Multiple",
             "description": "load_concentration: or anyone above this × median."
           },
+          "load_dedicated_reviewers": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Load Dedicated Reviewers",
+            "description": "Developer ids left out of load_concentration and load balance. Sorted, unique."
+          },
           "pattern_window_days": {
             "type": "integer",
             "maximum": 365.0,
@@ -1998,6 +2038,7 @@
           "load_window_days",
           "load_top2_share",
           "load_median_multiple",
+          "load_dedicated_reviewers",
           "pattern_window_days",
           "pattern_min_count",
           "self_approval_pattern_window_days",

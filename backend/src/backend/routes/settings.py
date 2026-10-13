@@ -1,9 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from backend.deps import ManagerDep, ParamsDep, SessionDep
-from backend.models import Flag, FlagStatus
+from backend.models import Developer, Flag, FlagStatus, Role
 from backend.params_store import from_settings, save_params, to_settings
 from backend.rules.engine import run_engine
 from backend.rules.params import DEFAULT_PARAMS, RuleParams
@@ -37,6 +37,15 @@ def get_settings(_manager: ManagerDep, params: ParamsDep) -> SettingsOut:
 @router.put("")
 def save_settings(settings: RuleSettings, session: SessionDep, _manager: ManagerDep) -> SettingsSaved:
     """Save every setting and re-run the rules with them. Manager only."""
+    developers = set(session.scalars(select(Developer.id).where(Developer.role == Role.dev)))
+    unknown = [i for i in settings.load_dedicated_reviewers if i not in developers]
+    if unknown:
+        raise HTTPException(422, [{
+            "type": "value_error",
+            "loc": ["body", "load_dedicated_reviewers"],
+            "msg": f"Value error, {', '.join(map(str, unknown))} "
+            + ("is not a developer" if len(unknown) == 1 else "are not developers"),
+        }])
     return _save_and_run(session, from_settings(settings))
 
 

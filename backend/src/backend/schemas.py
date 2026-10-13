@@ -68,8 +68,11 @@ class PendingReview(BaseModel):
 class ReviewActivity(BaseModel):
     window_days: int
     reviews_given: int
-    team_reviews: int = Field(description="Reviews by all developers in the window (the manager is not counted).")
-    share: float = Field(description="reviews_given / team_reviews, 0 to 1.")
+    team_reviews: int = Field(
+        description="Reviews by developers in the window; the manager and dedicated reviewers are not counted."
+    )
+    dedicated: bool = Field(description="A dedicated reviewer: left out of the team figures and the load rule.")
+    share: float | None = Field(description="reviews_given / team_reviews, 0 to 1; null for dedicated reviewers.")
     team_median: float = Field(description="Median reviews per developer in the window.")
     over_median_multiple: bool = Field(
         description="reviews_given is above the load_concentration rule's multiple of the team median."
@@ -90,8 +93,11 @@ class LoadRow(BaseModel):
     person: Person
     weekly: list[int] = Field(description="Reviews per week, aligned with LoadReport.week_starts.")
     reviews: int = Field(description="Reviews in the load window.")
-    share: float = Field(description="reviews / team_reviews, 0 to 1.")
-    median_multiple: float | None = Field(description="reviews / team_median; null when the median is 0.")
+    dedicated: bool = Field(description="A dedicated reviewer: left out of the team figures and the load rule.")
+    share: float | None = Field(description="reviews / team_reviews, 0 to 1; null for dedicated reviewers.")
+    median_multiple: float | None = Field(
+        description="reviews / team_median; null when the median is 0 or for dedicated reviewers."
+    )
     over_median_multiple: bool
     pending: int = Field(description="Review requests waiting on this person now.")
     oldest_pending_hours: float | None = Field(description="Age of the oldest waiting request; null if none.")
@@ -103,7 +109,9 @@ class LoadReport(BaseModel):
         description="Oldest first. Each week is the 7 days after its start; the last one ends at as_of."
     )
     window_days: int
-    team_reviews: int = Field(description="Reviews by all developers in the window (the manager is not counted).")
+    team_reviews: int = Field(
+        description="Reviews by developers in the window; the manager and dedicated reviewers are not counted."
+    )
     team_median: float
     top2_share: float = Field(description="Share of team_reviews done by the two busiest developers.")
     top2_share_threshold: float
@@ -198,6 +206,7 @@ class Overview(BaseModel):
     window_days: int
     escape_rate_floor: float = Field(description="An escape rate at or above this scores 0 on the escapes part.")
     top2_share_threshold: float = Field(description="Load balance scores 100 while the top two do at most this share.")
+    dedicated_reviewers: int = Field(description="Dedicated reviewers left out of load balance.")
     stale_after_hours: int = Field(description="Responsiveness counts a request answered within this many hours.")
     score: int | None
     parts: list[HealthPart]
@@ -220,6 +229,9 @@ class RuleSettings(BaseModel):
     load_window_days: int = Field(ge=1, le=365, description="load_concentration: window in days.")
     load_top2_share: float = Field(gt=0, lt=1, description="load_concentration: top two reviewers above this share.")
     load_median_multiple: float = Field(ge=1, description="load_concentration: or anyone above this × median.")
+    load_dedicated_reviewers: list[int] = Field(
+        description="Developer ids left out of load_concentration and load balance. Sorted, unique."
+    )
     pattern_window_days: int = Field(ge=1, le=365, description="Repeat pattern: flags of one rule in this window...")
     pattern_min_count: int = Field(ge=2, description="...at least this many times.")
     self_approval_pattern_window_days: int = Field(ge=1, le=365, description="The same, for self-approvals.")
@@ -236,6 +248,11 @@ class RuleSettings(BaseModel):
     @classmethod
     def _normalize_phrases(cls, phrases: list[str]) -> list[str]:
         return sorted({p.strip().lower() for p in phrases if p.strip()})
+
+    @field_validator("load_dedicated_reviewers")
+    @classmethod
+    def _sort_ids(cls, ids: list[int]) -> list[int]:
+        return sorted(set(ids))
 
     @model_validator(mode="after")
     def _weights_add_up(self) -> Self:

@@ -404,7 +404,7 @@ export interface components {
             window_days: number;
             /**
              * Team Reviews
-             * @description Reviews by all developers in the window (the manager is not counted).
+             * @description Reviews by developers in the window; the manager and dedicated reviewers are not counted.
              */
             team_reviews: number;
             /** Team Median */
@@ -443,13 +443,18 @@ export interface components {
              */
             reviews: number;
             /**
-             * Share
-             * @description reviews / team_reviews, 0 to 1.
+             * Dedicated
+             * @description A dedicated reviewer: left out of the team figures and the load rule.
              */
-            share: number;
+            dedicated: boolean;
+            /**
+             * Share
+             * @description reviews / team_reviews, 0 to 1; null for dedicated reviewers.
+             */
+            share: number | null;
             /**
              * Median Multiple
-             * @description reviews / team_median; null when the median is 0.
+             * @description reviews / team_median; null when the median is 0 or for dedicated reviewers.
              */
             median_multiple: number | null;
             /** Over Median Multiple */
@@ -489,6 +494,11 @@ export interface components {
              * @description Load balance scores 100 while the top two do at most this share.
              */
             top2_share_threshold: number;
+            /**
+             * Dedicated Reviewers
+             * @description Dedicated reviewers left out of load balance.
+             */
+            dedicated_reviewers: number;
             /**
              * Stale After Hours
              * @description Responsiveness counts a request answered within this many hours.
@@ -703,14 +713,19 @@ export interface components {
             reviews_given: number;
             /**
              * Team Reviews
-             * @description Reviews by all developers in the window (the manager is not counted).
+             * @description Reviews by developers in the window; the manager and dedicated reviewers are not counted.
              */
             team_reviews: number;
             /**
-             * Share
-             * @description reviews_given / team_reviews, 0 to 1.
+             * Dedicated
+             * @description A dedicated reviewer: left out of the team figures and the load rule.
              */
-            share: number;
+            dedicated: boolean;
+            /**
+             * Share
+             * @description reviews_given / team_reviews, 0 to 1; null for dedicated reviewers.
+             */
+            share: number | null;
             /**
              * Team Median
              * @description Median reviews per developer in the window.
@@ -803,6 +818,11 @@ export interface components {
              * @description load_concentration: or anyone above this × median.
              */
             load_median_multiple: number;
+            /**
+             * Load Dedicated Reviewers
+             * @description Developer ids left out of load_concentration and load balance. Sorted, unique.
+             */
+            load_dedicated_reviewers: number[];
             /**
              * Pattern Window Days
              * @description Repeat pattern: flags of one rule in this window...

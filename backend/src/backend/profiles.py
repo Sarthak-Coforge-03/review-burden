@@ -93,6 +93,7 @@ def build_profiles(
     for person in people:
         mine = flags_by_person.get(person.id, [])
         given = load.counts.get(person.id, 0)
+        dedicated = person.id in load.dedicated
         profiles.append(PersonProfile(
             person=Person.model_validate(person),
             as_author=_role_summary(mine, FlagRole.author),
@@ -119,7 +120,8 @@ def build_profiles(
                 window_days=params.load_window_days,
                 reviews_given=given,
                 team_reviews=load.total,
-                share=round(given / load.total, 3) if load.total else 0.0,
+                dedicated=dedicated,
+                share=None if dedicated else (round(given / load.total, 3) if load.total else 0.0),
                 team_median=load.median,
                 over_median_multiple=person.id in load.over_median_multiple,
                 prs_opened=opened.get(person.id, 0),

@@ -39,31 +39,43 @@ class ReviewLoad:
     """Review work per developer over the load window. Shared by the rule and every load figure the API shows."""
 
     counts: dict[int, int]  # developer id -> reviews in the window; manager excluded, developers with none are 0
-    total: int
-    top2_share: float  # share of `total` done by the two busiest developers; 0 when there are no reviews
-    median: float
-    over_median_multiple: list[int]  # developer ids above the median multiple, ascending
+    dedicated: frozenset[int]  # developers in `counts` left out of everything below
+    total: int  # reviews by the counted (not dedicated) developers
+    top2_share: float  # share of `total` done by the two busiest counted developers; 0 when there are no reviews
+    median: float  # median reviews per counted developer
+    over_median_multiple: list[int]  # counted developer ids above the median multiple, ascending
     concentrated: bool  # whether load_concentration fires
+
+    @property
+    def counted(self) -> dict[int, int]:
+        return {d: n for d, n in self.counts.items() if d not in self.dedicated}
 
 
 def review_load(
     reviews: Sequence[Review], developers: Sequence[Developer], now: datetime, params: RuleParams
 ) -> ReviewLoad:
-    """Count reviews submitted in [now - window, now] per developer and apply the load thresholds."""
+    """Count reviews submitted in [now - window, now] per developer and apply the load thresholds.
+
+    Dedicated reviewers are counted but left out of the totals, the median and the thresholds.
+    """
     since = now - timedelta(days=params.load_window_days)
     counts = {d.id: 0 for d in sorted(developers, key=lambda d: d.id) if d.role == Role.dev}
     for review in reviews:
         if review.reviewer_id in counts and since <= review.submitted_at <= now:
             counts[review.reviewer_id] += 1
+    dedicated = frozenset(params.load_dedicated_reviewers & counts.keys())
+    counted = [n for d, n in counts.items() if d not in dedicated]
 
-    total = sum(counts.values())
+    total = sum(counted)
     if total == 0:
-        return ReviewLoad(counts, 0, 0.0, 0, [], False)
-    top2_share = sum(sorted(counts.values(), reverse=True)[:2]) / total
-    median = statistics.median(counts.values())
-    heavy = sorted(d for d, n in counts.items() if median and n > params.load_median_multiple * median)
+        return ReviewLoad(counts, dedicated, 0, 0.0, 0, [], False)
+    top2_share = sum(sorted(counted, reverse=True)[:2]) / total
+    median = statistics.median(counted)
+    heavy = sorted(
+        d for d, n in counts.items() if d not in dedicated and median and n > params.load_median_multiple * median
+    )
     concentrated = top2_share > params.load_top2_share or bool(heavy)
-    return ReviewLoad(counts, total, top2_share, median, heavy, concentrated)
+    return ReviewLoad(counts, dedicated, total, top2_share, median, heavy, concentrated)
 
 
 def load_concentration(
@@ -80,7 +92,7 @@ def load_concentration(
     return [FlagCandidate(
         RuleKey.load_concentration, None, None, None, now,
         {
-            "counts": {str(d): n for d, n in load.counts.items()},
+            "counts": {str(d): n for d, n in load.counted.items()},
             "top2_share": round(load.top2_share, 3),
             "median": load.median,
             "over_median_multiple": load.over_median_multiple,

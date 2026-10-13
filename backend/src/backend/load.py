@@ -37,13 +37,15 @@ def build_load_report(session: Session, now: datetime, params: RuleParams, weeks
     rows = []
     for dev in devs:
         reviews_in_window = load.counts[dev.id]
+        dedicated = dev.id in load.dedicated
         waiting = pending.get(dev.id, [])
         rows.append(LoadRow(
             person=Person.model_validate(dev),
             weekly=weekly[dev.id],
             reviews=reviews_in_window,
-            share=round(reviews_in_window / load.total, 3) if load.total else 0.0,
-            median_multiple=round(reviews_in_window / load.median, 2) if load.median else None,
+            dedicated=dedicated,
+            share=None if dedicated else (round(reviews_in_window / load.total, 3) if load.total else 0.0),
+            median_multiple=round(reviews_in_window / load.median, 2) if load.median and not dedicated else None,
             over_median_multiple=dev.id in load.over_median_multiple,
             pending=len(waiting),
             oldest_pending_hours=waiting_hours(waiting[0], now) if waiting else None,

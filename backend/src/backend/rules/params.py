@@ -25,6 +25,8 @@ class RuleParams:
     load_window_days: int = 28
     load_top2_share: float = 0.6
     load_median_multiple: float = 2.0
+    # Developers whose job is reviewing: their reviews count toward neither the share nor the median.
+    load_dedicated_reviewers: frozenset[int] = frozenset()
 
     # repeat_pattern: this many non-dismissed flags of one rule for one person and role inside the window
     pattern_window_days: int = 30

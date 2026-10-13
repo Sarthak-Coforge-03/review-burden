@@ -4,7 +4,7 @@ from collections.abc import Iterator
 
 import pytest
 
-OMAR = 4
+ARJUN, OMAR = 2, 4
 TOTAL_FLAGS = 22
 
 
@@ -65,6 +65,8 @@ def test_stock_phrases_are_cleaned_up(client, defaults):
         {"load_top2_share": 1.0},
         {"rubber_stamp_min_lines": 0},
         {"pattern_min_count": 1},
+        {"load_dedicated_reviewers": [1]},  # the manager
+        {"load_dedicated_reviewers": [2, 99]},
     ],
 )
 def test_invalid_settings_are_rejected_and_nothing_changes(client, defaults, change):
@@ -76,6 +78,38 @@ def test_invalid_settings_are_rejected_and_nothing_changes(client, defaults, cha
 def test_weights_error_says_what_is_wrong(client, defaults):
     detail = client.put("/api/settings", json=defaults | {"health_weight_coverage": 0.35}).json()["detail"]
     assert "must add up to 100%, not 110%" in detail[0]["msg"]
+
+
+def test_dedicated_reviewer_error_names_the_ids(client, defaults):
+    response = client.put("/api/settings", json=defaults | {"load_dedicated_reviewers": [1, 99]})
+    [error] = response.json()["detail"]
+    assert error["loc"] == ["body", "load_dedicated_reviewers"]
+    assert error["msg"] == "Value error, 1, 99 are not developers"
+
+
+def test_dedicated_reviewer_is_left_out_of_load(client, defaults):
+    def flags(rule_key: str) -> list[dict]:
+        return client.get("/api/flags", params={"rule_key": rule_key}).json()
+
+    assert len(flags("load_concentration")) == 1
+    body = client.put("/api/settings", json=defaults | {"load_dedicated_reviewers": [ARJUN, ARJUN]}).json()
+    assert body["values"]["load_dedicated_reviewers"] == [ARJUN]
+    assert (body["engine"]["removed"], body["engine"]["open_flags"]) == (1, 18)
+    assert flags("load_concentration") == []
+    assert len(flags("stale_backlog")) == 2  # requests left waiting on Arjun are still flagged
+
+    load = client.get("/api/load").json()
+    arjun = next(r for r in load["people"] if r["person"]["id"] == ARJUN)
+    assert (arjun["reviews"], arjun["dedicated"], arjun["share"], arjun["median_multiple"]) == (82, True, None, None)
+    assert (load["team_reviews"], load["concentrated"]) == (147 - 82, False)
+
+    overview = client.get("/api/overview").json()
+    assert overview["dedicated_reviewers"] == 1
+    assert next(p for p in overview["parts"] if p["key"] == "load_balance")["score"] == 100
+
+    activity = client.get(f"/api/people/{ARJUN}/profile").json()["activity"]
+    assert (activity["reviews_given"], activity["dedicated"], activity["share"]) == (82, True, None)
+    client.delete("/api/settings")
 
 
 def test_re_running_with_unchanged_settings_changes_nothing(client):

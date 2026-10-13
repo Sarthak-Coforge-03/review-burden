@@ -1,5 +1,6 @@
 """Edge cases for the rules that depend on "now", on small in-memory data (no database)."""
 
+from dataclasses import replace
 from datetime import datetime, timedelta, timezone
 
 from backend.models import Developer, PullRequest, Review, ReviewRequest, ReviewState, Role
@@ -123,6 +124,35 @@ def test_review_load_reports_the_numbers_the_rule_uses():
     assert load.counts == {2: 20, 3: 5, 4: 4, 5: 5, 6: 6}
     assert (load.total, load.median, load.over_median_multiple, load.concentrated) == (40, 5, [2], True)
     assert load.top2_share == 26 / 40
+
+
+def dedicated(*ids: int):
+    return replace(DEFAULT_PARAMS, load_dedicated_reviewers=frozenset(ids))
+
+
+def test_dedicated_reviewer_is_left_out_of_the_rule():
+    reviews = reviews_by({2: 20, 3: 5, 4: 4, 5: 5, 6: 6})
+    assert not load_concentration(reviews, team(5), NOW, dedicated(2))
+
+    load = review_load(reviews, team(5), NOW, dedicated(2))
+    assert load.counts[2] == 20  # still counted, for display
+    assert load.counted == {3: 5, 4: 4, 5: 5, 6: 6}
+    assert (load.total, load.median, load.over_median_multiple, load.concentrated) == (20, 5, [], False)
+    assert load.top2_share == 11 / 20
+
+
+def test_others_are_still_flagged_alongside_a_dedicated_reviewer():
+    [flag] = load_concentration(reviews_by({2: 30, 3: 12, 4: 2, 5: 3, 6: 3}), team(5), NOW, dedicated(2))
+    assert flag.evidence["counts"] == {"3": 12, "4": 2, "5": 3, "6": 3}
+    assert flag.evidence["median"] == 3
+    assert flag.evidence["over_median_multiple"] == [3]
+
+
+def test_dedicated_ids_outside_the_team_are_ignored():
+    reviews = reviews_by({2: 20, 3: 5, 4: 4, 5: 5, 6: 6})
+    load = review_load(reviews, team(5), NOW, dedicated(MANAGER, 99))
+    assert load.dedicated == frozenset()
+    assert load == review_load(reviews, team(5), NOW, DEFAULT_PARAMS)
 
 
 def test_review_load_with_no_reviews():
