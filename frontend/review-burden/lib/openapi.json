@@ -735,6 +735,58 @@
         }
       }
     },
+    "/api/demo/reset": {
+      "post": {
+        "tags": [
+          "demo"
+        ],
+        "summary": "Reset Demo",
+        "description": "Replace everything with the demo, as `python -m backend.seed` does: the demo data, the flags the rules\nfind with the default settings, and the starting triage. Triage and saved settings are lost. Manager only.",
+        "operationId": "reset_demo_api_demo_reset_post",
+        "parameters": [
+          {
+            "name": "x-viewer-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Who is viewing. Demo only: there is no real auth.",
+              "title": "X-Viewer-Id"
+            },
+            "description": "Who is viewing. Demo only: there is no real auth."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DemoReset"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/health": {
       "get": {
         "summary": "Health",
@@ -756,6 +808,33 @@
   },
   "components": {
     "schemas": {
+      "DemoReset": {
+        "properties": {
+          "rows": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Rows"
+          },
+          "flags": {
+            "type": "integer",
+            "title": "Flags"
+          },
+          "open_flags": {
+            "type": "integer",
+            "title": "Open Flags"
+          }
+        },
+        "type": "object",
+        "required": [
+          "rows",
+          "flags",
+          "open_flags"
+        ],
+        "title": "DemoReset",
+        "description": "The demo after a reset: rows loaded per table, and the flags with their starting triage."
+      },
       "EngineRun": {
         "properties": {
           "created": {

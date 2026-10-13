@@ -267,6 +267,14 @@ class SettingsSaved(SettingsOut):
     engine: EngineRun
 
 
+class DemoReset(BaseModel):
+    """The demo after a reset: rows loaded per table, and the flags with their starting triage."""
+
+    rows: dict[str, int]
+    flags: int
+    open_flags: int
+
+
 class FlagUpdate(BaseModel):
     status: FlagStatus
     note: str | None = Field(
