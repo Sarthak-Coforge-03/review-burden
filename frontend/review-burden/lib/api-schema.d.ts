@@ -212,6 +212,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/demo/reset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reset Demo
+         * @description Replace everything with the demo, as `python -m backend.seed` does: the demo data, the flags the rules
+         *     find with the default settings, and the starting triage. Triage and saved settings are lost. Manager only.
+         */
+        post: operations["reset_demo_api_demo_reset_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/health": {
         parameters: {
             query?: never;
@@ -233,6 +254,20 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * DemoReset
+         * @description The demo after a reset: rows loaded per table, and the flags with their starting triage.
+         */
+        DemoReset: {
+            /** Rows */
+            rows: {
+                [key: string]: number;
+            };
+            /** Flags */
+            flags: number;
+            /** Open Flags */
+            open_flags: number;
+        };
         /**
          * EngineRun
          * @description What re-running the rules changed. Open flags that no longer fire are removed; triaged ones are kept.
@@ -1225,6 +1260,38 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["EngineRun"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reset_demo_api_demo_reset_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Who is viewing. Demo only: there is no real auth. */
+                "x-viewer-id"?: number | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DemoReset"];
                 };
             };
             /** @description Validation Error */

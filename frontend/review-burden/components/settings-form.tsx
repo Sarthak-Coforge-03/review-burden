@@ -5,6 +5,8 @@ import { useActionState, useState } from "react";
 import { type SettingsState, settingsAction } from "@/app/settings/actions";
 import { type FormValues, type NumberField, SETTINGS_GROUPS, WEIGHT_KEYS } from "@/lib/settings-fields";
 
+const DEMO_CONFIRM = "Reset the demo? All data, flag triage and settings go back to how the demo starts.";
+
 function weightTotal(values: Partial<FormValues>): number {
   return Math.round(WEIGHT_KEYS.reduce((sum, key) => sum + (Number(values[key]) || 0), 0) * 100) / 100;
 }
@@ -93,6 +95,19 @@ function SettingsFields({
           Re-run rules with saved settings
         </button>
         {pending && <span className="loading loading-spinner loading-sm" aria-label="Working" />}
+        <button
+          type="submit"
+          name="intent"
+          value="demo"
+          className="btn btn-outline btn-error ms-auto"
+          disabled={pending}
+          formNoValidate
+          onClick={(event) => {
+            if (!window.confirm(DEMO_CONFIRM)) event.preventDefault();
+          }}
+        >
+          Reset demo data
+        </button>
       </div>
     </form>
   );

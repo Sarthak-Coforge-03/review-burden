@@ -13,6 +13,9 @@ export const TOOLTIP = {
   labelStyle: { color: "var(--color-base-content)" },
 };
 
+/** Axis label for a person; full names overlap under narrow bars. */
+export const firstName = (name: string) => name.split(" ")[0];
+
 export function colors(people: ChartPerson[]): Map<number, string> {
   let next = 0;
   return new Map(people.map((p) => [p.id, p.heavy ? HEAVY : PALETTE[next++ % PALETTE.length]]));

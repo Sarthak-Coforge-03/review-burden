@@ -7,3 +7,8 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
+
+/* DaisyUI lets a card's paragraphs grow, which opens a gap in the shorter card of a row. */
+.card-body > p {
+  flex-grow: 0;
+}

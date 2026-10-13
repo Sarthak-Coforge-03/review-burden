@@ -26,3 +26,4 @@ export type RuleSettings = Schemas["RuleSettings"];
 export type SettingsOut = Schemas["SettingsOut"];
 export type SettingsSaved = Schemas["SettingsSaved"];
 export type EngineRun = Schemas["EngineRun"];
+export type DemoReset = Schemas["DemoReset"];

@@ -14,7 +14,7 @@ import {
   YAxis,
 } from "recharts";
 
-import { AXIS, type ChartPerson, colors, HEAVY } from "@/components/chart-theme";
+import { AXIS, type ChartPerson, colors, firstName, HEAVY } from "@/components/chart-theme";
 
 /** `detail` is preformatted on the server so client and server render the same text. */
 export type SpeedPoint = ChartPerson & { minutes: number; substantive: number; detail: string };
@@ -118,7 +118,7 @@ export function EscapeRateChart({ points }: { points: EscapePoint[] }) {
   return (
     <BarChart responsive data={points} style={{ width: "100%", height: 320 }} margin={{ top: 20, right: 16 }}>
       <CartesianGrid strokeDasharray="3 3" opacity={0.2} vertical={false} />
-      <XAxis dataKey="name" tick={AXIS} interval={0} />
+      <XAxis dataKey="name" tick={AXIS} interval={0} tickFormatter={firstName} />
       <YAxis tick={AXIS} width={44} unit="%" allowDecimals={false} />
       <Tooltip content={DetailTooltip} cursor={{ fillOpacity: 0.1 }} />
       <Bar dataKey="rate" isAnimationActive={false}>

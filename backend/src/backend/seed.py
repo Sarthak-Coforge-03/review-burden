@@ -108,11 +108,17 @@ def seed_demo(session: Session, data: dict[str, Any], triage: list[dict[str, Any
     return SeedResult(rows=rows, engine=engine, triaged=triaged)
 
 
-def main(argv: list[str]) -> None:
-    path = Path(argv[0]) if argv else DEFAULT_SEED_PATH
+def read_seed_files(path: Path = DEFAULT_SEED_PATH) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    """The seed data at `path` and the triage next to it (empty if there is no triage file)."""
     data = json.loads(path.read_text())
     triage_path = path.parent / TRIAGE_FILENAME
     triage = json.loads(triage_path.read_text()) if triage_path.exists() else []
+    return data, triage
+
+
+def main(argv: list[str]) -> None:
+    path = Path(argv[0]) if argv else DEFAULT_SEED_PATH
+    data, triage = read_seed_files(path)
 
     create_tables()
     with SessionLocal.begin() as session:
