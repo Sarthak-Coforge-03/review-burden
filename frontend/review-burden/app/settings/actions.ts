@@ -3,7 +3,7 @@
 import { refresh } from "next/cache";
 
 import { ApiError, apiFetch } from "@/lib/api";
-import type { EngineRun, SettingsSaved } from "@/lib/api-types";
+import type { DemoReset, EngineRun, SettingsOut, SettingsSaved } from "@/lib/api-types";
 import { type FormValues, NUMBER_FIELDS, fieldLabel, fromFormValues, toFormValues } from "@/lib/settings-fields";
 
 export type SettingsState = {
@@ -42,7 +42,12 @@ function failure(error: unknown): string {
   return "Could not reach the API. Is it running?";
 }
 
-/** Save, reset or re-run, depending on which button submitted the form. */
+function describeDemo(demo: DemoReset): string {
+  const flags = `${demo.flags} flags (${demo.open_flags} open)`;
+  return `Demo data restored: ${demo.rows.pull_requests ?? 0} PRs, ${flags}, settings back to the defaults.`;
+}
+
+/** Save, reset, re-run or restore the demo, depending on which button submitted the form. */
 export async function settingsAction(previous: SettingsState, formData: FormData): Promise<SettingsState> {
   const version = previous.version + 1;
   const intent = formData.get("intent");
@@ -55,6 +60,13 @@ export async function settingsAction(previous: SettingsState, formData: FormData
       const run = await apiFetch<EngineRun>("/api/settings/run-engine", { method: "POST" });
       refresh();
       return { ...previous, version, values: previous.saved, message: { kind: "success", text: describeRun(run) } };
+    }
+    if (intent === "demo") {
+      const demo = await apiFetch<DemoReset>("/api/demo/reset", { method: "POST" });
+      const settings = await apiFetch<SettingsOut>("/api/settings");
+      refresh();
+      const values = toFormValues(settings.values);
+      return { version, values, saved: values, message: { kind: "success", text: describeDemo(demo) } };
     }
     const saved =
       intent === "reset"
