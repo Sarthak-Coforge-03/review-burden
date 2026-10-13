@@ -51,9 +51,12 @@ function describeDemo(demo: DemoReset): string {
 export async function settingsAction(previous: SettingsState, formData: FormData): Promise<SettingsState> {
   const version = previous.version + 1;
   const intent = formData.get("intent");
-  const submitted = Object.fromEntries(
-    ["stock_phrases", ...NUMBER_FIELDS.map((f) => f.key)].map((key) => [key, String(formData.get(key) ?? "")]),
-  ) as FormValues;
+  const submitted = {
+    ...Object.fromEntries(
+      ["stock_phrases", ...NUMBER_FIELDS.map((f) => f.key)].map((key) => [key, String(formData.get(key) ?? "")]),
+    ),
+    load_dedicated_reviewers: formData.getAll("load_dedicated_reviewers").join(","),
+  } as FormValues;
 
   try {
     if (intent === "rerun") {

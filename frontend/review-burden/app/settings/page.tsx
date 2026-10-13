@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { SettingsForm } from "@/components/settings-form";
 import { ApiError, apiFetch } from "@/lib/api";
 import type { SettingsOut } from "@/lib/api-types";
+import { loadPeople } from "@/lib/people";
 import { toFormValues } from "@/lib/settings-fields";
 
 export default function SettingsPage() {
@@ -32,5 +33,12 @@ async function Settings() {
     }
     return <div className="alert alert-error">Could not load settings. Is the API running?</div>;
   }
-  return <SettingsForm values={toFormValues(settings.values)} defaults={toFormValues(settings.defaults)} />;
+  const developers = ((await loadPeople()) ?? []).filter((p) => p.role === "dev");
+  return (
+    <SettingsForm
+      values={toFormValues(settings.values)}
+      defaults={toFormValues(settings.defaults)}
+      developers={developers}
+    />
+  );
 }

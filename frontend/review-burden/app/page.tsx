@@ -67,8 +67,9 @@ function explain(part: HealthPart, overview: Overview): string {
       return `${good} of ${total} review requests were answered within ${overview.stale_after_hours} hours.`;
     case "load_balance":
       return (
-        `The two busiest reviewers did ${percent(bad / total)} of ${total} reviews; ` +
-        `up to ${percent(overview.top2_share_threshold)} scores full marks.`
+        `The two busiest reviewers did ${percent(bad / total)} of ${total} reviews` +
+        (overview.dedicated_reviewers ? " (dedicated reviewers not counted)" : "") +
+        `; up to ${percent(overview.top2_share_threshold)} scores full marks.`
       );
   }
 }

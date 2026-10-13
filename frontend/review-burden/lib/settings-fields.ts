@@ -1,7 +1,7 @@
 import type { RuleSettings } from "@/lib/api-types";
 
 export type SettingKey = keyof RuleSettings;
-type NumberKey = Exclude<SettingKey, "stock_phrases">;
+type NumberKey = Exclude<SettingKey, "stock_phrases" | "load_dedicated_reviewers">;
 
 /** A form field for one setting. `percent` fields are shares (0-1) shown and typed as percentages. */
 export type NumberField = {
@@ -14,7 +14,13 @@ export type NumberField = {
   max?: number;
 };
 
-export type SettingsGroup = { title: string; description: string; fields: NumberField[]; phrases?: boolean };
+export type SettingsGroup = {
+  title: string;
+  description: string;
+  fields: NumberField[];
+  phrases?: boolean;
+  dedicatedReviewers?: boolean;
+};
 
 export const WEIGHT_KEYS: NumberKey[] = [
   "health_weight_coverage",
@@ -59,6 +65,7 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
       { key: "load_top2_share", label: "Top two above", unit: "% of reviews", percent: true, min: 1, max: 99 },
       { key: "load_median_multiple", label: "Anyone above", unit: "× the median", step: 0.1, min: 1 },
     ],
+    dedicatedReviewers: true,
   },
   {
     title: "Repeat patterns",
@@ -94,11 +101,15 @@ export const SETTINGS_GROUPS: SettingsGroup[] = [
 
 export const NUMBER_FIELDS: NumberField[] = SETTINGS_GROUPS.flatMap((g) => g.fields);
 
-/** Settings as the form shows them: numbers as typed text, percentages scaled, phrases one per line. */
+/** Settings as the form shows them: numbers as typed text, percentages scaled, phrases one per line,
+ * dedicated reviewer ids comma-separated. */
 export type FormValues = Record<SettingKey, string>;
 
 export function toFormValues(settings: RuleSettings): FormValues {
-  const values = { stock_phrases: settings.stock_phrases.join("\n") } as FormValues;
+  const values = {
+    stock_phrases: settings.stock_phrases.join("\n"),
+    load_dedicated_reviewers: settings.load_dedicated_reviewers.join(","),
+  } as FormValues;
   for (const field of NUMBER_FIELDS) {
     const value = settings[field.key];
     values[field.key] = String(field.percent ? Math.round(value * 10000) / 100 : value);
@@ -107,7 +118,10 @@ export function toFormValues(settings: RuleSettings): FormValues {
 }
 
 export function fromFormValues(values: FormValues): RuleSettings {
-  const settings = { stock_phrases: values.stock_phrases.split("\n") } as RuleSettings;
+  const settings = {
+    stock_phrases: values.stock_phrases.split("\n"),
+    load_dedicated_reviewers: dedicatedIds(values.load_dedicated_reviewers),
+  } as RuleSettings;
   for (const field of NUMBER_FIELDS) {
     const value = Number(values[field.key]);
     settings[field.key] = field.percent ? value / 100 : value;
@@ -115,7 +129,12 @@ export function fromFormValues(values: FormValues): RuleSettings {
   return settings;
 }
 
+export function dedicatedIds(value: string): number[] {
+  return value.split(",").filter(Boolean).map(Number);
+}
+
 export function fieldLabel(key: string): string {
   if (key === "stock_phrases") return "Stock phrases";
+  if (key === "load_dedicated_reviewers") return "Dedicated reviewers";
   return NUMBER_FIELDS.find((f) => f.key === key)?.label ?? key;
 }

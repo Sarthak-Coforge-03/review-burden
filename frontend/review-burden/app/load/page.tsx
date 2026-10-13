@@ -42,6 +42,7 @@ async function Load() {
     ...Object.fromEntries(report.people.map((r) => [String(r.person.id), r.weekly[i]])),
   }));
   const heavy = report.people.filter((r) => r.over_median_multiple);
+  const dedicated = report.people.filter((r) => r.dedicated).map((r) => r.person.name);
   const multiple = report.median_multiple_threshold;
 
   return (
@@ -106,9 +107,10 @@ async function Load() {
                   <Link href={`/people/${r.person.id}`} className="link link-hover">
                     {r.person.name}
                   </Link>
+                  {r.dedicated && <span className="badge badge-ghost badge-sm ms-2">Dedicated reviewer</span>}
                 </td>
                 <td className={`text-right ${r.over_median_multiple ? "font-semibold text-error" : ""}`}>{r.reviews}</td>
-                <td className="text-right">{percent(r.share)}</td>
+                <td className="text-right">{r.share === null ? "–" : percent(r.share)}</td>
                 <td className={`text-right ${r.over_median_multiple ? "font-semibold text-error" : ""}`}>
                   {r.median_multiple === null ? "–" : `${r.median_multiple}×`}
                 </td>
@@ -123,7 +125,8 @@ async function Load() {
       </div>
       <p className="text-xs opacity-60">
         Team median: {report.team_median} reviews per developer over {report.window_days} days. The manager&apos;s
-        reviews are not counted.
+        reviews are not counted
+        {dedicated.length > 0 && <>, and neither are the dedicated reviewers&apos; ({dedicated.join(", ")})</>}.
       </p>
     </div>
   );

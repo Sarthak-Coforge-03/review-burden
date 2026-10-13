@@ -3,7 +3,14 @@
 import { useActionState, useState } from "react";
 
 import { type SettingsState, settingsAction } from "@/app/settings/actions";
-import { type FormValues, type NumberField, SETTINGS_GROUPS, WEIGHT_KEYS } from "@/lib/settings-fields";
+import type { Person } from "@/lib/api-types";
+import {
+  dedicatedIds,
+  type FormValues,
+  type NumberField,
+  SETTINGS_GROUPS,
+  WEIGHT_KEYS,
+} from "@/lib/settings-fields";
 
 const DEMO_CONFIRM = "Reset the demo? All data, flag triage and settings go back to how the demo starts.";
 
@@ -11,7 +18,15 @@ function weightTotal(values: Partial<FormValues>): number {
   return Math.round(WEIGHT_KEYS.reduce((sum, key) => sum + (Number(values[key]) || 0), 0) * 100) / 100;
 }
 
-export function SettingsForm({ values, defaults }: { values: FormValues; defaults: FormValues }) {
+export function SettingsForm({
+  values,
+  defaults,
+  developers,
+}: {
+  values: FormValues;
+  defaults: FormValues;
+  developers: Person[];
+}) {
   const [state, action, pending] = useActionState<SettingsState, FormData>(settingsAction, {
     version: 0,
     values,
@@ -29,7 +44,14 @@ export function SettingsForm({ values, defaults }: { values: FormValues; default
           {state.message.text}
         </div>
       )}
-      <SettingsFields key={state.version} values={state.values} defaults={defaults} action={action} pending={pending} />
+      <SettingsFields
+        key={state.version}
+        values={state.values}
+        defaults={defaults}
+        developers={developers}
+        action={action}
+        pending={pending}
+      />
     </div>
   );
 }
@@ -37,11 +59,13 @@ export function SettingsForm({ values, defaults }: { values: FormValues; default
 function SettingsFields({
   values,
   defaults,
+  developers,
   action,
   pending,
 }: {
   values: FormValues;
   defaults: FormValues;
+  developers: Person[];
   action: (formData: FormData) => void;
   pending: boolean;
 }) {
@@ -73,6 +97,13 @@ function SettingsFields({
                     className="textarea w-full"
                   />
                 </label>
+              )}
+              {group.dedicatedReviewers && (
+                <DedicatedReviewers
+                  developers={developers}
+                  value={values.load_dedicated_reviewers}
+                  fallback={defaults.load_dedicated_reviewers}
+                />
               )}
               {group.fields.some((f) => WEIGHT_KEYS.includes(f.key)) && (
                 <p className={`text-sm ${total === 100 ? "opacity-70" : "font-medium text-error"}`}>
@@ -110,6 +141,34 @@ function SettingsFields({
         </button>
       </div>
     </form>
+  );
+}
+
+function DedicatedReviewers({ developers, value, fallback }: { developers: Person[]; value: string; fallback: string }) {
+  const chosen = new Set(dedicatedIds(value));
+  return (
+    <div role="group" aria-labelledby="dedicated-reviewers" className="flex flex-col gap-1">
+      <span id="dedicated-reviewers" className="text-sm">
+        Dedicated reviewers: reviewing is their job, so their reviews count toward neither the share nor the median
+      </span>
+      <div className="flex flex-wrap gap-x-4 gap-y-1">
+        {developers.map((d) => (
+          <label key={d.id} className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              name="load_dedicated_reviewers"
+              value={d.id}
+              defaultChecked={chosen.has(d.id)}
+              className="checkbox checkbox-sm"
+            />
+            {d.name}
+          </label>
+        ))}
+      </div>
+      <span className="text-xs opacity-60">
+        Default none{value !== fallback && " (changed)"}
+      </span>
+    </div>
   );
 }
 

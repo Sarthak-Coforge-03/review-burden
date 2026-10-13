@@ -78,7 +78,7 @@ function PersonCard({ profile }: { profile: PersonProfile }) {
           <dd className="text-right">{as_reviewer.flags.reduce((n, c) => n + c.count, 0)}</dd>
           <dt className="opacity-60">Reviews, {activity.window_days} days</dt>
           <dd className={`text-right ${heavy ? "font-semibold text-error" : ""}`}>
-            {activity.reviews_given} ({percent(activity.share)})
+            {activity.reviews_given} ({activity.share === null ? "dedicated" : percent(activity.share)})
           </dd>
           <dt className="opacity-60">Waiting on them</dt>
           <dd className={`text-right ${stale ? "font-semibold text-error" : ""}`}>

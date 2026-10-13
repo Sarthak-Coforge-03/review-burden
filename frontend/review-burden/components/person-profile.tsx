@@ -50,7 +50,9 @@ export async function PersonProfileView({ personId }: { personId: number }) {
             {activity.reviews_given}
           </div>
           <div className="stat-desc">
-            {percent(activity.share)} of the team&apos;s {activity.team_reviews}; median {activity.team_median}
+            {activity.share === null
+              ? "dedicated reviewer, not counted toward the team's load"
+              : `${percent(activity.share)} of the team's ${activity.team_reviews}; median ${activity.team_median}`}
           </div>
         </div>
         <div className="stat">

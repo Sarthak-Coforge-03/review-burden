@@ -64,6 +64,8 @@ The demo team has 8 people (Maya Chen is the manager) and 12 weeks of review his
 6. **Viewing as a developer.** Switch "Viewing as" to Omar: he sees only his own page, and the team pages are closed to him.
 7. **Settings** (back as Maya). Change "Big PR from" to 1000 lines and save: the rules re-run at once, 7 rubber-stamp flags disappear, and the dismissed one stays because a person decided on it.
 
+   Some teams have people whose job is reviewing. Tick Arjun under "Dedicated reviewers" in the Review load card and save: the review-load flag disappears, Load balance goes to 100, and Arjun's own stale-review flags stay. His reviews still show on the Load page, marked "Dedicated reviewer", but count toward neither the top two's share nor the median.
+
    ![Settings](docs/screenshots/6-settings.png)
 
 8. **Reset demo data** (bottom right of Settings) puts everything back: the data, the starting triage and the default settings. Use it between run-throughs. `docker compose restart api` does the same.
