@@ -14,7 +14,7 @@ import {
   YAxis,
 } from "recharts";
 
-import { AXIS, type ChartPerson, colors, HEAVY, TOOLTIP } from "@/components/chart-theme";
+import { AXIS, type ChartPerson, colors, firstName, HEAVY, TOOLTIP } from "@/components/chart-theme";
 
 /** One line per developer; `weeks` rows are keyed by person id. */
 export function WeeklyReviewsChart({
@@ -64,7 +64,7 @@ export function WindowReviewsChart({
   return (
     <BarChart responsive data={rows} style={{ width: "100%", height: 300 }} margin={{ top: 20, right: 16 }}>
       <CartesianGrid strokeDasharray="3 3" opacity={0.2} vertical={false} />
-      <XAxis dataKey="name" tick={AXIS} interval={0} />
+      <XAxis dataKey="name" tick={AXIS} interval={0} tickFormatter={firstName} />
       <YAxis allowDecimals={false} tick={AXIS} width={32} domain={[0, (max: number) => Math.max(max, threshold * 1.1)]} />
       <Tooltip {...TOOLTIP} cursor={{ fillOpacity: 0.1 }} />
       <Bar dataKey="reviews" name="Reviews" isAnimationActive={false}>
